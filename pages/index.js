@@ -1,12 +1,19 @@
 import React, { useState, useRef, useEffect } from 'react';
-import JSZip from 'jszip'; // NEU: Die ZIP Bibliothek
+import JSZip from 'jszip';
 
-// --- WÖRTERBUCH ---
+// --- WÖRTERBUCH (Alle 9 Sprachen, VOLLSTÄNDIG) ---
 const LANGS = {
-  "🇩🇪 DE": { title: "🧱 Facade AI Pro v0.3.1.6", search_h: "1. Suche", c_land: "Land", c_zip: "PLZ", reuse: "Gebraucht", new: "Neu", btn_search: "Suchen", cust_h: "2. Eigenbestand", w_lbl: "Breite", h_lbl: "Höhe", btn_add: "Hinzufügen", wall_h: "Wandöffnung (mm)", btn_suggest: "💡 Wand optimieren", btn_shuf: "🎲 Zufälliger Seed", btn_gaps: "✂️ Zuschnitt drehen", lock: "🔒 Gepinnte behalten", sym: "📐 Symmetrie", chaos: "Chaos", seed: "Seed-Regler", auto_rot: "🔄 Auto-Rotation erlauben", multi_clust: "🏝️ Mehrere Cluster bilden", wall_a: "Wandfläche", win_a: "Fenster", fill: "Füllgrad", price: "Gesamtpreis", mat_h: "📋 Fenster Matrix", exp_csv: "📥 CSV", exp_cad: "📥 DXF", exp_img: "🖼️ PNG", exp_zip: "📦 Alles als .zip", gaps_h: "🟥 Zuschnitt-Liste", no_gaps: "Wand perfekt gefüllt!", col: {v:"👁️", p:"📌", r:"🔄", f:"⭐", id:"ID", x:"X", y:"Y", dim:"Maße", a:"m²", src:"Herkunft", pr:"Preis", l:"Link"} }
+  "🇩🇪 DE": { title: "🧱 Facade AI Pro v6.2", search_h: "1. Suche", c_land: "Land", c_zip: "PLZ", c_rad: "Umkreis (km)", reuse: "Gebraucht", new: "Neu", btn_search: "Suchen", cust_h: "2. Eigenbestand", w_lbl: "Breite", h_lbl: "Höhe", btn_add: "Hinzufügen", wall_h: "Wandöffnung (mm)", btn_suggest: "💡 Wand optimieren", btn_shuf: "🎲 Zufälliger Seed", btn_gaps: "✂️ Zuschnitt drehen", lock: "🔒 Gepinnte behalten", sym: "📐 Symmetrie", chaos: "Chaos", seed: "Seed-Regler", auto_rot: "🔄 Auto-Rotation", multi_clust: "🏝️ Mehrere Cluster", wall_a: "Wandfläche", win_a: "Fensterfläche", fill: "Füllgrad", price: "Gesamtpreis", mat_h: "📋 Fenster Matrix", exp_csv: "📥 CSV", exp_cad: "📥 DXF", exp_img: "🖼️ Collage", exp_bw: "🖼️ S/W", exp_line: "🖼️ Linien", exp_zip: "📦 ZIP Komplett", gaps_h: "🟥 Zuschnitt-Liste", no_gaps: "Wand perfekt gefüllt!", col: {v:"👁️", p:"📌", r:"🔄", f:"⭐", id:"ID", x:"X", y:"Y", dim:"Maße", a:"m²", dist:"km", src:"Herkunft", pr:"Preis", l:"Link"} },
+  "🇬🇧 EN": { title: "🧱 Facade AI Pro v6.2", search_h: "1. Search", c_land: "Country", c_zip: "ZIP", c_rad: "Radius (km)", reuse: "Used", new: "New", btn_search: "Search", cust_h: "2. Custom Inventory", w_lbl: "Width", h_lbl: "Height", btn_add: "Add", wall_h: "Wall Opening (mm)", btn_suggest: "💡 Optimize Wall", btn_shuf: "🎲 Random Seed", btn_gaps: "✂️ Toggle Gaps", lock: "🔒 Keep Pinned", sym: "📐 Symmetry", chaos: "Chaos", seed: "Seed Slider", auto_rot: "🔄 Auto-Rotation", multi_clust: "🏝️ Multi-Cluster", wall_a: "Wall Area", win_a: "Window Area", fill: "Fill Rate", price: "Total Price", mat_h: "📋 Window Matrix", exp_csv: "📥 CSV", exp_cad: "📥 DXF", exp_img: "🖼️ Collage", exp_bw: "🖼️ B/W", exp_line: "🖼️ Lines", exp_zip: "📦 Full ZIP", gaps_h: "🟥 Gap Panels", no_gaps: "Perfectly filled!", col: {v:"👁️", p:"📌", r:"🔄", f:"⭐", id:"ID", x:"X", y:"Y", dim:"Dims", a:"m²", dist:"km", src:"Source", pr:"Price", l:"Link"} },
+  "🇪🇸 ES": { title: "🧱 Generador Fachadas v6.2", search_h: "1. Búsqueda", c_land: "País", c_zip: "C.P.", c_rad: "Radio (km)", reuse: "Usado", new: "Nuevo", btn_search: "Buscar", cust_h: "2. Inventario Propio", w_lbl: "Ancho", h_lbl: "Alto", btn_add: "Añadir", wall_h: "Muro (mm)", btn_suggest: "💡 Optimizar Muro", btn_shuf: "🎲 Semilla Aleatoria", btn_gaps: "✂️ Rotar cortes", lock: "🔒 Bloquear Pines", sym: "📐 Simetría", chaos: "Caos", seed: "Semilla", auto_rot: "🔄 Auto-rotación", multi_clust: "🏝️ Multi-Clúster", wall_a: "Área Muro", win_a: "Área Vent.", fill: "Relleno", price: "Precio Total", mat_h: "📋 Matriz", exp_csv: "📥 CSV", exp_cad: "📥 DXF", exp_img: "🖼️ Collage", exp_bw: "🖼️ B/N", exp_line: "🖼️ Líneas", exp_zip: "📦 ZIP Completo", gaps_h: "🟥 Paneles de Relleno", no_gaps: "¡Muro perfecto!", col: {v:"👁️", p:"📌", r:"🔄", f:"⭐", id:"ID", x:"X", y:"Y", dim:"Dim", a:"m²", dist:"km", src:"Origen", pr:"Precio", l:"Link"} },
+  "🇫🇷 FR": { title: "🧱 Générateur Façade v6.2", search_h: "1. Recherche", c_land: "Pays", c_zip: "CP", c_rad: "Rayon (km)", reuse: "Usagé", new: "Neuf", btn_search: "Chercher", cust_h: "2. Inventaire", w_lbl: "Largeur", h_lbl: "Hauteur", btn_add: "Ajouter", wall_h: "Mur (mm)", btn_suggest: "💡 Optimiser", btn_shuf: "🎲 Aléatoire", btn_gaps: "✂️ Alterner", lock: "🔒 Garder", sym: "📐 Symétrie", chaos: "Chaos", seed: "Graine", auto_rot: "🔄 Rotation auto", multi_clust: "🏝️ Multi-Cluster", wall_a: "Mur", win_a: "Fenêtres", fill: "Remplissage", price: "Prix", mat_h: "📋 Matrice", exp_csv: "📥 CSV", exp_cad: "📥 DXF", exp_img: "🖼️ Image", exp_bw: "🖼️ N/B", exp_line: "🖼️ Lignes", exp_zip: "📦 ZIP", gaps_h: "🟥 Panneaux", no_gaps: "Parfait!", col: {v:"👁️", p:"📌", r:"🔄", f:"⭐", id:"ID", x:"X", y:"Y", dim:"Dim", a:"m²", dist:"km", src:"Source", pr:"Prix", l:"Lien"} },
+  "🇮🇹 IT": { title: "🧱 Generatore Facciate", search_h: "1. Ricerca", c_land: "Paese", c_zip: "CAP", c_rad: "Raggio (km)", reuse: "Usato", new: "Nuovo", btn_search: "Cerca", cust_h: "2. Inventario", w_lbl: "Largh.", h_lbl: "Altezza", btn_add: "Aggiungi", wall_h: "Muro (mm)", btn_suggest: "💡 Ottimizza", btn_shuf: "🎲 Rimescola", btn_gaps: "✂️ Tagli", lock: "🔒 Blocca", sym: "📐 Simmetria", chaos: "Caos", seed: "Seed", auto_rot: "🔄 Auto-Rot.", multi_clust: "🏝️ Multi-Cluster", wall_a: "Muro", win_a: "Finestre", fill: "Riempimento", price: "Prezzo", mat_h: "📋 Matrice", exp_csv: "📥 CSV", exp_cad: "📥 DXF", exp_img: "🖼️ Immagine", exp_bw: "🖼️ B/N", exp_line: "🖼️ Linee", exp_zip: "📦 ZIP", gaps_h: "🟥 Pannelli", no_gaps: "Perfetto!", col: {v:"👁️", p:"📌", r:"🔄", f:"⭐", id:"ID", x:"X", y:"Y", dim:"Dim", a:"m²", dist:"km", src:"Fonte", pr:"Prezzo", l:"Link"} },
+  "🇨🇭 RM": { title: "🧱 Generatur Façadas", search_h: "1. Tschertga", c_land: "Pajais", c_zip: "PLZ", c_rad: "Radius (km)", reuse: "Duvrà", new: "Nov", btn_search: "Tschertgar", cust_h: "2. Inventari", w_lbl: "Ladezza", h_lbl: "Autezza", btn_add: "Agiuntar", wall_h: "Paraid (mm)", btn_suggest: "💡 Optimar", btn_shuf: "🎲 Maschadar", btn_gaps: "✂️ Panels", lock: "🔒 Fixar", sym: "📐 Simetria", chaos: "Caos", seed: "Seed", auto_rot: "🔄 Auto-Rot.", multi_clust: "🏝️ Multi-Cluster", wall_a: "Paraid", win_a: "Fanestra", fill: "Emplenida", price: "Pretsch", mat_h: "📋 Matrix", exp_csv: "📥 CSV", exp_cad: "📥 DXF", exp_img: "🖼️ Maletg", exp_bw: "🖼️ N/A", exp_line: "🖼️ Lingias", exp_zip: "📦 ZIP", gaps_h: "🟥 Panels", no_gaps: "Perfegt!", col: {v:"👁️", p:"📌", r:"🔄", f:"⭐", id:"ID", x:"X", y:"Y", dim:"Dim", a:"m²", dist:"km", src:"Funt.", pr:"Pretsch", l:"Link"} },
+  "🇧🇬 BG": { title: "🧱 Генератор Фасади", search_h: "1. Търсене", c_land: "Държава", c_zip: "ПК", c_rad: "Радиус (км)", reuse: "Стари", new: "Нови", btn_search: "Търси", cust_h: "2. Инвентар", w_lbl: "Ширина", h_lbl: "Височина", btn_add: "Добави", wall_h: "Стена (мм)", btn_suggest: "💡 Оптимизирай", btn_shuf: "🎲 Разбъркай", btn_gaps: "✂️ Панели", lock: "🔒 Заключи", sym: "📐 Симетрия", chaos: "Хаос", seed: "Сийд", auto_rot: "🔄 Авто-рот.", multi_clust: "🏝️ Мулти-кл.", wall_a: "Стена", win_a: "Проз.", fill: "Запълване", price: "Цена", mat_h: "📋 Матрица", exp_csv: "📥 CSV", exp_cad: "📥 DXF", exp_img: "🖼️ Изобр.", exp_bw: "🖼️ Ч/Б", exp_line: "🖼️ Линии", exp_zip: "📦 ZIP", gaps_h: "🟥 Панели", no_gaps: "Идеално!", col: {v:"👁️", p:"📌", r:"🔄", f:"⭐", id:"ID", x:"X", y:"Y", dim:"Разм", a:"m²", dist:"км", src:"Изт.", pr:"Цена", l:"Линк"} },
+  "🇮🇱 HE": { title: "🧱 מחולל חזיתות", search_h: "1. חיפוש", c_land: "מדינה", c_zip: "מיקוד", c_rad: "רדיוס (ק״מ)", reuse: "ישן", new: "חדש", btn_search: "חפש", cust_h: "2. מלאי", w_lbl: "רוחב", h_lbl: "גובה", btn_add: "הוסף", wall_h: "קיר (מ״מ)", btn_suggest: "💡 ייעול קיר", btn_shuf: "🎲 ערבב", btn_gaps: "✂️ פאנלים", lock: "🔒 נעל", sym: "📐 סימטריה", chaos: "כאוס", seed: "גרעין", auto_rot: "🔄 סיבוב אוטו׳", multi_clust: "🏝️ אשכולות", wall_a: "קיר", win_a: "חלונות", fill: "מילוי", price: "מחיר", mat_h: "📋 טבלה", exp_csv: "📥 CSV", exp_cad: "📥 DXF", exp_img: "🖼️ תמונה", exp_bw: "🖼️ ש/ל", exp_line: "🖼️ קווים", exp_zip: "📦 ZIP", gaps_h: "🟥 פאנלים", no_gaps: "מושלם!", col: {v:"👁️", p:"📌", r:"🔄", f:"⭐", id:"ID", x:"X", y:"Y", dim:"מידות", a:"m²", dist:"ק״מ", src:"מקור", pr:"מחיר", l:"לינק"} },
+  "🇯🇵 JA": { title: "🧱 ファサードジェネレーター", search_h: "1. 検索", c_land: "国", c_zip: "郵便番号", c_rad: "半径 (km)", reuse: "中古", new: "新品", btn_search: "検索", cust_h: "2. 在庫", w_lbl: "幅", h_lbl: "高さ", btn_add: "追加", wall_h: "壁 (mm)", btn_suggest: "💡 最適化", btn_shuf: "🎲 シャッフル", btn_gaps: "✂️ パネル", lock: "🔒 固定", sym: "📐 対称", chaos: "カオス", seed: "シード", auto_rot: "🔄 自動回転", multi_clust: "🏝️ 複数クラスター", wall_a: "壁面積", win_a: "窓面積", fill: "充填率", price: "価格", mat_h: "📋 マトリックス", exp_csv: "📥 CSV", exp_cad: "📥 DXF", exp_img: "🖼️ 画像", exp_bw: "🖼️ 白黒", exp_line: "🖼️ 線画", exp_zip: "📦 ZIP", gaps_h: "🟥 パネル", no_gaps: "完璧！", col: {v:"👁️", p:"📌", r:"🔄", f:"⭐", id:"ID", x:"X", y:"Y", dim:"寸法", a:"m²", dist:"km", src:"ソース", pr:"価格", l:"リンク"} }
 };
 
-// Deterministischer Zufallsgenerator
 function mulberry32(a) {
   return function() {
     var t = a += 0x6D2B79F5;
@@ -18,15 +25,16 @@ function mulberry32(a) {
 
 export default function App() {
   const [lang, setLang] = useState("🇩🇪 DE");
-  const T = LANGS[lang] || LANGS["🇩🇪 DE"]; 
+  const T = LANGS[lang]; 
 
-  const [searchParams, setSearch] = useState({ land: "Deutschland", zip: "10115", reuse: true, new: false });
+  const [searchParams, setSearch] = useState({ land: "Deutschland", zip: "10115", radius: 50, reuse: true, new: false });
   const [customWin, setCustomWin] = useState({ w: 1000, h: 1200 });
 
   const [wall, setWall] = useState({ w: 4000, h: 3000 });
   const [windows, setWindows] = useState([]);
   const [gaps, setGaps] = useState([]);
   const [counter, setCounter] = useState(1);
+  const [loading, setLoading] = useState(false);
   
   const [params, setParams] = useState({ symmetry: false, chaos: 10, lock: true, gapToggle: false, autoRot: false, multi: false });
   const [seed, setSeed] = useState(42);
@@ -43,9 +51,9 @@ export default function App() {
 
   useEffect(() => {
     let initial = [
-      { id: "1", pos: "P1", w: 1200, h: 1400, x:0, y:0, price: 85, color: "#4682b4", source: "Lager", type: "Fenster", pinned: false, rotated: false, visible: true },
-      { id: "2", pos: "P2", w: 2000, h: 2100, x:0, y:0, price: 350, color: "#add8e6", source: "Lager", type: "Fenster", pinned: false, rotated: false, visible: true },
-      { id: "3", pos: "P3", w: 800, h: 600, x:0, y:0, price: 40, color: "#4682b4", source: "Lager", type: "Fenster", pinned: false, rotated: false, visible: true }
+      { id: "1", pos: "P1", w: 1200, h: 1400, x:0, y:0, price: 85, color: "#4682b4", source: "Lager", type: "Fenster", dist: 0, pinned: false, rotated: false, visible: true },
+      { id: "2", pos: "P2", w: 2000, h: 2100, x:0, y:0, price: 350, color: "#add8e6", source: "Lager", type: "Fenster", dist: 0, pinned: false, rotated: false, visible: true },
+      { id: "3", pos: "P3", w: 800, h: 600, x:0, y:0, price: 40, color: "#4682b4", source: "Lager", type: "Fenster", dist: 0, pinned: false, rotated: false, visible: true }
     ];
     setCounter(4);
     runAI(initial, wall, params, seed);
@@ -124,7 +132,7 @@ export default function App() {
 
     let centers = [];
     if (currentParams.multi) {
-        centers = [{ x: currentWall.w * 0.25, y: currentWall.h * 0.5 }, { x: currentWall.w * 0.75, y: currentWall.h * 0.5 }];
+        centers = [ { x: currentWall.w * 0.25, y: currentWall.h * 0.5 }, { x: currentWall.w * 0.75, y: currentWall.h * 0.5 } ];
     } else {
         let cx = fixed_x.length ? fixed_x.reduce((a,b)=>a+b)/fixed_x.length : currentWall.w / 2;
         let cy = fixed_y.length ? fixed_y.reduce((a,b)=>a+b)/fixed_y.length : currentWall.h / 2;
@@ -141,7 +149,8 @@ export default function App() {
       
       orientations.forEach(rot => {
           let eff_w = rot ? w.h : w.w; let eff_h = rot ? w.w : w.h;
-          if (eff_w > currentWall.w || eff_h > currentWall.h) return;
+          if (eff_w > currentWall.w || eff_h > currentWall.h) return; 
+          
           for(let y=0; y<=currentWall.h - eff_h; y+=step) {
             for(let x=0; x<=currentWall.w - eff_w; x+=step) {
               if(!checkOverlap(x, y, eff_w, eff_h, placed)) {
@@ -190,107 +199,130 @@ export default function App() {
     runAI(updatedWins, {w: newW, h: newH}, params, seed);
   };
 
-  const handleSeedChange = (newSeed) => {
-      setSeed(newSeed);
-      runAI(windows, wall, params, newSeed);
+  // --- API FETCH (MOCK MIT DISTANZ) ---
+  const performSearch = async () => {
+    setLoading(true);
+    try {
+      const q = new URLSearchParams(searchParams).toString();
+      const res = await fetch(`/api/scrape?${q}`);
+      const data = await res.json();
+      
+      let c = counter;
+      const newResults = data.results.map(r => ({
+          ...r,
+          id: Math.random().toString(36).substr(2, 9),
+          pos: `P${c++}`,
+          x: 0, y: 0,
+          pinned: false, rotated: false, visible: true
+      }));
+      
+      setCounter(c);
+      runAI([...windows, ...newResults], wall, params, seed);
+    } catch (e) {
+      console.error(e);
+    }
+    setLoading(false);
   };
 
-  // --- DIE NEUEN GLOBALEN TOGGLES (ALLE EIN/AUSSCHALTEN) ---
+  const addCustom = () => {
+    const nw = { id: Math.random().toString(), pos: `P${counter}`, w: customWin.w, h: customWin.h, x:0, y:0, price: 0, color: "#90EE90", source: "Eigenbestand", type: "Fenster", dist: 0, pinned: false, rotated: false, visible: true, link: "" };
+    setCounter(counter+1);
+    runAI([...windows, nw], wall, params, seed);
+  };
+
+  // --- TABELLEN-KOPF TOGGLE ---
   const toggleAll = (prop) => {
-    if(windows.length === 0) return;
-    const allTrue = windows.every(w => w[prop]);
-    const updated = windows.map(w => ({...w, [prop]: !allTrue}));
-    setWindows(updated);
-    runAI(updated, wall, params, seed);
+      const allTrue = windows.every(w => w[prop]);
+      const updated = windows.map(w => ({ ...w, [prop]: !allTrue }));
+      setWindows(updated);
+      runAI(updated, wall, params, seed);
   };
 
-  // --- EXPORT DATEN GENERATOREN ---
-  const getCSVContent = () => {
-    let r = [ ["ID", "Typ", "Breite", "Hoehe", "m2", "Preis", "Herkunft"] ];
-    windows.filter(w=>w.visible).forEach(w => r.push([w.pos, w.type, w.w, w.h, ((w.w*w.h)/1000000).toFixed(2), w.price, w.source]));
-    gaps.forEach((g,i) => r.push([`Gap-${i+1}`, "Zuschnitt", g.w, g.h, ((g.w*g.h)/1000000).toFixed(2), "0", "Holz/Metall"]));
+  // --- EXPORT STRINGS & ZIP ---
+  const getCsvString = () => {
+    let r = [ ["ID", "Typ", "Breite", "Hoehe", "m2", "Preis", "Entfernung(km)", "Herkunft"] ];
+    windows.filter(w=>w.visible).forEach(w => r.push([w.pos, w.type, w.w, w.h, ((w.w*w.h)/1000000).toFixed(2), w.price, w.dist, w.source]));
+    gaps.forEach((g,i) => r.push([`Gap-${i+1}`, "Zuschnitt", g.w, g.h, ((g.w*g.h)/1000000).toFixed(2), "0", "0", "Holz/Metall"]));
     return "data:text/csv;charset=utf-8," + r.map(e => e.join(",")).join("\n");
   };
 
-  const getDXFContent = () => {
+  const getDxfString = () => {
     let dxf = "0\nSECTION\n2\nENTITIES\n";
     const addRect = (x, y, w, h, color) => `0\nLWPOLYLINE\n8\n0\n62\n${color}\n90\n4\n70\n1\n43\n0\n10\n${x}\n20\n${y}\n10\n${x+w}\n20\n${y}\n10\n${x+w}\n20\n${y+h}\n10\n${x}\n20\n${y+h}\n`;
     dxf += addRect(0, 0, wall.w, wall.h, 1); 
-    gaps.forEach(g => dxf += addRect(g.x, g.y, g.w, g.h, 1));
+    gaps.forEach(g => dxf += addRect(g.x, g.y, g.w, g.h, 1)); 
     windows.filter(w=>w.visible).forEach(w => {
         let dw = w.rotated ? w.h : w.w; let dh = w.rotated ? w.w : w.h;
-        dxf += addRect(w.x, w.y, dw, dh, 7);
+        dxf += addRect(w.x, w.y, dw, dh, 7); 
     });
     dxf += "0\nENDSEC\n0\nEOF\n";
     return dxf;
   };
 
-  // Hilfsfunktion zum Rendern der 3 verschiedenen Bild-Typen
-  const getCanvasDataUrl = (type) => {
-    const cvs = document.createElement("canvas");
-    cvs.width = wall.w; cvs.height = wall.h;
+  const drawMainCanvas = () => {
+    const cvs = document.createElement("canvas"); cvs.width = wall.w; cvs.height = wall.h;
     const ctx = cvs.getContext("2d");
-    
-    if (type === 'main') {
-        ctx.fillStyle = "#fce4e4"; ctx.fillRect(0,0, wall.w, wall.h);
-        ctx.fillStyle = "rgba(255, 75, 75, 0.4)"; ctx.strokeStyle = "#FF4B4B"; ctx.lineWidth = 15;
-        gaps.forEach(g => { ctx.fillRect(g.x, wall.h - g.y - g.h, g.w, g.h); ctx.strokeRect(g.x, wall.h - g.y - g.h, g.w, g.h); });
-        windows.filter(w=>w.visible).forEach(w => {
-            let dw = w.rotated ? w.h : w.w; let dh = w.rotated ? w.w : w.h;
-            ctx.fillStyle = w.color; ctx.fillRect(w.x, wall.h - w.y - dh, dw, dh);
-            ctx.strokeStyle = w.pinned ? "#111" : "#555"; ctx.lineWidth = w.pinned ? 30 : 15;
-            ctx.strokeRect(w.x, wall.h - w.y - dh, dw, dh);
-        });
-    } else if (type === 'bw') {
-        ctx.fillStyle = "white"; ctx.fillRect(0,0, wall.w, wall.h);
-        ctx.fillStyle = "black";
-        gaps.forEach(g => { ctx.fillRect(g.x, wall.h - g.y - g.h, g.w, g.h); });
-        windows.filter(w=>w.visible).forEach(w => {
-            let dw = w.rotated ? w.h : w.w; let dh = w.rotated ? w.w : w.h;
-            ctx.fillStyle = "white"; ctx.fillRect(w.x, wall.h - w.y - dh, dw, dh);
-            ctx.strokeStyle = "#ccc"; ctx.lineWidth = 15; ctx.strokeRect(w.x, wall.h - w.y - dh, dw, dh);
-        });
-    } else if (type === 'wire') {
-        ctx.fillStyle = "white"; ctx.fillRect(0,0, wall.w, wall.h);
-        ctx.strokeStyle = "#ccc"; ctx.lineWidth = 8;
-        gaps.forEach(g => { ctx.strokeRect(g.x, wall.h - g.y - g.h, g.w, g.h); });
-        windows.filter(w=>w.visible).forEach(w => {
-            let dw = w.rotated ? w.h : w.w; let dh = w.rotated ? w.w : w.h;
-            ctx.strokeStyle = "#333"; ctx.lineWidth = 20; ctx.strokeRect(w.x, wall.h - w.y - dh, dw, dh);
-        });
-    }
-    return cvs.toDataURL("image/png");
+    ctx.fillStyle = "#fce4e4"; ctx.fillRect(0,0, wall.w, wall.h);
+    ctx.fillStyle = "rgba(255, 75, 75, 0.4)"; ctx.strokeStyle = "#FF4B4B"; ctx.lineWidth = 15;
+    gaps.forEach(g => { ctx.fillRect(g.x, wall.h - g.y - g.h, g.w, g.h); ctx.strokeRect(g.x, wall.h - g.y - g.h, g.w, g.h); });
+    windows.filter(w=>w.visible).forEach(w => {
+        let dw = w.rotated ? w.h : w.w; let dh = w.rotated ? w.w : w.h;
+        ctx.fillStyle = w.color; ctx.fillRect(w.x, wall.h - w.y - dh, dw, dh);
+        ctx.strokeStyle = w.pinned ? "#111" : "#555"; ctx.lineWidth = w.pinned ? 30 : 15;
+        ctx.strokeRect(w.x, wall.h - w.y - dh, dw, dh);
+    });
+    return cvs;
   };
 
-  // Einzelne Downloads
-  const downloadFile = (uri, filename) => {
+  const drawBWCanvas = () => {
+    const cvs = document.createElement("canvas"); cvs.width = wall.w; cvs.height = wall.h;
+    const ctx = cvs.getContext("2d");
+    ctx.fillStyle = "white"; ctx.fillRect(0,0, wall.w, wall.h);
+    ctx.fillStyle = "black";
+    gaps.forEach(g => { ctx.fillRect(g.x, wall.h - g.y - g.h, g.w, g.h); });
+    windows.filter(w=>w.visible).forEach(w => {
+        let dw = w.rotated ? w.h : w.w; let dh = w.rotated ? w.w : w.h;
+        ctx.fillStyle = "white"; ctx.fillRect(w.x, wall.h - w.y - dh, dw, dh);
+        ctx.strokeStyle = "#ccc"; ctx.lineWidth = 10; ctx.strokeRect(w.x, wall.h - w.y - dh, dw, dh);
+    });
+    return cvs;
+  };
+
+  const drawLineCanvas = () => {
+    const cvs = document.createElement("canvas"); cvs.width = wall.w; cvs.height = wall.h;
+    const ctx = cvs.getContext("2d");
+    ctx.fillStyle = "white"; ctx.fillRect(0,0, wall.w, wall.h);
+    ctx.strokeStyle = "#ccc"; ctx.lineWidth = 5;
+    gaps.forEach(g => { ctx.strokeRect(g.x, wall.h - g.y - g.h, g.w, g.h); });
+    windows.filter(w=>w.visible).forEach(w => {
+        let dw = w.rotated ? w.h : w.w; let dh = w.rotated ? w.w : w.h;
+        ctx.strokeStyle = "#333"; ctx.lineWidth = 15; ctx.strokeRect(w.x, wall.h - w.y - dh, dw, dh);
+    });
+    return cvs;
+  };
+
+  const downloadCanvas = (canvasFunc, filename) => {
     const link = document.createElement("a");
-    link.href = uri; link.download = filename;
+    link.download = filename; link.href = canvasFunc().toDataURL("image/png");
     document.body.appendChild(link); link.click(); document.body.removeChild(link);
   };
 
-  const exportCSV = () => downloadFile(encodeURI(getCSVContent()), "stueckliste.csv");
-  const exportDXF = () => downloadFile("data:text/plain;charset=utf-8," + encodeURIComponent(getDXFContent()), "facade_export.dxf");
-  const exportImgMain = () => downloadFile(getCanvasDataUrl('main'), "collage_main.png");
-  const exportImgBW = () => downloadFile(getCanvasDataUrl('bw'), "collage_bw.png");
-  const exportImgWire = () => downloadFile(getCanvasDataUrl('wire'), "collage_wireframe.png");
+  const getCanvasBlob = (canvas) => new Promise(resolve => canvas.toBlob(resolve, 'image/png'));
 
-  // --- DIE NEUE ZIP FUNKTION ---
   const exportZIP = async () => {
     const zip = new JSZip();
-    zip.file("stueckliste.csv", decodeURI(getCSVContent().split(',')[1]));
-    zip.file("facade_export.dxf", getDXFContent());
-    zip.file("collage_main.png", getCanvasDataUrl('main').split(',')[1], {base64: true});
-    zip.file("collage_bw.png", getCanvasDataUrl('bw').split(',')[1], {base64: true});
-    zip.file("collage_wireframe.png", getCanvasDataUrl('wire').split(',')[1], {base64: true});
-
+    zip.file("stueckliste.csv", getCsvString().replace("data:text/csv;charset=utf-8,", ""));
+    zip.file("facade_export.dxf", getDxfString());
+    zip.file("01_collage.png", await getCanvasBlob(drawMainCanvas()));
+    zip.file("02_verschnitt_bw.png", await getCanvasBlob(drawBWCanvas()));
+    zip.file("03_cad_linien.png", await getCanvasBlob(drawLineCanvas()));
+    
     const content = await zip.generateAsync({type: "blob"});
     const link = document.createElement("a");
-    link.href = URL.createObjectURL(content);
-    link.download = "Facade_Projekt_Komplett.zip";
-    document.body.appendChild(link); link.click(); document.body.removeChild(link);
+    link.href = URL.createObjectURL(content); link.download = "facade_project.zip"; link.click();
   };
 
+  // --- DRAG ---
   const startDrag = (e, w) => {
     if(w.pinned || e.target.tagName === 'BUTTON') return;
     const rect = e.target.getBoundingClientRect();
@@ -315,47 +347,11 @@ export default function App() {
     }
   };
 
-  const toggleWinProp = (id, prop) => {
-    const updated = windows.map(w => w.id === id ? {...w, [prop]: !w[prop]} : w);
-    runAI(updated, wall, params, seed);
-  };
-  
-  const handleWallChange = (key, val) => {
-    const newWall = {...wall, [key]: val || 0};
-    setWall(newWall); runAI(windows, newWall, params, seed);
-  };
-
-  const performSearch = () => {
-    const stdSizes = [ [800,1000], [1000,1200], [1200,1400], [2000,2100], [600,800] ];
-    let results = []; let c = counter;
-    const numToGen = Math.floor(Math.random() * 5) + 3;
-    for(let i=0; i<numToGen; i++) {
-        const size = stdSizes[Math.floor(Math.random() * stdSizes.length)];
-        const isReuse = searchParams.reuse && (!searchParams.new || Math.random() > 0.5);
-        results.push({
-            id: Math.random().toString(36).substr(2, 9), pos: `P${c++}`,
-            w: size[0], h: size[1], x: 0, y: 0,
-            price: isReuse ? (size[0]*size[1])/25000 + 20 : (size[0]*size[1])/15000 + 100,
-            color: isReuse ? "#4682b4" : "#add8e6", 
-            source: isReuse ? `eBay Kleinanzeigen` : `Fensterbau`, type: "Fenster",
-            pinned: false, rotated: false, visible: true
-        });
-    }
-    setCounter(c);
-    runAI([...windows, ...results], wall, params, seed);
-  };
-
-  const addCustom = () => {
-    const nw = { id: Math.random().toString(), pos: `P${counter}`, w: customWin.w, h: customWin.h, x:0, y:0, price: 0, color: "#90EE90", source: "Eigen", type: "Fenster", pinned: false, rotated: false, visible: true, force: true };
-    setCounter(counter+1);
-    runAI([...windows, nw], wall, params, seed);
-  };
-
+  // --- METRIKEN ---
   const totalPrice = windows.filter(w=>w.visible).reduce((s,w)=>s+w.price, 0);
   const winArea = windows.filter(w=>w.visible).reduce((s,w)=>s+(w.w*w.h), 0) / 1000000;
   const wallArea = (wall.w*wall.h) / 1000000;
   const fillRate = wallArea ? (winArea/wallArea)*100 : 0;
-
   const archSVG = `data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 200 600'><path d='M98,5 C84,5 72,17 72,31 C72,45 84,57 98,57 C112,57 124,45 124,31 C124,17 112,5 98,5 Z M78,65 C55,65 42,75 42,95 L42,280 C42,295 55,300 65,280 L75,190 L85,190 L85,580 C85,595 105,595 105,580 L105,350 L115,350 L115,580 C115,595 135,595 135,580 L135,190 L145,190 L155,280 C165,300 178,295 178,280 L178,95 C178,75 165,65 142,65 L78,65 Z' fill='%23222'/></svg>`;
 
   return (
@@ -371,16 +367,35 @@ export default function App() {
         </div>
         <h2 style={{fontSize:"18px", marginTop:0, color:"#111"}}>{T.title}</h2>
 
+        {/* SUCHE */}
         <div style={{background:"#f8f9fa", padding:"15px", borderRadius:"6px", marginBottom:"15px", border:"1px solid #e9ecef"}}>
           <h4 style={{margin:"0 0 10px 0"}}>{T.search_h}</h4>
-          <input placeholder={T.c_land} value={searchParams.land} onChange={e=>setSearch({...searchParams, land:e.target.value})} style={{width:"100%", padding:"8px", marginBottom:"5px", border:"1px solid #ccc", borderRadius:"4px"}}/>
+          
+          {/* LÄNDER DROPDOWN */}
+          <select value={searchParams.land} onChange={e=>setSearch({...searchParams, land:e.target.value})} style={{width:"100%", padding:"8px", marginBottom:"5px", border:"1px solid #ccc", borderRadius:"4px"}}>
+            <option value="Deutschland">🇩🇪 Deutschland</option>
+            <option value="Österreich">🇦🇹 Österreich</option>
+            <option value="Schweiz">🇨🇭 Schweiz</option>
+            <option value="España">🇪🇸 España</option>
+            <option value="France">🇫🇷 France</option>
+            <option value="Italia">🇮🇹 Italia</option>
+            <option value="UK">🇬🇧 UK</option>
+          </select>
+
+          <input placeholder={T.c_zip} value={searchParams.zip} onChange={e=>setSearch({...searchParams, zip:e.target.value})} style={{width:"100%", padding:"8px", marginBottom:"10px", border:"1px solid #ccc", borderRadius:"4px"}}/>
+          
+          {/* RADIUS SLIDER */}
+          <label style={{fontSize:"12px", color:"#555"}}>{T.c_rad}: {searchParams.radius} km</label>
+          <input type="range" min="10" max="500" step="10" value={searchParams.radius} onChange={e=>setSearch({...searchParams, radius:parseInt(e.target.value)})} style={{width:"100%", marginBottom:"10px"}}/>
+
           <div style={{display:"flex", gap:"10px", fontSize:"12px", margin:"10px 0"}}>
             <label><input type="checkbox" checked={searchParams.reuse} onChange={e=>setSearch({...searchParams, reuse:e.target.checked})}/> {T.reuse}</label>
             <label><input type="checkbox" checked={searchParams.new} onChange={e=>setSearch({...searchParams, new:e.target.checked})}/> {T.new}</label>
           </div>
-          <button onClick={performSearch} style={{width:"100%", padding:"10px", background:"#FF4B4B", color:"white", border:"none", borderRadius:"4px", cursor:"pointer", fontWeight:"bold"}}>{T.btn_search}</button>
+          <button onClick={performSearch} disabled={loading} style={{width:"100%", padding:"10px", background: loading ? "#ccc" : "#FF4B4B", color:"white", border:"none", borderRadius:"4px", cursor: loading ? "not-allowed" : "pointer", fontWeight:"bold"}}>{loading ? "..." : T.btn_search}</button>
         </div>
 
+        {/* CUSTOM */}
         <div style={{background:"#f8f9fa", padding:"15px", borderRadius:"6px", marginBottom:"15px", border:"1px solid #e9ecef"}}>
           <h4 style={{margin:"0 0 10px 0"}}>{T.cust_h}</h4>
           <div style={{display:"flex", gap:"10px", marginBottom:"10px"}}>
@@ -390,6 +405,7 @@ export default function App() {
           <button onClick={addCustom} style={{width:"100%", padding:"8px", background:"white", border:"1px solid #ccc", borderRadius:"4px", cursor:"pointer", fontWeight:"bold"}}>{T.btn_add}</button>
         </div>
 
+        {/* WAND */}
         <div style={{background:"#f8f9fa", padding:"15px", borderRadius:"6px", border:"1px solid #e9ecef"}}>
           <h4 style={{margin:"0 0 10px 0"}}>{T.wall_h}</h4>
           <div style={{display:"flex", alignItems:"center", gap:"10px", marginBottom:"5px"}}>
@@ -418,14 +434,15 @@ export default function App() {
             <input type="range" min="0" max="100" value={params.chaos} onChange={e=>{let p={...params, chaos:parseInt(e.target.value)}; setParams(p); runAI(windows, wall, p, seed);}} style={{width:"100%", marginBottom:"5px"}}/>
           </div>
 
-          <button onClick={()=>{let newSeed = Math.floor(Math.random()*1000); handleSeedChange(newSeed);}} style={{width:"100%", padding:"10px", background:"#222", color:"white", border:"none", borderRadius:"4px", cursor:"pointer", fontWeight:"bold", marginTop:"10px", marginBottom:"5px"}}>{T.btn_shuf}</button>
+          <button onClick={()=>{let newSeed = Math.floor(Math.random()*1000); handleSeedChange(newSeed);}} style={{width:"100%", padding:"10px", background:"#222", color:"white", border:"none", borderRadius:"4px", cursor:"pointer", fontWeight:"bold", marginBottom:"5px"}}>{T.btn_shuf}</button>
           <button onClick={()=>{let p={...params, gapToggle:!params.gapToggle}; setParams(p); runAI(windows, wall, p, seed);}} style={{width:"100%", padding:"10px", background:"white", color:"#333", border:"1px solid #ccc", borderRadius:"4px", cursor:"pointer", fontWeight:"bold"}}>{T.btn_gaps}</button>
         </div>
       </div>
 
-      {/* RECHTER BEREICH */}
+      {/* RECHTER BEREICH (SPLIT SCREEN) */}
       <div style={{ flex: 1, display: "flex", flexDirection: "column", background: "#eef1f5" }}>
         
+        {/* TOP HALF: FIXIERT */}
         <div style={{ flexShrink: 0, paddingBottom: "10px" }}>
           
           <div style={{ display: "flex", gap: "15px", padding: "15px 25px", background: "white", borderBottom: "1px solid #ddd" }}>
@@ -434,17 +451,17 @@ export default function App() {
             <div style={{flex:1, borderRight:"1px solid #eee"}}><div style={{fontSize:"12px", color:"#777", fontWeight:"bold"}}>{T.fill}</div><div style={{fontSize:"20px", fontWeight:"bold", color:"#222"}}>{fillRate.toFixed(1)} %</div></div>
             <div style={{flex:1}}><div style={{fontSize:"12px", color:"#FF4B4B", fontWeight:"bold"}}>{T.price}</div><div style={{fontSize:"20px", fontWeight:"bold", color:"#FF4B4B"}}>{totalPrice.toFixed(2)} €</div></div>
             
-            {/* DOWNLOAD BUTTONS TOP BAR */}
-            <div style={{display:"flex", gap:"10px", alignItems:"center"}}>
-               <button onClick={exportDXF} style={{padding:"8px 12px", background:"#fff", border:"1px solid #0056b3", color:"#0056b3", borderRadius:"4px", cursor:"pointer", fontWeight:"bold", fontSize:"12px"}}>{T.exp_cad}</button>
-               <button onClick={exportImgMain} style={{padding:"8px 12px", background:"#fff", border:"1px solid #28a745", color:"#28a745", borderRadius:"4px", cursor:"pointer", fontWeight:"bold", fontSize:"12px"}}>{T.exp_img}</button>
-               {/* NEU: ZIP ALLES BUTTON */}
-               <button onClick={exportZIP} style={{padding:"8px 16px", background:"#111", border:"none", color:"white", borderRadius:"4px", cursor:"pointer", fontWeight:"bold", fontSize:"12px"}}>{T.exp_zip}</button>
+            {/* DOWNLOAD BUTTONS */}
+            <div style={{display:"flex", gap:"8px", alignItems:"center", flexWrap:"wrap", maxWidth:"450px", justifyContent:"flex-end"}}>
+               <button onClick={()=>downloadCanvas(drawMainCanvas, "facade_collage.png")} style={{padding:"6px 10px", background:"#fff", border:"1px solid #ccc", borderRadius:"4px", cursor:"pointer", fontSize:"11px"}}>{T.exp_img}</button>
+               <button onClick={()=>downloadCanvas(drawBWCanvas, "facade_sw.png")} style={{padding:"6px 10px", background:"#fff", border:"1px solid #ccc", borderRadius:"4px", cursor:"pointer", fontSize:"11px"}}>{T.exp_bw}</button>
+               <button onClick={()=>downloadCanvas(drawLineCanvas, "facade_cad.png")} style={{padding:"6px 10px", background:"#fff", border:"1px solid #ccc", borderRadius:"4px", cursor:"pointer", fontSize:"11px"}}>{T.exp_line}</button>
+               <button onClick={()=>{const link=document.createElement("a"); link.href="data:text/plain;charset=utf-8,"+encodeURIComponent(getDxfString()); link.download="facade.dxf"; link.click();}} style={{padding:"6px 10px", background:"#e3f2fd", border:"1px solid #0056b3", color:"#0056b3", borderRadius:"4px", cursor:"pointer", fontWeight:"bold", fontSize:"11px"}}>{T.exp_cad}</button>
+               <button onClick={exportZIP} style={{padding:"6px 10px", background:"#28a745", border:"none", color:"white", borderRadius:"4px", cursor:"pointer", fontWeight:"bold", fontSize:"11px"}}>{T.exp_zip}</button>
             </div>
           </div>
 
           <div style={{ padding: "15px 25px", display: "flex", gap: "25px", alignItems: "flex-end", justifyContent:"flex-start" }}>
-            
             <div style={{display: "flex", alignItems: "flex-end"}}>
               <div style={{ width: Math.max(20, 400 * SCALE), height: 1780 * SCALE, marginRight: "10px", background: `url("${archSVG}") no-repeat bottom center/contain`, opacity: 0.7 }} />
               <div>
@@ -478,10 +495,9 @@ export default function App() {
             </div>
 
             <div style={{display: "flex", gap: "20px"}}>
-              {/* VERSCHNITT B&W */}
-              <div style={{display:"flex", flexDirection:"column", alignItems:"center"}}>
-                <div style={{fontWeight:"bold", marginBottom:"8px", fontSize:"11px", color:"#555"}}>Verschnitt Analyse</div>
-                <div style={{ width: canvasW * 0.5, height: canvasH * 0.5, border: "2px solid #000", position: "relative", background: "white", boxShadow: "0 2px 10px rgba(0,0,0,0.1)", marginBottom:"8px" }}>
+              <div>
+                <div style={{textAlign:"center", fontWeight:"bold", marginBottom:"8px", fontSize:"11px", color:"#555"}}>{T.exp_bw}</div>
+                <div style={{ width: canvasW * 0.5, height: canvasH * 0.5, border: "2px solid #000", position: "relative", background: "white", boxShadow: "0 2px 10px rgba(0,0,0,0.1)" }}>
                   {gaps.map(g => (
                     <div key={"bw_"+g.id} style={{ position: "absolute", left: g.x * (SCALE*0.5), bottom: g.y * (SCALE*0.5), width: g.w * (SCALE*0.5), height: g.h * (SCALE*0.5), background: "black" }} />
                   ))}
@@ -490,14 +506,11 @@ export default function App() {
                     return <div key={"bw_"+w.id} style={{ position: "absolute", left: w.x * (SCALE*0.5), bottom: w.y * (SCALE*0.5), width: dispW * (SCALE*0.5), height: dispH * (SCALE*0.5), background: "white", border: "1px solid #ccc" }} />
                   })}
                 </div>
-                {/* NEUER BUTTON: DOWNLOAD B&W */}
-                <button onClick={exportImgBW} style={{fontSize:"10px", padding:"4px 8px", cursor:"pointer", background:"#fff", border:"1px solid #ccc", borderRadius:"4px"}}>📥 S/W Bild</button>
               </div>
 
-              {/* WIREFRAME */}
-              <div style={{display:"flex", flexDirection:"column", alignItems:"center"}}>
-                <div style={{fontWeight:"bold", marginBottom:"8px", fontSize:"11px", color:"#555"}}>CAD Drahtmodell</div>
-                <div style={{ width: canvasW * 0.5, height: canvasH * 0.5, border: "1px solid #000", position: "relative", background: "white", boxShadow: "0 2px 10px rgba(0,0,0,0.1)", marginBottom:"8px" }}>
+              <div>
+                <div style={{textAlign:"center", fontWeight:"bold", marginBottom:"8px", fontSize:"11px", color:"#555"}}>{T.exp_line}</div>
+                <div style={{ width: canvasW * 0.5, height: canvasH * 0.5, border: "1px solid #000", position: "relative", background: "white", boxShadow: "0 2px 10px rgba(0,0,0,0.1)" }}>
                   {gaps.map(g => (
                     <div key={"line_"+g.id} style={{ position: "absolute", left: g.x * (SCALE*0.5), bottom: g.y * (SCALE*0.5), width: g.w * (SCALE*0.5), height: g.h * (SCALE*0.5), background: "transparent", border: "0.5px solid #ccc" }} />
                   ))}
@@ -506,38 +519,26 @@ export default function App() {
                     return <div key={"line_"+w.id} style={{ position: "absolute", left: w.x * (SCALE*0.5), bottom: w.y * (SCALE*0.5), width: dispW * (SCALE*0.5), height: dispH * (SCALE*0.5), background: "transparent", border: "1px solid #333" }} />
                   })}
                 </div>
-                {/* NEUER BUTTON: DOWNLOAD WIREFRAME */}
-                <button onClick={exportImgWire} style={{fontSize:"10px", padding:"4px 8px", cursor:"pointer", background:"#fff", border:"1px solid #ccc", borderRadius:"4px"}}>📥 Linien-Bild</button>
               </div>
             </div>
-
           </div>
         </div>
 
-        {/* BOTTOM HALF: SCROLLBAR (Listen & Matrix) */}
+        {/* BOTTOM HALF: SCROLLBAR */}
         <div style={{ flex: 1, overflowY: "auto", background: "white", borderTop: "2px solid #ddd", padding: "25px" }}>
           
           <div style={{display:"flex", justifyContent:"space-between", alignItems:"center", marginBottom:"15px"}}>
             <h3 style={{margin:0, color:"#111"}}>{T.mat_h}</h3>
-            <button onClick={exportCSV} style={{padding:"8px 16px", background:"#FF4B4B", color:"white", border:"none", borderRadius:"4px", cursor:"pointer", fontWeight:"bold"}}>{T.exp_csv}</button>
+            <button onClick={()=>{const link=document.createElement("a"); link.href=getCsvString(); link.download="stueckliste.csv"; link.click();}} style={{padding:"8px 16px", background:"#FF4B4B", color:"white", border:"none", borderRadius:"4px", cursor:"pointer", fontWeight:"bold"}}>{T.exp_csv}</button>
           </div>
 
           <div style={{border:"1px solid #eee", borderRadius:"6px", overflowX:"auto", marginBottom:"30px"}}>
             <table style={{width: "100%", borderCollapse: "collapse", fontSize: "12px", textAlign: "left"}}>
               <thead><tr style={{background:"#f8f9fa", borderBottom:"1px solid #eee"}}>
-                
-                {/* GLOBAL TOGGLES IM HEADER */}
-                <th style={{padding:"10px", cursor:"pointer"}} onClick={()=>toggleAll('visible')} title="Alle Sichtsbar umschalten">
-                    <input type="checkbox" checked={windows.length>0 && windows.every(w=>w.visible)} readOnly style={{cursor:"pointer", marginRight:"4px"}}/> {T.col.v}
-                </th>
-                <th style={{padding:"10px", cursor:"pointer"}} onClick={()=>toggleAll('pinned')} title="Alle Pins umschalten">
-                    <input type="checkbox" checked={windows.length>0 && windows.every(w=>w.pinned)} readOnly style={{cursor:"pointer", marginRight:"4px"}}/> {T.col.p}
-                </th>
-                <th style={{padding:"10px", cursor:"pointer"}} onClick={()=>toggleAll('rotated')} title="Alle Rotationen umschalten">
-                    <input type="checkbox" checked={windows.length>0 && windows.every(w=>w.rotated)} readOnly style={{cursor:"pointer", marginRight:"4px"}}/> {T.col.r}
-                </th>
-
-                <th style={{padding:"10px"}}>{T.col.id}</th><th style={{padding:"10px"}}>{T.col.x}</th><th style={{padding:"10px"}}>{T.col.y}</th><th style={{padding:"10px"}}>{T.col.dim}</th><th style={{padding:"10px"}}>{T.col.a}</th><th style={{padding:"10px"}}>{T.col.pr}</th><th style={{padding:"10px"}}>{T.col.src}</th>
+                <th title="Alle umschalten" onClick={()=>toggleAll('visible')} style={{padding:"10px", cursor:"pointer", userSelect:"none"}}>{T.col.v}</th>
+                <th title="Alle umschalten" onClick={()=>toggleAll('pinned')} style={{padding:"10px", cursor:"pointer", userSelect:"none"}}>{T.col.p}</th>
+                <th title="Alle umschalten" onClick={()=>toggleAll('rotated')} style={{padding:"10px", cursor:"pointer", userSelect:"none"}}>{T.col.r}</th>
+                <th style={{padding:"10px"}}>{T.col.id}</th><th style={{padding:"10px"}}>{T.col.x}</th><th style={{padding:"10px"}}>{T.col.y}</th><th style={{padding:"10px"}}>{T.col.dim}</th><th style={{padding:"10px"}}>{T.col.a}</th><th style={{padding:"10px"}}>{T.col.dist}</th><th style={{padding:"10px"}}>{T.col.pr}</th><th style={{padding:"10px"}}>{T.col.src}</th>
               </tr></thead>
               <tbody>
                 {windows.map(w => {
@@ -552,8 +553,9 @@ export default function App() {
                       <td style={{padding:"8px 10px"}}><input type="number" value={w.y} onChange={e=>{let arr=windows.map(x=>x.id===w.id?{...x, y:parseInt(e.target.value)||0, pinned:true}:x); setWindows(arr); runAI(arr, wall, params, seed);}} style={{width:"70px", padding:"4px", border:"1px solid #ccc", borderRadius:"4px"}}/></td>
                       <td style={{padding:"8px 10px"}}>{dispW} x {dispH}</td>
                       <td style={{padding:"8px 10px", fontWeight:"bold"}}>{((dispW*dispH)/1000000).toFixed(2)}</td>
+                      <td style={{padding:"8px 10px", color:"#0056b3"}}>{w.dist} {T.col.dist}</td>
                       <td style={{padding:"8px 10px", color:"#FF4B4B", fontWeight:"bold"}}>{w.price.toFixed(2)} €</td>
-                      <td style={{padding:"8px 10px", maxWidth:"150px", overflow:"hidden", textOverflow:"ellipsis", whiteSpace:"nowrap"}}>{w.source}</td>
+                      <td style={{padding:"8px 10px", maxWidth:"150px", overflow:"hidden", textOverflow:"ellipsis", whiteSpace:"nowrap"}}>{w.source} {w.link && <a href={w.link} target="_blank">🔗</a>}</td>
                     </tr>
                   )
                 })}

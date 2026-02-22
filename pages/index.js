@@ -3,20 +3,19 @@ import JSZip from 'jszip';
 
 // --- VOLLSTÄNDIGES WÖRTERBUCH (UNGEKÜRZT) ---
 const LANGS = {
-  "🇩🇪 DE": { title: "🧱 Facade AI Pro v8.2", search_h: "1. Globale Suche", c_land: "Land", c_zip: "PLZ / Ort", c_rad: "Umkreis (km)", reuse: "Gebraucht", new: "Neu", btn_search: "Echte Daten abrufen", cust_h: "2. Eigenbestand", w_lbl: "Breite", h_lbl: "Höhe", btn_add: "Hinzufügen", wall_h: "Wandöffnung (mm)", btn_suggest: "💡 Wand optimieren", btn_shuf: "🎲 Zufälliger Seed", btn_gaps: "✂️ Zuschnitt drehen", lock: "🔒 Gepinnte behalten", sym: "📐 Symmetrie", chaos: "Chaos", seed: "Seed-Regler", auto_rot: "🔄 Auto-Rotation erlauben", clust_num: "🏝️ Anzahl Cluster", clust_pin: "🧲 Um Gepinnte anordnen", mode_cluster: "🏝️ Organisch Clustern", mode_rect: "🧱 Rechteckig füllen", mode_scatter: "🌌 Zufällig verstreuen", wall_a: "Wandfläche", win_a: "Fensterfläche", fill: "Füllgrad", price: "Gesamtpreis", mat_h: "📋 Fenster Matrix", exp_csv: "📥 CSV", exp_cad: "📥 DXF", exp_img: "🖼️ Collage", exp_bw: "🖼️ S/W", exp_line: "🖼️ Linien", exp_zip: "📦 ZIP Komplett", gaps_h: "🟥 Zuschnitt-Liste", no_gaps: "Wand perfekt gefüllt!", col: {v:"👁️", p:"📌", r:"🔄", f:"⭐", id:"ID", x:"X", y:"Y", dim:"Maße", a:"m²", src:"Herkunft", dist: "Distanz", pr:"Preis", l:"Link"} },
-  "🇪🇸 ES": { title: "🧱 Generador Fachadas v8.2", search_h: "1. Búsqueda Global", c_land: "País", c_zip: "C.P. / Ciudad", c_rad: "Radio (km)", reuse: "Usado", new: "Nuevo", btn_search: "Obtener datos reales", cust_h: "2. Inventario Propio", w_lbl: "Ancho", h_lbl: "Alto", btn_add: "Añadir", wall_h: "Muro (mm)", btn_suggest: "💡 Optimizar Muro", btn_shuf: "🎲 Reagrupar (IA)", btn_gaps: "✂️ Rotar cortes", lock: "🔒 Bloquear Pines", sym: "📐 Simetría", chaos: "Caos", seed: "Semilla", auto_rot: "🔄 Auto-rotación", clust_num: "🏝️ Número de Clústeres", clust_pin: "🧲 Agrupar en torno a fijos", mode_cluster: "🏝️ Clúster Orgánico", mode_rect: "🧱 Relleno Rectangular", mode_scatter: "🌌 Dispersión Aleatoria", wall_a: "Área Muro", win_a: "Área Vent.", fill: "Relleno", price: "Precio Total", mat_h: "📋 Matriz de ventanas", exp_csv: "📥 CSV", exp_cad: "📥 DXF", exp_img: "🖼️ Collage", exp_bw: "🖼️ B/N", exp_line: "🖼️ Líneas", exp_zip: "📦 ZIP Completo", gaps_h: "🟥 Paneles de Relleno", no_gaps: "¡Muro perfecto!", col: {v:"👁️", p:"📌", r:"🔄", f:"⭐", id:"ID", x:"X", y:"Y", dim:"Dim", a:"m²", src:"Origen", dist: "Distancia", pr:"Precio", l:"Link"} },
-  "🇬🇧 EN": { title: "🧱 Facade AI Pro v8.2", search_h: "1. Global Search", c_land: "Country", c_zip: "ZIP / City", c_rad: "Radius (km)", reuse: "Used", new: "New", btn_search: "Fetch Real Data", cust_h: "2. Custom Inventory", w_lbl: "Width", h_lbl: "Height", btn_add: "Add", wall_h: "Wall Opening (mm)", btn_suggest: "💡 Optimize Wall", btn_shuf: "🎲 Random Seed", btn_gaps: "✂️ Toggle Gaps", lock: "🔒 Keep Pinned", sym: "📐 Symmetry", chaos: "Chaos", seed: "Seed Slider", auto_rot: "🔄 Allow Auto-Rotation", clust_num: "🏝️ Number of Clusters", clust_pin: "🧲 Cluster around Pinned", mode_cluster: "🏝️ Organic Cluster", mode_rect: "🧱 Rectangular Block", mode_scatter: "🌌 Random Scatter", wall_a: "Wall Area", win_a: "Window Area", fill: "Fill Rate", price: "Total Price", mat_h: "📋 Window Matrix", exp_csv: "📥 CSV", exp_cad: "📥 DXF", exp_img: "🖼️ Collage", exp_bw: "🖼️ B/W", exp_line: "🖼️ Lines", exp_zip: "📦 Full ZIP", gaps_h: "🟥 Gap Panels", no_gaps: "Perfectly filled!", col: {v:"👁️", p:"📌", r:"🔄", f:"⭐", id:"ID", x:"X", y:"Y", dim:"Dims", a:"m²", src:"Source", dist: "Distance", pr:"Price", l:"Link"} },
-  "🇫🇷 FR": { title: "🧱 Générateur de Façade v8.2", search_h: "1. Recherche", c_land: "Pays", c_zip: "CP / Ville", c_rad: "Rayon (km)", reuse: "Usagé", new: "Neuf", btn_search: "Obtenir données", cust_h: "2. Inventaire", w_lbl: "Largeur", h_lbl: "Hauteur", btn_add: "Ajouter", wall_h: "Mur (mm)", btn_suggest: "💡 Optimiser le Mur", btn_shuf: "🎲 Graine Aléatoire", btn_gaps: "✂️ Alterner Trous", lock: "🔒 Garder Pins", sym: "📐 Symétrie", chaos: "Chaos", seed: "Graine", auto_rot: "🔄 Rotation Auto", clust_num: "🏝️ Nombre de Clústeres", clust_pin: "🧲 Grouper autour des fixés", mode_cluster: "🏝️ Grappe Organique", mode_rect: "🧱 Remplissage Rectangulaire", mode_scatter: "🌌 Dispersion Aléatoire", wall_a: "Surface Mur", win_a: "Surface Fen.", fill: "Remplissage", price: "Prix Total", mat_h: "📋 Matrice", exp_csv: "📥 CSV", exp_cad: "📥 DXF", exp_img: "🖼️ Collage", exp_bw: "🖼️ N/B", exp_line: "🖼️ Lignes", exp_zip: "📦 ZIP Complet", gaps_h: "🟥 Panneaux de coupe", no_gaps: "Mur parfait!", col: {v:"👁️", p:"📌", r:"🔄", f:"⭐", id:"ID", x:"X", y:"Y", dim:"Dim", a:"m²", src:"Source", dist: "Distance", pr:"Prix", l:"Lien"} },
-  "🇮🇹 IT": { title: "🧱 Generatore Facciate v8.2", search_h: "1. Ricerca Globale", c_land: "Paese", c_zip: "CAP / Città", c_rad: "Raggio (km)", reuse: "Usato", new: "Nuovo", btn_search: "Cerca Dati", cust_h: "2. Inventario Proprio", w_lbl: "Larghezza", h_lbl: "Altezza", btn_add: "Aggiungi", wall_h: "Muro (mm)", btn_suggest: "💡 Ottimizza Muro", btn_shuf: "🎲 Seme Casuale", btn_gaps: "✂️ Inverti Tagli", lock: "🔒 Mantieni Pin", sym: "📐 Simmetria", chaos: "Caos", seed: "Seme", auto_rot: "🔄 Rotazione Auto", clust_num: "🏝️ Numero di Cluster", clust_pin: "🧲 Raggruppa attorno ai fissati", mode_cluster: "🏝️ Cluster Organico", mode_rect: "🧱 Blocco Rettangolare", mode_scatter: "🌌 Dispersione Casuale", wall_a: "Area Muro", win_a: "Area Finestre", fill: "Riempimento", price: "Prezzo Totale", mat_h: "📋 Matrice Finestre", exp_csv: "📥 CSV", exp_cad: "📥 DXF", exp_img: "🖼️ Collage", exp_bw: "🖼️ B/N", exp_line: "🖼️ Linee", exp_zip: "📦 ZIP Completo", gaps_h: "🟥 Pannelli Necessari", no_gaps: "Muro perfetto!", col: {v:"👁️", p:"📌", r:"🔄", f:"⭐", id:"ID", x:"X", y:"Y", dim:"Dim", a:"m²", src:"Fonte", dist: "Distanza", pr:"Prezzo", l:"Link"} },
-  "🇨🇭 RM": { title: "🧱 Generatur Façadas v8.2", search_h: "1. Tschertga", c_land: "Pajais", c_zip: "PLZ / Lieu", c_rad: "Radius (km)", reuse: "Duvrà", new: "Nov", btn_search: "Tschertgar Datas", cust_h: "2. Inventari", w_lbl: "Ladezza", h_lbl: "Autezza", btn_add: "Agiuntar", wall_h: "Paraid (mm)", btn_suggest: "💡 Optimisar Paraid", btn_shuf: "🎲 Seed Casual", btn_gaps: "✂️ Midar Panels", lock: "🔒 Tegnair Fixà", sym: "📐 Simetria", chaos: "Caos", seed: "Seed", auto_rot: "🔄 Rotaziun Auto", clust_num: "🏝️ Dumber da Clusters", clust_pin: "🧲 Groupar enturn ils fixads", mode_cluster: "🏝️ Cluster Organic", mode_rect: "🧱 Bloc Rectangular", mode_scatter: "🌌 Strewiment Casual", wall_a: "Surfatscha Paraid", win_a: "Surfatscha Fanestra", fill: "Emplenida", price: "Pretsch Total", mat_h: "📋 Matrix da Fanestras", exp_csv: "📥 CSV", exp_cad: "📥 DXF", exp_img: "🖼️ Maletg", exp_bw: "🖼️ S/W", exp_line: "🖼️ Lingias", exp_zip: "📦 ZIP", gaps_h: "🟥 Panels Basegnaivels", no_gaps: "Paraid perfetg!", col: {v:"👁️", p:"📌", r:"🔄", f:"⭐", id:"ID", x:"X", y:"Y", dim:"Dim", a:"m²", src:"Funtauna", dist: "Distanza", pr:"Pretsch", l:"Link"} },
-  "🇧🇬 BG": { title: "🧱 Генератор на фасади v8.2", search_h: "1. Търсене", c_land: "Държава", c_zip: "ПК / Град", c_rad: "Радиус (км)", reuse: "Стари", new: "Нови", btn_search: "Търси реални данни", cust_h: "2. Инвентар", w_lbl: "Ширина", h_lbl: "Височина", btn_add: "Добави", wall_h: "Стена (мм)", btn_suggest: "💡 Оптимизирай Стена", btn_shuf: "🎲 Рандъм Сийд", btn_gaps: "✂️ Смени Панели", lock: "🔒 Запази Пин", sym: "📐 Симетрия", chaos: "Хаос", seed: "Сийд", auto_rot: "🔄 Авто-Ротация", clust_num: "🏝️ Брой Клъстери", clust_pin: "🧲 Групирай около фиксирани", mode_cluster: "🏝️ Органичен Клъстер", mode_rect: "🧱 Правоъгълен Блок", mode_scatter: "🌌 Случайно Разпръскване", wall_a: "Площ Стена", win_a: "Площ Прозорци", fill: "Запълване", price: "Обща Цена", mat_h: "📋 Матрица", exp_csv: "📥 CSV", exp_cad: "📥 DXF", exp_img: "🖼️ Колаж", exp_bw: "🖼️ Ч/Б", exp_line: "🖼️ Линии", exp_zip: "📦 ZIP", gaps_h: "🟥 Нужни Панели", no_gaps: "Идеално!", col: {v:"👁️", p:"📌", r:"🔄", f:"⭐", id:"ID", x:"X", y:"Y", dim:"Размери", a:"m²", src:"Източник", dist: "Разстояние", pr:"Цена", l:"Линк"} },
-  "🇮🇱 HE": { title: "🧱 מחולל חזיתות v8.2", search_h: "1. חיפוש גלובלי", c_land: "מדינה", c_zip: "מיקוד / עיר", c_rad: "רדיוס (ק״מ)", reuse: "משומש", new: "חדש", btn_search: "הבא נתונים אמיתיים", cust_h: "2. מלאי אישי", w_lbl: "רוחב", h_lbl: "גובה", btn_add: "הוסף", wall_h: "פתיחת קיר (מ״מ)", btn_suggest: "💡 יעל קיר", btn_shuf: "🎲 גרעין אקראי", btn_gaps: "✂️ החלף חיתוכים", lock: "🔒 שים נעוצים", sym: "📐 סימטריה", chaos: "כאוס", seed: "גרעין", auto_rot: "🔄 סיבוב אוטומטי", clust_num: "🏝️ מספר אשכולות", clust_pin: "🧲 קבץ סביב חלונות נעוצים", mode_cluster: "🏝️ אשכול אורגני", mode_rect: "🧱 בלוק מלבני", mode_scatter: "🌌 פיזור אקראי", wall_a: "שטח קיר", win_a: "שטח חלונות", fill: "אחוז מילוי", price: "מחיר כולל", mat_h: "📋 מטריצת חלונות", exp_csv: "📥 CSV", exp_cad: "📥 DXF", exp_img: "🖼️ קולאז׳", exp_bw: "🖼️ ש/ל", exp_line: "🖼️ קווים", exp_zip: "📦 ZIP מלא", gaps_h: "🟥 לוחות חיתוך", no_gaps: "הקיר מלא לחלוטין!", col: {v:"👁️", p:"📌", r:"🔄", f:"⭐", id:"ID", x:"X", y:"Y", dim:"מידות", a:"מ״ר", src:"מקור", dist: "מרחק", pr:"מחיר", l:"קישור"} },
-  "🇯🇵 JA": { title: "🧱 ファサードAI Pro v8.2", search_h: "1. グローバル検索", c_land: "国", c_zip: "郵便番号 / 都市", c_rad: "半径 (km)", reuse: "中古", new: "新品", btn_search: "実データを取得", cust_h: "2. カスタム在庫", w_lbl: "幅", h_lbl: "高さ", btn_add: "追加", wall_h: "壁の開口部 (mm)", btn_suggest: "💡 壁を最適化", btn_shuf: "🎲 ランダムシード", btn_gaps: "✂️ パネルを切り替え", lock: "🔒 ピン留めを維持", sym: "📐 対称性", chaos: "カオス", seed: "シード", auto_rot: "🔄 自動回転を許可", clust_num: "🏝️ クラスター数", clust_pin: "🧲 ピン留めの周りにグループ化", mode_cluster: "🏝️ オーガニッククラスター", mode_rect: "🧱 長方形ブロック", mode_scatter: "🌌 ランダム分散", wall_a: "壁の面積", win_a: "窓の面積", fill: "充填率", price: "合計価格", mat_h: "📋 ウィンドウマトリックス", exp_csv: "📥 CSV", exp_cad: "📥 DXF", exp_img: "🖼️ コラージュ", exp_bw: "🖼️ 白黒", exp_line: "🖼️ 線画", exp_zip: "📦 完全なZIP", gaps_h: "🟥 必要なカットパネル", no_gaps: "壁は完全に埋まっています！", col: {v:"👁️", p:"📌", r:"🔄", f:"⭐", id:"ID", x:"X", y:"Y", dim:"寸法", a:"m²", src:"ソース", dist: "距離", pr:"価格", l:"リンク"} }
+  "🇩🇪 DE": { title: "🧱 Facade AI Pro v9.0", search_h: "1. Globale Suche", c_land: "Land", c_zip: "PLZ / Ort", c_rad: "Umkreis (km)", reuse: "Gebraucht", new: "Neu", btn_search: "Echte Daten abrufen", cust_h: "2. Eigenbestand", w_lbl: "Breite", h_lbl: "Höhe", btn_add: "Hinzufügen", wall_h: "Wandöffnung (mm)", btn_suggest: "💡 Wand optimieren", btn_shuf: "🎲 Zufälliger Seed", btn_gaps: "✂️ Zuschnitt drehen", lock: "🔒 Gepinnte behalten", sym: "📐 Symmetrie", chaos: "Chaos", seed: "Seed-Regler", auto_rot: "🔄 Auto-Rotation erlauben", clust_num: "🏝️ Anzahl Cluster", clust_pin: "🧲 Um Gepinnte anordnen", mode_cluster: "🏝️ Organisch Clustern", mode_rect: "🧱 Rechteckig füllen", mode_scatter: "🌌 Zufällig verstreuen", wall_a: "Wandfläche", win_a: "Fensterfläche", fill: "Füllgrad", price: "Gesamtpreis", mat_h: "📋 Fenster Matrix", exp_csv: "📥 CSV", exp_cad: "📥 DXF", exp_img: "🖼️ Collage", exp_bw: "🖼️ S/W", exp_line: "🖼️ Linien", exp_zip: "📦 ZIP Komplett", gaps_h: "🟥 Zuschnitt-Liste", no_gaps: "Wand perfekt gefüllt!", col: {v:"👁️", p:"📌", r:"🔄", f:"⭐", id:"ID", x:"X", y:"Y", dim:"Maße", a:"m²", src:"Herkunft", dist: "Distanz", pr:"Preis", l:"Link"}, all_windows: "📦 Inventar (Alle Fenster)", used_windows: "🏗️ Verwendete Fenster", fullscreen: "⛶ Vollbild" },
+  "🇪🇸 ES": { title: "🧱 Generador Fachadas v9.0", search_h: "1. Búsqueda Global", c_land: "País", c_zip: "C.P. / Ciudad", c_rad: "Radio (km)", reuse: "Usado", new: "Nuevo", btn_search: "Obtener datos reales", cust_h: "2. Inventario Propio", w_lbl: "Ancho", h_lbl: "Alto", btn_add: "Añadir", wall_h: "Muro (mm)", btn_suggest: "💡 Optimizar Muro", btn_shuf: "🎲 Reagrupar (IA)", btn_gaps: "✂️ Rotar cortes", lock: "🔒 Bloquear Pines", sym: "📐 Simetría", chaos: "Caos", seed: "Semilla", auto_rot: "🔄 Auto-rotación", clust_num: "🏝️ Número de Clústeres", clust_pin: "🧲 Agrupar en torno a fijos", mode_cluster: "🏝️ Clúster Orgánico", mode_rect: "🧱 Relleno Rectangular", mode_scatter: "🌌 Dispersión Aleatoria", wall_a: "Área Muro", win_a: "Área Vent.", fill: "Relleno", price: "Precio Total", mat_h: "📋 Matriz de ventanas", exp_csv: "📥 CSV", exp_cad: "📥 DXF", exp_img: "🖼️ Collage", exp_bw: "🖼️ B/N", exp_line: "🖼️ Líneas", exp_zip: "📦 ZIP Completo", gaps_h: "🟥 Paneles de Relleno", no_gaps: "¡Muro perfecto!", col: {v:"👁️", p:"📌", r:"🔄", f:"⭐", id:"ID", x:"X", y:"Y", dim:"Dim", a:"m²", src:"Origen", dist: "Distancia", pr:"Precio", l:"Link"}, all_windows: "📦 Inventario (Todas)", used_windows: "🏗️ Ventanas Usadas", fullscreen: "⛶ Pantalla Completa" },
+  "🇬🇧 EN": { title: "🧱 Facade AI Pro v9.0", search_h: "1. Global Search", c_land: "Country", c_zip: "ZIP / City", c_rad: "Radius (km)", reuse: "Used", new: "New", btn_search: "Fetch Real Data", cust_h: "2. Custom Inventory", w_lbl: "Width", h_lbl: "Height", btn_add: "Add", wall_h: "Wall Opening (mm)", btn_suggest: "💡 Optimize Wall", btn_shuf: "🎲 Random Seed", btn_gaps: "✂️ Toggle Gaps", lock: "🔒 Keep Pinned", sym: "📐 Symmetry", chaos: "Chaos", seed: "Seed Slider", auto_rot: "🔄 Allow Auto-Rotation", clust_num: "🏝️ Number of Clusters", clust_pin: "🧲 Cluster around Pinned", mode_cluster: "🏝️ Organic Cluster", mode_rect: "🧱 Rectangular Block", mode_scatter: "🌌 Random Scatter", wall_a: "Wall Area", win_a: "Window Area", fill: "Fill Rate", price: "Total Price", mat_h: "📋 Window Matrix", exp_csv: "📥 CSV", exp_cad: "📥 DXF", exp_img: "🖼️ Collage", exp_bw: "🖼️ B/W", exp_line: "🖼️ Lines", exp_zip: "📦 Full ZIP", gaps_h: "🟥 Gap Panels", no_gaps: "Perfectly filled!", col: {v:"👁️", p:"📌", r:"🔄", f:"⭐", id:"ID", x:"X", y:"Y", dim:"Dims", a:"m²", src:"Source", dist: "Distance", pr:"Price", l:"Link"}, all_windows: "📦 Inventory (All Windows)", used_windows: "🏗️ Used Windows", fullscreen: "⛶ Fullscreen" },
+  "🇫🇷 FR": { title: "🧱 Générateur de Façade v9.0", search_h: "1. Recherche", c_land: "Pays", c_zip: "CP / Ville", c_rad: "Rayon (km)", reuse: "Usagé", new: "Neuf", btn_search: "Obtenir données", cust_h: "2. Inventaire", w_lbl: "Largeur", h_lbl: "Hauteur", btn_add: "Ajouter", wall_h: "Mur (mm)", btn_suggest: "💡 Optimiser le Mur", btn_shuf: "🎲 Graine Aléatoire", btn_gaps: "✂️ Alterner Trous", lock: "🔒 Garder Pins", sym: "📐 Symétrie", chaos: "Chaos", seed: "Graine", auto_rot: "🔄 Rotation Auto", clust_num: "🏝️ Nombre de Clústeres", clust_pin: "🧲 Grouper autour des fixés", mode_cluster: "🏝️ Grappe Organique", mode_rect: "🧱 Remplissage Rectangulaire", mode_scatter: "🌌 Dispersion Aléatoire", wall_a: "Surface Mur", win_a: "Surface Fen.", fill: "Remplissage", price: "Prix Total", mat_h: "📋 Matrice", exp_csv: "📥 CSV", exp_cad: "📥 DXF", exp_img: "🖼️ Collage", exp_bw: "🖼️ N/B", exp_line: "🖼️ Lignes", exp_zip: "📦 ZIP Complet", gaps_h: "🟥 Panneaux de coupe", no_gaps: "Mur parfait!", col: {v:"👁️", p:"📌", r:"🔄", f:"⭐", id:"ID", x:"X", y:"Y", dim:"Dim", a:"m²", src:"Source", dist: "Distance", pr:"Prix", l:"Lien"}, all_windows: "📦 Inventaire (Toutes)", used_windows: "🏗️ Fenêtres Utilisées", fullscreen: "⛶ Plein Écran" },
+  "🇮🇹 IT": { title: "🧱 Generatore Facciate v9.0", search_h: "1. Ricerca Globale", c_land: "Paese", c_zip: "CAP / Città", c_rad: "Raggio (km)", reuse: "Usato", new: "Nuovo", btn_search: "Cerca Dati", cust_h: "2. Inventario Proprio", w_lbl: "Larghezza", h_lbl: "Altezza", btn_add: "Aggiungi", wall_h: "Muro (mm)", btn_suggest: "💡 Ottimizza Muro", btn_shuf: "🎲 Seme Casuale", btn_gaps: "✂️ Inverti Tagli", lock: "🔒 Mantieni Pin", sym: "📐 Simmetria", chaos: "Caos", seed: "Seme", auto_rot: "🔄 Rotazione Auto", clust_num: "🏝️ Numero di Cluster", clust_pin: "🧲 Raggruppa attorno ai fissati", mode_cluster: "🏝️ Cluster Organico", mode_rect: "🧱 Blocco Rettangolare", mode_scatter: "🌌 Dispersione Casuale", wall_a: "Area Muro", win_a: "Area Finestre", fill: "Riempimento", price: "Prezzo Totale", mat_h: "📋 Matrice Finestre", exp_csv: "📥 CSV", exp_cad: "📥 DXF", exp_img: "🖼️ Collage", exp_bw: "🖼️ B/N", exp_line: "🖼️ Linee", exp_zip: "📦 ZIP Completo", gaps_h: "🟥 Pannelli Necessari", no_gaps: "Muro perfetto!", col: {v:"👁️", p:"📌", r:"🔄", f:"⭐", id:"ID", x:"X", y:"Y", dim:"Dim", a:"m²", src:"Fonte", dist: "Distanza", pr:"Prezzo", l:"Link"}, all_windows: "📦 Inventario (Tutte)", used_windows: "🏗️ Finestre Usate", fullscreen: "⛶ Schermo Intero" },
+  "🇨🇭 RM": { title: "🧱 Generatur Façadas v9.0", search_h: "1. Tschertga", c_land: "Pajais", c_zip: "PLZ / Lieu", c_rad: "Radius (km)", reuse: "Duvrà", new: "Nov", btn_search: "Tschertgar Datas", cust_h: "2. Inventari", w_lbl: "Ladezza", h_lbl: "Autezza", btn_add: "Agiuntar", wall_h: "Paraid (mm)", btn_suggest: "💡 Optimisar Paraid", btn_shuf: "🎲 Seed Casual", btn_gaps: "✂️ Midar Panels", lock: "🔒 Tegnair Fixà", sym: "📐 Simetria", chaos: "Caos", seed: "Seed", auto_rot: "🔄 Rotaziun Auto", clust_num: "🏝️ Dumber da Clusters", clust_pin: "🧲 Groupar enturn ils fixads", mode_cluster: "🏝️ Cluster Organic", mode_rect: "🧱 Bloc Rectangular", mode_scatter: "🌌 Strewiment Casual", wall_a: "Surfatscha Paraid", win_a: "Surfatscha Fanestra", fill: "Emplenida", price: "Pretsch Total", mat_h: "📋 Matrix da Fanestras", exp_csv: "📥 CSV", exp_cad: "📥 DXF", exp_img: "🖼️ Maletg", exp_bw: "🖼️ S/W", exp_line: "🖼️ Lingias", exp_zip: "📦 ZIP", gaps_h: "🟥 Panels Basegnaivels", no_gaps: "Paraid perfetg!", col: {v:"👁️", p:"📌", r:"🔄", f:"⭐", id:"ID", x:"X", y:"Y", dim:"Dim", a:"m²", src:"Funtauna", dist: "Distanza", pr:"Pretsch", l:"Link"}, all_windows: "📦 Inventari", used_windows: "🏗️ Fanestras duvradas", fullscreen: "⛶ Vollbild" },
+  "🇧🇬 BG": { title: "🧱 Генератор на фасади v9.0", search_h: "1. Търсене", c_land: "Държава", c_zip: "ПК / Град", c_rad: "Радиус (км)", reuse: "Стари", new: "Нови", btn_search: "Търси реални данни", cust_h: "2. Инвентар", w_lbl: "Ширина", h_lbl: "Височина", btn_add: "Добави", wall_h: "Стена (мм)", btn_suggest: "💡 Оптимизирай Стена", btn_shuf: "🎲 Рандъм Сийд", btn_gaps: "✂️ Смени Панели", lock: "🔒 Запази Пин", sym: "📐 Симетрия", chaos: "Хаос", seed: "Сийд", auto_rot: "🔄 Авто-Ротация", clust_num: "🏝️ Брой Клъстери", clust_pin: "🧲 Групирай около фиксирани", mode_cluster: "🏝️ Органичен Клъстер", mode_rect: "🧱 Правоъгълен Блок", mode_scatter: "🌌 Случайно Разпръскване", wall_a: "Площ Стена", win_a: "Площ Прозорци", fill: "Запълване", price: "Обща Цена", mat_h: "📋 Матрица", exp_csv: "📥 CSV", exp_cad: "📥 DXF", exp_img: "🖼️ Колаж", exp_bw: "🖼️ Ч/Б", exp_line: "🖼️ Линии", exp_zip: "📦 ZIP", gaps_h: "🟥 Нужни Панели", no_gaps: "Идеално!", col: {v:"👁️", p:"📌", r:"🔄", f:"⭐", id:"ID", x:"X", y:"Y", dim:"Размери", a:"m²", src:"Източник", dist: "Разстояние", pr:"Цена", l:"Линк"}, all_windows: "📦 Инвентар", used_windows: "🏗️ Използвани", fullscreen: "⛶ Цял Екран" },
+  "🇮🇱 HE": { title: "🧱 מחולל חזיתות v9.0", search_h: "1. חיפוש גלובלי", c_land: "מדינה", c_zip: "מיקוד / עיר", c_rad: "רדיוס (ק״מ)", reuse: "משומש", new: "חדש", btn_search: "הבא נתונים אמיתיים", cust_h: "2. מלאי אישי", w_lbl: "רוחב", h_lbl: "גובה", btn_add: "הוסף", wall_h: "פתיחת קיר (מ״מ)", btn_suggest: "💡 יעל קיר", btn_shuf: "🎲 גרעין אקראי", btn_gaps: "✂️ החלף חיתוכים", lock: "🔒 שים נעוצים", sym: "📐 סימטריה", chaos: "כאוס", seed: "גרעין", auto_rot: "🔄 סיבוב אוטומטי", clust_num: "🏝️ מספר אשכולות", clust_pin: "🧲 קבץ סביב חלונות נעוצים", mode_cluster: "🏝️ אשכול אורגני", mode_rect: "🧱 בלוק מלבני", mode_scatter: "🌌 פיזור אקראי", wall_a: "שטח קיר", win_a: "שטח חלונות", fill: "אחוז מילוי", price: "מחיר כולל", mat_h: "📋 מטריצת חלונות", exp_csv: "📥 CSV", exp_cad: "📥 DXF", exp_img: "🖼️ קולאז׳", exp_bw: "🖼️ ש/ל", exp_line: "🖼️ קווים", exp_zip: "📦 ZIP מלא", gaps_h: "🟥 לוחות חיתוך", no_gaps: "הקיר מלא לחלוטין!", col: {v:"👁️", p:"📌", r:"🔄", f:"⭐", id:"ID", x:"X", y:"Y", dim:"מידות", a:"מ״ר", src:"מקור", dist: "מרחק", pr:"מחיר", l:"קישור"}, all_windows: "📦 כל החלונות", used_windows: "🏗️ חלונות בשימוש", fullscreen: "⛶ מסך מלא" },
+  "🇯🇵 JA": { title: "🧱 ファサードAI Pro v9.0", search_h: "1. グローバル検索", c_land: "国", c_zip: "郵便番号 / 都市", c_rad: "半径 (km)", reuse: "中古", new: "新品", btn_search: "実データを取得", cust_h: "2. カスタム在庫", w_lbl: "幅", h_lbl: "高さ", btn_add: "追加", wall_h: "壁の開口部 (mm)", btn_suggest: "💡 壁を最適化", btn_shuf: "🎲 ランダムシード", btn_gaps: "✂️ パネルを切り替え", lock: "🔒 ピン留めを維持", sym: "📐 対称性", chaos: "カオス", seed: "シード", auto_rot: "🔄 自動回転を許可", clust_num: "🏝️ クラスター数", clust_pin: "🧲 ピン留めの周りにグループ化", mode_cluster: "🏝️ オーガニッククラスター", mode_rect: "🧱 長方形ブロック", mode_scatter: "🌌 ランダム分散", wall_a: "壁の面積", win_a: "窓の面積", fill: "充填率", price: "合計価格", mat_h: "📋 ウィンドウマトリックス", exp_csv: "📥 CSV", exp_cad: "📥 DXF", exp_img: "🖼️ コラージュ", exp_bw: "🖼️ 白黒", exp_line: "🖼️ 線画", exp_zip: "📦 完全なZIP", gaps_h: "🟥 必要なカットパネル", no_gaps: "壁は完全に埋まっています！", col: {v:"👁️", p:"📌", r:"🔄", f:"⭐", id:"ID", x:"X", y:"Y", dim:"寸法", a:"m²", src:"ソース", dist: "距離", pr:"価格", l:"リンク"}, all_windows: "📦 全ての窓", used_windows: "🏗️ 使用中の窓", fullscreen: "⛶ フルスクリーン" }
 };
 
 const COUNTRIES = ["Deutschland", "Österreich", "Schweiz", "España", "France", "Italia", "United Kingdom", "USA"];
 
-// Deterministischer Zufallsgenerator
 function mulberry32(a) {
   return function() {
     var t = a += 0x6D2B79F5;
@@ -38,27 +37,28 @@ export default function App() {
   const [gaps, setGaps] = useState([]);
   const [counter, setCounter] = useState(1);
   
-  // PARAMS MIT LAYOUT-MODUS
   const [params, setParams] = useState({ 
-    symmetry: false, 
-    chaos: 10, 
-    lock: true, 
-    gapToggle: false, 
-    autoRot: false, 
-    clusterCount: 1, 
-    clusterPinned: true,
-    layoutMode: 'cluster' // 'cluster', 'rect', 'scatter'
+    symmetry: false, chaos: 10, lock: true, gapToggle: false, autoRot: false, 
+    clusterCount: 1, clusterPinned: true, layoutMode: 'cluster' 
   });
   const [seed, setSeed] = useState(42);
   
+  // DRAG & DROP & HIGHLIGHTS
   const [draggingId, setDraggingId] = useState(null);
   const [dragOffset, setDragOffset] = useState({x: 0, y: 0});
+  const [selectedId, setSelectedId] = useState(null); // NEU: Bidirektionales Highlighting
   const canvasRef = useRef(null); 
   
-  const [topPaneHeight, setTopPaneHeight] = useState(55); 
+  // UI TOGGLE STATES
+  const [isFullscreen, setIsFullscreen] = useState(false);
+  const [leftOpen, setLeftOpen] = useState(true);
+  const [rightOpen, setRightOpen] = useState(true);
+  const [topPaneHeight, setTopPaneHeight] = useState(55); // 0 = nur Matrix, 100 = nur Zeichnung
+  
   const topPaneRef = useRef(null);
   const [paneSize, setPaneSize] = useState({ w: 800, h: 400 }); 
 
+  // CHATBOT
   const [chatInput, setChatInput] = useState("");
   const [chatMessages, setChatMessages] = useState([
     { role: 'bot', text: '👋 Hallo! Ich bin deine intelligente Architekten-KI.' }
@@ -66,6 +66,28 @@ export default function App() {
   const [chatLoading, setChatLoading] = useState(false);
   const chatEndRef = useRef(null);
 
+  // FULLSCREEN LOGIK
+  const toggleFullscreen = () => {
+    if (!document.fullscreenElement) {
+        document.documentElement.requestFullscreen().catch(err => console.log(err));
+        setIsFullscreen(true);
+    } else {
+        document.exitFullscreen();
+        setIsFullscreen(false);
+    }
+  };
+
+  // HIGHLIGHT SCROLL LOGIK
+  const scrollToRow = (id) => {
+    setTimeout(() => {
+      const elAll = document.getElementById(`row-all-${id}`);
+      const elUsed = document.getElementById(`row-used-${id}`);
+      if (elAll) elAll.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      if (elUsed) elUsed.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    }, 50);
+  };
+
+  // OBSERVER FÜR CANVASSKALIERUNG
   useEffect(() => {
     if(!topPaneRef.current) return;
     const obs = new ResizeObserver(entries => {
@@ -73,11 +95,11 @@ export default function App() {
     });
     obs.observe(topPaneRef.current);
     return () => obs.disconnect();
-  }, []);
+  }, [topPaneHeight, leftOpen, rightOpen]); // Auch auf Sidebar-Toggles reagieren
 
   const paddingOffset = 100;
-  const mainScale = Math.min((paneSize.w * 0.45) / Math.max(wall.w, 1), (paneSize.h - paddingOffset) / Math.max(wall.h, 1));
-  const subScale = Math.min((paneSize.w * 0.22) / Math.max(wall.w, 1), (paneSize.h - paddingOffset) / Math.max(wall.h, 1));
+  const mainScale = Math.min((paneSize.w * 0.45) / Math.max(wall.w, 1), Math.max(10, paneSize.h - paddingOffset) / Math.max(wall.h, 1));
+  const subScale = Math.min((paneSize.w * 0.22) / Math.max(wall.w, 1), Math.max(10, paneSize.h - paddingOffset) / Math.max(wall.h, 1));
   
   const canvasH = wall.h * mainScale;
   const canvasW = wall.w * mainScale;
@@ -105,7 +127,7 @@ export default function App() {
   };
   const handleDividerDrag = (e) => {
     const newHeight = (e.clientY / window.innerHeight) * 100;
-    setTopPaneHeight(Math.max(20, Math.min(newHeight, 80))); 
+    setTopPaneHeight(Math.max(0, Math.min(newHeight, 100))); 
   };
   const handleDividerDragEnd = () => {
     document.removeEventListener('mousemove', handleDividerDrag);
@@ -190,7 +212,7 @@ export default function App() {
     let unpinned = winList.filter(w => w.visible && !w.pinned);
     unpinned = unpinned.map(w => ({...w, _weight: (w.w*w.h) * (1 + (rng()-0.5)*(currentParams.chaos/50)) })).sort((a,b)=>b._weight - a._weight);
     let step = currentWall.w > 15000 ? 200 : 100;
-    if(currentParams.layoutMode === 'rect') step = 50; // Präziseres Packen für Rechtecke
+    if(currentParams.layoutMode === 'rect') step = 50; 
     
     unpinned.forEach(w => {
       let bestPos = null, minScore = Infinity;
@@ -204,14 +226,11 @@ export default function App() {
             for(let x=0; x<=currentWall.w - eff_w; x+=step) {
               if(!checkOverlap(x, y, eff_w, eff_h, placed)) {
                 let score = 0;
-
-                // --- NEUE LAYOUT MODI LOGIK ---
                 if (currentParams.layoutMode === 'scatter') {
-                    score = rng(); // Völlig zufällige Verteilung
+                    score = rng(); 
                 } else if (currentParams.layoutMode === 'rect') {
-                    score = y * 100000 + x; // Stopft alles massiv nach unten links (Block)
+                    score = y * 100000 + x; 
                 } else {
-                    // Standard Organischer Cluster
                     score = Math.min(...centers.map(c => Math.pow(x+eff_w/2 - c.x, 2) + Math.pow(y+eff_h/2 - c.y, 2)));
                     if(currentParams.symmetry) score += Math.min(Math.abs(x+eff_w/2 - centers[0].x), Math.abs(y+eff_h/2 - centers[0].y)) * 5000;
                 }
@@ -224,7 +243,6 @@ export default function App() {
       if(bestPos) placed.push(bestPos);
     });
 
-    // Zentrieren (Gilt für Organisch UND Rechteckig!)
     if(placed.length > 0 && fixed_x.length === 0 && currentParams.layoutMode !== 'scatter' && (!currentParams.clusterCount || currentParams.clusterCount === 1)) {
       let minX = Math.min(...placed.map(p=>p.x)), maxX = Math.max(...placed.map(p=>p.x+p.w));
       let minY = Math.min(...placed.map(p=>p.y)), maxY = Math.max(...placed.map(p=>p.y+p.h));
@@ -305,7 +323,6 @@ export default function App() {
     setWindows(updated); runAI(updated, wall, params, seed);
   };
 
-  // --- EXPORTE FUNKTIONEN ---
   const getCsvString = () => {
     let r = [ ["ID", "Typ", "Breite", "Hoehe", "m2", "Preis", "Distanz(km)", "Herkunft"] ];
     windows.filter(w=>w.visible).forEach(w => r.push([w.pos, w.type, w.w, w.h, ((w.w*w.h)/1000000).toFixed(2), w.price.toFixed(2), w.dist, w.source]));
@@ -394,12 +411,17 @@ export default function App() {
     const link = document.createElement("a"); link.href = URL.createObjectURL(content); link.download = "facade_project.zip"; link.click();
   };
 
-  const startDrag = (e, w) => {
+  // --- DRAG & HIGHLIGHT LOGIK ---
+  const handleWindowPointerDown = (e, w) => {
+    e.stopPropagation(); // Verhindert Klick ins Leere
+    setSelectedId(w.id);
+    scrollToRow(w.id);
     if(w.pinned || e.target.tagName === 'BUTTON') return;
     const rect = e.target.getBoundingClientRect();
     setDragOffset({ x: e.clientX - rect.left, y: e.clientY - rect.top });
     setDraggingId(w.id);
   };
+
   const onDrag = (e) => {
     if(!draggingId || !canvasRef.current) return;
     const rect = canvasRef.current.getBoundingClientRect();
@@ -412,6 +434,7 @@ export default function App() {
     let mmY = Math.round((canvasH - px_y - (eff_h*mainScale)) / mainScale); mmY = Math.max(0, Math.min(mmY, wall.h - eff_h));
     setWindows(windows.map(w => w.id === draggingId ? {...w, x: mmX, y: mmY} : w));
   };
+
   const stopDrag = () => {
     if(draggingId) {
       const updated = windows.map(w => w.id === draggingId ? {...w, pinned: true} : w);
@@ -464,91 +487,102 @@ export default function App() {
   return (
     <div style={{ display: "flex", height: "100vh", overflow: "hidden", fontFamily: "sans-serif", backgroundColor: "#f0f2f6", color:"#222" }}>
       
-      {/* SIDEBAR */}
-      <div style={{ width: "350px", background: "#fff", borderRight: "1px solid #ddd", padding: "20px", overflowY: "auto", flexShrink: 0 }}>
-        
-        <div style={{display:"flex", gap:"5px", flexWrap:"wrap", marginBottom:"15px"}}>
-          {Object.keys(LANGS).map(l => (
-            <button key={l} onClick={()=>setLang(l)} style={{background: lang===l ? "#222":"#eee", color: lang===l ? "#fff":"#333", border:"none", padding:"4px 8px", borderRadius:"4px", cursor:"pointer", fontSize:"11px", fontWeight:"bold"}}>{l.split(" ")[0]}</button>
-          ))}
-        </div>
-        <h2 style={{fontSize:"18px", marginTop:0, color:"#111"}}>{T.title}</h2>
-
-        <div style={{background:"#f8f9fa", padding:"15px", borderRadius:"6px", marginBottom:"15px", border:"1px solid #e9ecef"}}>
-          <h4 style={{margin:"0 0 10px 0"}}>{T.search_h}</h4>
-          <select value={searchParams.land} onChange={e=>setSearch({...searchParams, land:e.target.value})} style={{width:"100%", padding:"8px", marginBottom:"5px", border:"1px solid #ccc", borderRadius:"4px"}}>{COUNTRIES.map(c => <option key={c} value={c}>{c}</option>)}</select>
-          <input placeholder={T.c_zip} value={searchParams.zip} onChange={e=>setSearch({...searchParams, zip:e.target.value})} style={{width:"100%", padding:"8px", marginBottom:"10px", border:"1px solid #ccc", borderRadius:"4px"}}/>
-          <label style={{fontSize:"11px", display:"block", color:"#555"}}>{T.c_rad}: {searchParams.radius} km</label>
-          <input type="range" min="10" max="500" step="10" value={searchParams.radius} onChange={e=>setSearch({...searchParams, radius:parseInt(e.target.value)})} style={{width:"100%", marginBottom:"10px"}}/>
-          <div style={{display:"flex", gap:"10px", fontSize:"12px", margin:"10px 0"}}>
-            <label><input type="checkbox" checked={searchParams.reuse} onChange={e=>setSearch({...searchParams, reuse:e.target.checked})}/> {T.reuse}</label>
-            <label><input type="checkbox" checked={searchParams.new} onChange={e=>setSearch({...searchParams, new:e.target.checked})}/> {T.new}</label>
+      {/* =======================
+          LINKE SIDEBAR (STEUERUNG)
+      ======================= */}
+      <div style={{ width: leftOpen ? "350px" : "0px", background: "#fff", borderRight: leftOpen ? "1px solid #ddd" : "none", overflowY: "auto", overflowX: "hidden", transition: "0.3s", flexShrink: 0, position: "relative" }}>
+        <div style={{ width: "350px", padding: "20px" }}> {/* Inner Wrapper um Umbruch zu verhindern */}
+          <div style={{display:"flex", gap:"5px", flexWrap:"wrap", marginBottom:"15px"}}>
+            {Object.keys(LANGS).map(l => (
+              <button key={l} onClick={()=>setLang(l)} style={{background: lang===l ? "#222":"#eee", color: lang===l ? "#fff":"#333", border:"none", padding:"4px 8px", borderRadius:"4px", cursor:"pointer", fontSize:"11px", fontWeight:"bold"}}>{l.split(" ")[0]}</button>
+            ))}
           </div>
-          <button onClick={performSearch} style={{width:"100%", padding:"10px", background:"#FF4B4B", color:"white", border:"none", borderRadius:"4px", cursor:"pointer", fontWeight:"bold"}}>{T.btn_search}</button>
-        </div>
+          <h2 style={{fontSize:"18px", marginTop:0, color:"#111"}}>{T.title}</h2>
 
-        <div style={{background:"#f8f9fa", padding:"15px", borderRadius:"6px", marginBottom:"15px", border:"1px solid #e9ecef"}}>
-          <h4 style={{margin:"0 0 10px 0"}}>{T.cust_h}</h4>
-          <div style={{display:"flex", gap:"10px", marginBottom:"10px"}}>
-            <div><label style={{fontSize:"11px", fontWeight:"bold"}}>{T.w_lbl}</label><input type="number" value={customWin.w} onChange={e=>setCustomWin({...customWin, w:parseInt(e.target.value)})} style={{width:"100%", padding:"6px", border:"1px solid #ccc", borderRadius:"4px"}}/></div>
-            <div><label style={{fontSize:"11px", fontWeight:"bold"}}>{T.h_lbl}</label><input type="number" value={customWin.h} onChange={e=>setCustomWin({...customWin, h:parseInt(e.target.value)})} style={{width:"100%", padding:"6px", border:"1px solid #ccc", borderRadius:"4px"}}/></div>
-          </div>
-          <button onClick={addCustom} style={{width:"100%", padding:"8px", background:"white", border:"1px solid #ccc", borderRadius:"4px", cursor:"pointer", fontWeight:"bold"}}>{T.btn_add}</button>
-        </div>
-
-        <div style={{background:"#f8f9fa", padding:"15px", borderRadius:"6px", border:"1px solid #e9ecef"}}>
-          <h4 style={{margin:"0 0 10px 0"}}>{T.wall_h}</h4>
-          <div style={{display:"flex", alignItems:"center", gap:"10px", marginBottom:"5px"}}>
-             <input type="range" min="1000" max="30000" step="100" value={wall.w} onChange={e=>handleWallChange('w', parseInt(e.target.value))} style={{flex:1}}/>
-             <input type="number" value={wall.w} onChange={e=>handleWallChange('w', parseInt(e.target.value))} style={{width:"70px", padding:"4px", border:"1px solid #ccc", borderRadius:"4px"}}/>
-          </div>
-          <div style={{display:"flex", alignItems:"center", gap:"10px", marginBottom:"15px"}}>
-             <input type="range" min="1000" max="30000" step="100" value={wall.h} onChange={e=>handleWallChange('h', parseInt(e.target.value))} style={{flex:1}}/>
-             <input type="number" value={wall.h} onChange={e=>handleWallChange('h', parseInt(e.target.value))} style={{width:"70px", padding:"4px", border:"1px solid #ccc", borderRadius:"4px"}}/>
+          <div style={{background:"#f8f9fa", padding:"15px", borderRadius:"6px", marginBottom:"15px", border:"1px solid #e9ecef"}}>
+            <h4 style={{margin:"0 0 10px 0"}}>{T.search_h}</h4>
+            <select value={searchParams.land} onChange={e=>setSearch({...searchParams, land:e.target.value})} style={{width:"100%", padding:"8px", marginBottom:"5px", border:"1px solid #ccc", borderRadius:"4px"}}>{COUNTRIES.map(c => <option key={c} value={c}>{c}</option>)}</select>
+            <input placeholder={T.c_zip} value={searchParams.zip} onChange={e=>setSearch({...searchParams, zip:e.target.value})} style={{width:"100%", padding:"8px", marginBottom:"10px", border:"1px solid #ccc", borderRadius:"4px"}}/>
+            <label style={{fontSize:"11px", display:"block", color:"#555"}}>{T.c_rad}: {searchParams.radius} km</label>
+            <input type="range" min="10" max="500" step="10" value={searchParams.radius} onChange={e=>setSearch({...searchParams, radius:parseInt(e.target.value)})} style={{width:"100%", marginBottom:"10px"}}/>
+            <div style={{display:"flex", gap:"10px", fontSize:"12px", margin:"10px 0"}}>
+              <label><input type="checkbox" checked={searchParams.reuse} onChange={e=>setSearch({...searchParams, reuse:e.target.checked})}/> {T.reuse}</label>
+              <label><input type="checkbox" checked={searchParams.new} onChange={e=>setSearch({...searchParams, new:e.target.checked})}/> {T.new}</label>
+            </div>
+            <button onClick={performSearch} style={{width:"100%", padding:"10px", background:"#FF4B4B", color:"white", border:"none", borderRadius:"4px", cursor:"pointer", fontWeight:"bold"}}>{T.btn_search}</button>
           </div>
 
-          <button onClick={optimizeWall} style={{width:"100%", padding:"10px", background:"#e3f2fd", color:"#0056b3", border:"1px solid #b6d4fe", borderRadius:"4px", cursor:"pointer", fontWeight:"bold", marginBottom:"15px"}}>{T.btn_suggest}</button>
-
-          {/* NEU: DIE 3 LAYOUT MODI */}
-          <div style={{background:"white", padding:"10px", borderRadius:"4px", border:"1px solid #ddd", marginBottom:"15px"}}>
-            <h5 style={{margin:"0 0 8px 0", fontSize:"12px", color:"#333"}}>Layout-Modus:</h5>
-            <label style={{fontSize:"12px", display:"flex", alignItems:"center", gap:"5px", marginBottom:"4px"}}><input type="checkbox" checked={params.layoutMode==='cluster'} onChange={()=>{setParams({...params, layoutMode:'cluster'}); runAI(windows, wall, {...params, layoutMode:'cluster'}, seed);}}/> {T.mode_cluster}</label>
-            <label style={{fontSize:"12px", display:"flex", alignItems:"center", gap:"5px", marginBottom:"4px"}}><input type="checkbox" checked={params.layoutMode==='rect'} onChange={()=>{setParams({...params, layoutMode:'rect'}); runAI(windows, wall, {...params, layoutMode:'rect'}, seed);}}/> {T.mode_rect}</label>
-            <label style={{fontSize:"12px", display:"flex", alignItems:"center", gap:"5px", marginBottom:"10px"}}><input type="checkbox" checked={params.layoutMode==='scatter'} onChange={()=>{setParams({...params, layoutMode:'scatter'}); runAI(windows, wall, {...params, layoutMode:'scatter'}, seed);}}/> {T.mode_scatter}</label>
-            <hr style={{border:"none", borderTop:"1px solid #eee"}}/>
-
-            <label style={{fontSize:"12px", display:"flex", alignItems:"center", gap:"5px", marginBottom:"5px"}}><input type="checkbox" checked={params.autoRot} onChange={e=>{let p={...params, autoRot:e.target.checked}; setParams(p); runAI(windows, wall, p, seed);}}/> {T.auto_rot}</label>
-            
-            <label style={{fontSize:"12px", display:"flex", alignItems:"center", gap:"5px", marginBottom:"5px"}}>{T.clust_num}: <input type="number" min="1" max="10" value={params.clusterCount} onChange={e=>{let p={...params, clusterCount:parseInt(e.target.value)||1}; setParams(p); runAI(windows, wall, p, seed);}} style={{width:"50px", padding:"2px", marginLeft:"auto"}}/></label>
-            <label style={{fontSize:"12px", display:"flex", alignItems:"center", gap:"5px", marginBottom:"5px"}}><input type="checkbox" checked={params.clusterPinned} onChange={e=>{let p={...params, clusterPinned:e.target.checked}; setParams(p); runAI(windows, wall, p, seed);}}/> {T.clust_pin}</label>
-
-            <label style={{fontSize:"12px", display:"flex", alignItems:"center", gap:"5px", marginBottom:"5px"}}><input type="checkbox" checked={params.lock} onChange={e=>{let p={...params, lock:e.target.checked}; setParams(p); runAI(windows, wall, p, seed);}}/> {T.lock}</label>
-            <label style={{fontSize:"12px", display:"flex", alignItems:"center", gap:"5px", marginBottom:"10px"}}><input type="checkbox" checked={params.symmetry} onChange={e=>{let p={...params, symmetry:e.target.checked}; setParams(p); runAI(windows, wall, p, seed);}}/> {T.sym}</label>
-            
-            <label style={{fontSize:"11px", display:"block", color:"#555"}}>{T.seed}: {seed}</label>
-            <input type="range" min="1" max="1000" value={seed} onChange={e=>{const val=parseInt(e.target.value); setSeed(val); runAI(windows, wall, params, val);}} style={{width:"100%", marginBottom:"5px"}}/>
-
-            <label style={{fontSize:"11px", display:"block", color:"#555", marginTop:"5px"}}>{T.chaos}: {params.chaos}%</label>
-            <input type="range" min="0" max="100" value={params.chaos} onChange={e=>{const val=parseInt(e.target.value); setParams({...params, chaos:val}); runAI(windows, wall, {...params, chaos:val}, seed);}} style={{width:"100%", marginBottom:"5px"}}/>
+          <div style={{background:"#f8f9fa", padding:"15px", borderRadius:"6px", marginBottom:"15px", border:"1px solid #e9ecef"}}>
+            <h4 style={{margin:"0 0 10px 0"}}>{T.cust_h}</h4>
+            <div style={{display:"flex", gap:"10px", marginBottom:"10px"}}>
+              <div><label style={{fontSize:"11px", fontWeight:"bold"}}>{T.w_lbl}</label><input type="number" value={customWin.w} onChange={e=>setCustomWin({...customWin, w:parseInt(e.target.value)})} style={{width:"100%", padding:"6px", border:"1px solid #ccc", borderRadius:"4px"}}/></div>
+              <div><label style={{fontSize:"11px", fontWeight:"bold"}}>{T.h_lbl}</label><input type="number" value={customWin.h} onChange={e=>setCustomWin({...customWin, h:parseInt(e.target.value)})} style={{width:"100%", padding:"6px", border:"1px solid #ccc", borderRadius:"4px"}}/></div>
+            </div>
+            <button onClick={addCustom} style={{width:"100%", padding:"8px", background:"white", border:"1px solid #ccc", borderRadius:"4px", cursor:"pointer", fontWeight:"bold"}}>{T.btn_add}</button>
           </div>
 
-          <button onClick={()=>{let newSeed = Math.floor(Math.random()*1000); setSeed(newSeed); runAI(windows, wall, params, newSeed);}} style={{width:"100%", padding:"10px", background:"#222", color:"white", border:"none", borderRadius:"4px", cursor:"pointer", fontWeight:"bold", marginBottom:"5px"}}>{T.btn_shuf}</button>
-          <button onClick={()=>{let p={...params, gapToggle:!params.gapToggle}; setParams(p); runAI(windows, wall, p, seed);}} style={{width:"100%", padding:"10px", background:"white", color:"#333", border:"1px solid #ccc", borderRadius:"4px", cursor:"pointer", fontWeight:"bold"}}>{T.btn_gaps}</button>
+          <div style={{background:"#f8f9fa", padding:"15px", borderRadius:"6px", border:"1px solid #e9ecef"}}>
+            <h4 style={{margin:"0 0 10px 0"}}>{T.wall_h}</h4>
+            <div style={{display:"flex", alignItems:"center", gap:"10px", marginBottom:"5px"}}>
+              <input type="range" min="1000" max="30000" step="100" value={wall.w} onChange={e=>handleWallChange('w', parseInt(e.target.value))} style={{flex:1}}/>
+              <input type="number" value={wall.w} onChange={e=>handleWallChange('w', parseInt(e.target.value))} style={{width:"70px", padding:"4px", border:"1px solid #ccc", borderRadius:"4px"}}/>
+            </div>
+            <div style={{display:"flex", alignItems:"center", gap:"10px", marginBottom:"15px"}}>
+              <input type="range" min="1000" max="30000" step="100" value={wall.h} onChange={e=>handleWallChange('h', parseInt(e.target.value))} style={{flex:1}}/>
+              <input type="number" value={wall.h} onChange={e=>handleWallChange('h', parseInt(e.target.value))} style={{width:"70px", padding:"4px", border:"1px solid #ccc", borderRadius:"4px"}}/>
+            </div>
+
+            <button onClick={optimizeWall} style={{width:"100%", padding:"10px", background:"#e3f2fd", color:"#0056b3", border:"1px solid #b6d4fe", borderRadius:"4px", cursor:"pointer", fontWeight:"bold", marginBottom:"15px"}}>{T.btn_suggest}</button>
+
+            <div style={{background:"white", padding:"10px", borderRadius:"4px", border:"1px solid #ddd", marginBottom:"15px"}}>
+              <h5 style={{margin:"0 0 8px 0", fontSize:"12px", color:"#333"}}>Layout-Modus:</h5>
+              <label style={{fontSize:"12px", display:"flex", alignItems:"center", gap:"5px", marginBottom:"4px"}}><input type="checkbox" checked={params.layoutMode==='cluster'} onChange={()=>{setParams({...params, layoutMode:'cluster'}); runAI(windows, wall, {...params, layoutMode:'cluster'}, seed);}}/> {T.mode_cluster}</label>
+              <label style={{fontSize:"12px", display:"flex", alignItems:"center", gap:"5px", marginBottom:"4px"}}><input type="checkbox" checked={params.layoutMode==='rect'} onChange={()=>{setParams({...params, layoutMode:'rect'}); runAI(windows, wall, {...params, layoutMode:'rect'}, seed);}}/> {T.mode_rect}</label>
+              <label style={{fontSize:"12px", display:"flex", alignItems:"center", gap:"5px", marginBottom:"10px"}}><input type="checkbox" checked={params.layoutMode==='scatter'} onChange={()=>{setParams({...params, layoutMode:'scatter'}); runAI(windows, wall, {...params, layoutMode:'scatter'}, seed);}}/> {T.mode_scatter}</label>
+              <hr style={{border:"none", borderTop:"1px solid #eee"}}/>
+
+              <label style={{fontSize:"12px", display:"flex", alignItems:"center", gap:"5px", marginBottom:"5px"}}><input type="checkbox" checked={params.autoRot} onChange={e=>{let p={...params, autoRot:e.target.checked}; setParams(p); runAI(windows, wall, p, seed);}}/> {T.auto_rot}</label>
+              <label style={{fontSize:"12px", display:"flex", alignItems:"center", gap:"5px", marginBottom:"5px"}}>{T.clust_num}: <input type="number" min="1" max="10" value={params.clusterCount} onChange={e=>{let p={...params, clusterCount:parseInt(e.target.value)||1}; setParams(p); runAI(windows, wall, p, seed);}} style={{width:"50px", padding:"2px", marginLeft:"auto"}}/></label>
+              <label style={{fontSize:"12px", display:"flex", alignItems:"center", gap:"5px", marginBottom:"5px"}}><input type="checkbox" checked={params.clusterPinned} onChange={e=>{let p={...params, clusterPinned:e.target.checked}; setParams(p); runAI(windows, wall, p, seed);}}/> {T.clust_pin}</label>
+              <label style={{fontSize:"12px", display:"flex", alignItems:"center", gap:"5px", marginBottom:"5px"}}><input type="checkbox" checked={params.lock} onChange={e=>{let p={...params, lock:e.target.checked}; setParams(p); runAI(windows, wall, p, seed);}}/> {T.lock}</label>
+              <label style={{fontSize:"12px", display:"flex", alignItems:"center", gap:"5px", marginBottom:"10px"}}><input type="checkbox" checked={params.symmetry} onChange={e=>{let p={...params, symmetry:e.target.checked}; setParams(p); runAI(windows, wall, p, seed);}}/> {T.sym}</label>
+              
+              <label style={{fontSize:"11px", display:"block", color:"#555"}}>{T.seed}: {seed}</label>
+              <input type="range" min="1" max="1000" value={seed} onChange={e=>{const val=parseInt(e.target.value); setSeed(val); runAI(windows, wall, params, val);}} style={{width:"100%", marginBottom:"5px"}}/>
+              <label style={{fontSize:"11px", display:"block", color:"#555", marginTop:"5px"}}>{T.chaos}: {params.chaos}%</label>
+              <input type="range" min="0" max="100" value={params.chaos} onChange={e=>{const val=parseInt(e.target.value); setParams({...params, chaos:val}); runAI(windows, wall, {...params, chaos:val}, seed);}} style={{width:"100%", marginBottom:"5px"}}/>
+            </div>
+
+            <button onClick={()=>{let newSeed = Math.floor(Math.random()*1000); setSeed(newSeed); runAI(windows, wall, params, newSeed);}} style={{width:"100%", padding:"10px", background:"#222", color:"white", border:"none", borderRadius:"4px", cursor:"pointer", fontWeight:"bold", marginBottom:"5px"}}>{T.btn_shuf}</button>
+            <button onClick={()=>{let p={...params, gapToggle:!params.gapToggle}; setParams(p); runAI(windows, wall, p, seed);}} style={{width:"100%", padding:"10px", background:"white", color:"#333", border:"1px solid #ccc", borderRadius:"4px", cursor:"pointer", fontWeight:"bold"}}>{T.btn_gaps}</button>
+          </div>
         </div>
       </div>
 
-      {/* RECHTER BEREICH */}
-      <div style={{ flex: 1, display: "flex", flexDirection: "column", background: "#eef1f5" }}>
+      {/* =======================
+          HAUPT BEREICH (MITTE)
+      ======================= */}
+      <div style={{ flex: 1, display: "flex", flexDirection: "column", background: "#eef1f5", position: "relative" }}>
         
-        <div style={{ height: `${topPaneHeight}%`, minHeight: "30%", display: "flex", flexDirection: "column", overflow: "hidden" }}>
+        {/* Toggle Buttons Floating in Main Area */}
+        <button onClick={()=>setLeftOpen(!leftOpen)} style={{position:"absolute", left:10, top:10, zIndex:100, background:"#222", color:"white", border:"none", borderRadius:"4px", width:"30px", height:"30px", cursor:"pointer", boxShadow:"0 2px 5px rgba(0,0,0,0.2)"}}>
+          {leftOpen ? "◀" : "▶"}
+        </button>
+        <button onClick={()=>setRightOpen(!rightOpen)} style={{position:"absolute", right:10, top:10, zIndex:100, background:"#222", color:"white", border:"none", borderRadius:"4px", width:"30px", height:"30px", cursor:"pointer", boxShadow:"0 2px 5px rgba(0,0,0,0.2)"}}>
+          {rightOpen ? "▶" : "◀"}
+        </button>
+
+        {/* === OBERE HÄLFTE: ZEICHNUNGEN === */}
+        <div style={{ height: `${topPaneHeight}%`, display: "flex", flexDirection: "column", overflow: "hidden" }}>
           
-          <div style={{ display: "flex", gap: "15px", padding: "15px 25px", background: "white", borderBottom: "1px solid #ddd", flexShrink: 0 }}>
-            <div style={{flex:1, borderRight:"1px solid #eee"}}><div style={{fontSize:"12px", color:"#777", fontWeight:"bold"}}>{T.wall_a}</div><div style={{fontSize:"20px", fontWeight:"bold", color:"#222"}}>{wallArea.toFixed(2)} m²</div></div>
-            <div style={{flex:1, borderRight:"1px solid #eee"}}><div style={{fontSize:"12px", color:"#777", fontWeight:"bold"}}>{T.win_a}</div><div style={{fontSize:"20px", fontWeight:"bold", color:"#222"}}>{winArea.toFixed(2)} m²</div></div>
-            <div style={{flex:1, borderRight:"1px solid #eee"}}><div style={{fontSize:"12px", color:"#777", fontWeight:"bold"}}>{T.fill}</div><div style={{fontSize:"20px", fontWeight:"bold", color:"#222"}}>{fillRate.toFixed(1)} %</div></div>
-            <div style={{flex:1}}><div style={{fontSize:"12px", color:"#FF4B4B", fontWeight:"bold"}}>{T.price}</div><div style={{fontSize:"20px", fontWeight:"bold", color:"#FF4B4B"}}>{totalPrice.toFixed(2)} €</div></div>
+          <div style={{ display: "flex", gap: "15px", padding: "10px 50px", background: "white", borderBottom: "1px solid #ddd", flexShrink: 0, alignItems:"center" }}>
+            <div style={{flex:1, borderRight:"1px solid #eee"}}><div style={{fontSize:"11px", color:"#777", fontWeight:"bold"}}>{T.wall_a}</div><div style={{fontSize:"16px", fontWeight:"bold", color:"#222"}}>{wallArea.toFixed(2)} m²</div></div>
+            <div style={{flex:1, borderRight:"1px solid #eee"}}><div style={{fontSize:"11px", color:"#777", fontWeight:"bold"}}>{T.win_a}</div><div style={{fontSize:"16px", fontWeight:"bold", color:"#222"}}>{winArea.toFixed(2)} m²</div></div>
+            <div style={{flex:1, borderRight:"1px solid #eee"}}><div style={{fontSize:"11px", color:"#777", fontWeight:"bold"}}>{T.fill}</div><div style={{fontSize:"16px", fontWeight:"bold", color:"#222"}}>{fillRate.toFixed(1)} %</div></div>
+            <div style={{flex:1}}><div style={{fontSize:"11px", color:"#FF4B4B", fontWeight:"bold"}}>{T.price}</div><div style={{fontSize:"16px", fontWeight:"bold", color:"#FF4B4B"}}>{totalPrice.toFixed(2)} €</div></div>
             
-            <div style={{display:"flex", gap:"8px", alignItems:"center", flexWrap:"wrap", maxWidth:"450px", justifyContent:"flex-end"}}>
+            <div style={{display:"flex", gap:"5px", alignItems:"center"}}>
+               <button onClick={toggleFullscreen} style={{padding:"6px 10px", background:"#333", color:"white", border:"none", borderRadius:"4px", cursor:"pointer", fontSize:"11px", fontWeight:"bold"}}>{T.fullscreen}</button>
                <button onClick={()=>downloadCanvas(drawMainCanvas, "facade_collage.png")} style={{padding:"6px 10px", background:"#fff", border:"1px solid #ccc", borderRadius:"4px", cursor:"pointer", fontSize:"11px"}}>{T.exp_img}</button>
                <button onClick={()=>downloadCanvas(drawBWCanvas, "facade_sw.png")} style={{padding:"6px 10px", background:"#fff", border:"1px solid #ccc", borderRadius:"4px", cursor:"pointer", fontSize:"11px"}}>{T.exp_bw}</button>
                <button onClick={()=>downloadCanvas(drawLineCanvas, "facade_cad.png")} style={{padding:"6px 10px", background:"#fff", border:"1px solid #ccc", borderRadius:"4px", cursor:"pointer", fontSize:"11px"}}>{T.exp_line}</button>
@@ -557,12 +591,12 @@ export default function App() {
             </div>
           </div>
 
-          <div ref={topPaneRef} style={{ flex: 1, padding: "15px 25px", display: "flex", gap: "25px", alignItems: "center", justifyContent:"flex-start", overflow:"hidden", background:"#eef1f5" }}>
+          <div ref={topPaneRef} onClick={() => setSelectedId(null)} style={{ flex: 1, padding: "15px", display: "flex", gap: "25px", alignItems: "center", justifyContent:"flex-start", overflow:"hidden", background:"#eef1f5" }}>
             
             <div style={{display: "flex", alignItems: "flex-end"}}>
               <div style={{ width: Math.max(15, 300 * mainScale), height: 1780 * mainScale, marginRight: "10px", background: `url("${archSVG}") no-repeat bottom center/contain`, opacity: 0.7 }} />
               <div>
-                <div style={{textAlign:"center", fontWeight:"bold", marginBottom:"8px", fontSize:"11px", color:"#555"}}>Collage</div>
+                <div style={{textAlign:"center", fontWeight:"bold", marginBottom:"8px", fontSize:"11px", color:"#555"}}>Collage (Drag & Drop)</div>
                 <div ref={canvasRef} onMouseMove={onDrag} onMouseUp={stopDrag} onMouseLeave={stopDrag}
                   style={{ width: canvasW, height: canvasH, border: "3px solid #333", position: "relative", background: "repeating-linear-gradient(45deg, #fce4e4, #fce4e4 10px, #ffffff 10px, #ffffff 20px)", boxShadow: "0 5px 15px rgba(0,0,0,0.1)", borderRadius:"2px" }}>
                   
@@ -575,9 +609,13 @@ export default function App() {
                   {windows.filter(w=>w.visible).map(w => {
                     let dispW = w.rotated ? w.h : w.w; let dispH = w.rotated ? w.w : w.h;
                     let isDragging = draggingId === w.id;
+                    let isSelected = selectedId === w.id;
                     return (
-                      <div key={w.id} onMouseDown={(e) => startDrag(e, w)}
-                        style={{ position: "absolute", left: w.x * mainScale, bottom: w.y * mainScale, width: dispW * mainScale, height: dispH * mainScale, background: w.color, border: w.pinned ? "2px solid #111" : "1px solid #555", cursor: w.pinned ? "not-allowed" : (isDragging ? "grabbing" : "grab"), display: "flex", flexDirection: "column", justifyContent: "center", alignItems: "center", fontWeight: "bold", fontSize: "10px", color:"#222", zIndex: w.pinned ? 5 : 10, opacity: w.pinned ? 0.95 : 1, transition: isDragging ? "none" : "all 0.1s" }}
+                      <div key={w.id} onMouseDown={(e) => handleWindowPointerDown(e, w)}
+                        style={{ position: "absolute", left: w.x * mainScale, bottom: w.y * mainScale, width: dispW * mainScale, height: dispH * mainScale, background: w.color, 
+                        border: isSelected ? "3px solid #00a8ff" : (w.pinned ? "2px solid #111" : "1px solid #555"), 
+                        boxShadow: isSelected ? "0 0 15px 5px rgba(0,168,255,0.7)" : (w.pinned ? "none" : "0 4px 8px rgba(0,0,0,0.3)"),
+                        cursor: w.pinned ? "not-allowed" : (isDragging ? "grabbing" : "grab"), display: "flex", flexDirection: "column", justifyContent: "center", alignItems: "center", fontWeight: "bold", fontSize: "10px", color:"#222", zIndex: isSelected || isDragging ? 100 : (w.pinned ? 5 : 10), opacity: w.pinned ? 0.95 : 1, transition: isDragging ? "none" : "all 0.1s" }}
                       >
                         <div style={{position: "absolute", top: 1, right: 1, display: "flex", gap: "2px"}}>
                           <button onClick={(e)=>{e.stopPropagation(); toggleRotate(w.id);}} style={{background:"rgba(255,255,255,0.8)", border:"1px solid #777", borderRadius:"2px", fontSize:"8px", cursor:"pointer", padding:"1px 3px"}}>🔄</button>
@@ -591,7 +629,7 @@ export default function App() {
               </div>
             </div>
 
-            <div style={{display: "flex", gap: "20px", alignItems:"flex-end"}}>
+            <div style={{display: "flex", gap: "20px", alignItems:"flex-end", opacity: topPaneHeight < 30 ? 0 : 1, transition: "0.2s"}}>
               <div>
                 <div style={{textAlign:"center", fontWeight:"bold", marginBottom:"8px", fontSize:"11px", color:"#555"}}>S/W Analyse</div>
                 <div style={{ width: wall.w * subScale, height: wall.h * subScale, border: "2px solid #000", position: "relative", background: "white", boxShadow: "0 2px 10px rgba(0,0,0,0.1)" }}>
@@ -621,91 +659,105 @@ export default function App() {
           </div>
         </div>
 
-        <div onMouseDown={handleDividerDragStart} style={{ height: "8px", background: "#ccc", cursor: "row-resize", display: "flex", justifyContent: "center", alignItems: "center", zIndex: 50 }}>
-          <div style={{width:"40px", height:"2px", background:"#fff", borderRadius:"2px"}}></div>
+        {/* === DRAGGABLE DIVIDER (MIT BUTTONS) === */}
+        <div 
+          onMouseDown={handleDividerDragStart}
+          style={{ height: "16px", background: "#ddd", cursor: "row-resize", display: "flex", justifyContent: "center", alignItems: "center", zIndex: 50, gap:"20px" }}
+        >
+          <button onClick={()=>setTopPaneHeight(100)} style={{background:"none", border:"none", cursor:"pointer", fontSize:"10px"}}>🔽 Zeichnung Max</button>
+          <div style={{width:"40px", height:"4px", background:"#fff", borderRadius:"2px"}}></div>
+          <button onClick={()=>setTopPaneHeight(0)} style={{background:"none", border:"none", cursor:"pointer", fontSize:"10px"}}>🔼 Listen Max</button>
         </div>
 
-        {/* === UNTERE HÄLFTE === */}
-        <div style={{ height: `${100 - topPaneHeight}%`, minHeight: "20%", display: "flex", background: "#fff", overflow: "hidden" }}>
+        {/* === UNTERE HÄLFTE: 2 SPALTEN MATRIX === */}
+        <div style={{ height: `${100 - topPaneHeight}%`, display: "flex", background: "#fff", overflow: "hidden" }}>
           
-          <div style={{ flex: 1, overflowY: "auto", padding: "25px", borderRight: "1px solid #ddd" }}>
-            <h3 style={{margin:"0 0 15px 0", color:"#111"}}>{T.mat_h}</h3>
-            <div style={{border:"1px solid #eee", borderRadius:"6px", overflowX:"auto", marginBottom:"30px"}}>
-              <table style={{width: "100%", borderCollapse: "collapse", fontSize: "12px", textAlign: "left"}}>
+          {/* Spalte 1: ALLE FENSTER */}
+          <div style={{ flex: 1, overflowY: "auto", padding: "15px", borderRight: "2px solid #ddd" }}>
+            <h3 style={{margin:"0 0 10px 0", color:"#111", fontSize:"14px"}}>{T.all_windows} ({windows.length})</h3>
+            <div style={{border:"1px solid #eee", borderRadius:"6px", overflowX:"auto"}}>
+              <table style={{width: "100%", borderCollapse: "collapse", fontSize: "11px", textAlign: "left"}}>
                 <thead><tr style={{background:"#f8f9fa", borderBottom:"1px solid #eee"}}>
-                  <th title="Alle umschalten" onClick={()=>toggleAll('visible')} style={{padding:"10px", cursor:"pointer", userSelect:"none", borderRight:"1px solid #ddd"}}>{T.col.v} 🖱️</th>
-                  <th title="Alle umschalten" onClick={()=>toggleAll('pinned')} style={{padding:"10px", cursor:"pointer", userSelect:"none", borderRight:"1px solid #ddd"}}>{T.col.p} 🖱️</th>
-                  <th title="Alle umschalten" onClick={()=>toggleAll('rotated')} style={{padding:"10px", cursor:"pointer", userSelect:"none", borderRight:"1px solid #ddd"}}>{T.col.r} 🖱️</th>
-                  <th style={{padding:"10px"}}>{T.col.id}</th><th style={{padding:"10px"}}>{T.col.x}</th><th style={{padding:"10px"}}>{T.col.y}</th><th style={{padding:"10px"}}>{T.col.dim}</th><th style={{padding:"10px"}}>{T.col.a}</th><th style={{padding:"10px", color:"#0066cc"}}>{T.col.dist}</th><th style={{padding:"10px"}}>{T.col.pr}</th><th style={{padding:"10px"}}>{T.col.src}</th>
+                  <th title="Alle umschalten" onClick={()=>toggleAll('visible')} style={{padding:"6px", cursor:"pointer"}}>{T.col.v}🖱️</th>
+                  <th style={{padding:"6px"}}>{T.col.id}</th><th style={{padding:"6px"}}>{T.col.dim}</th><th style={{padding:"6px"}}>{T.col.pr}</th><th style={{padding:"6px"}}>{T.col.dist}</th><th style={{padding:"6px"}}>{T.col.src}</th>
                 </tr></thead>
                 <tbody>
                   {windows.sort((a,b)=>a.dist-b.dist).map(w => {
-                    let dispW = w.rotated ? w.h : w.w; let dispH = w.rotated ? w.w : w.h;
+                    let isSelected = selectedId === w.id;
                     return (
-                      <tr key={w.id} style={{background: w.pinned ? "#fff3cd" : "transparent", opacity: w.visible ? 1 : 1, borderBottom:"1px solid #eee"}}>
-                        <td style={{padding:"8px 10px", borderRight:"1px solid #ddd"}}><input type="checkbox" checked={w.visible} onChange={()=>toggleWinProp(w.id, 'visible')} style={{cursor:"pointer"}}/></td>
-                        <td style={{padding:"8px 10px", borderRight:"1px solid #ddd"}}><input type="checkbox" checked={w.pinned} onChange={()=>toggleWinProp(w.id, 'pinned')} style={{cursor:"pointer"}}/></td>
-                        <td style={{padding:"8px 10px", borderRight:"1px solid #ddd"}}><input type="checkbox" checked={w.rotated} onChange={()=>toggleRotate(w.id)} style={{cursor:"pointer"}}/></td>
-                        <td style={{padding:"8px 10px", fontWeight:"bold"}}>{w.pos}</td>
-                        <td style={{padding:"8px 10px"}}><input type="number" value={w.x} onChange={e=>{let arr=windows.map(x=>x.id===w.id?{...x, x:parseInt(e.target.value)||0, pinned:true}:x); setWindows(arr); runAI(arr, wall, params, seed);}} style={{width:"70px", padding:"4px", border:"1px solid #ccc", borderRadius:"4px"}}/></td>
-                        <td style={{padding:"8px 10px"}}><input type="number" value={w.y} onChange={e=>{let arr=windows.map(x=>x.id===w.id?{...x, y:parseInt(e.target.value)||0, pinned:true}:x); setWindows(arr); runAI(arr, wall, params, seed);}} style={{width:"70px", padding:"4px", border:"1px solid #ccc", borderRadius:"4px"}}/></td>
-                        <td style={{padding:"8px 10px"}}>{dispW} x {dispH}</td>
-                        <td style={{padding:"8px 10px", fontWeight:"bold"}}>{((dispW*dispH)/1000000).toFixed(2)}</td>
-                        <td style={{padding:"8px 10px", color:"#0066cc", fontWeight:"bold"}}>{w.dist} km</td>
-                        <td style={{padding:"8px 10px", color:"#FF4B4B", fontWeight:"bold"}}>{w.price.toFixed(2)} €</td>
-                        <td style={{padding:"8px 10px", maxWidth:"150px", overflow:"hidden", textOverflow:"ellipsis", whiteSpace:"nowrap"}}>{w.source}</td>
+                      <tr id={`row-all-${w.id}`} key={`all-${w.id}`} onClick={()=>setSelectedId(w.id)} style={{background: isSelected ? "#e3f2fd" : (w.pinned ? "#fff3cd" : "transparent"), opacity: w.visible ? 1 : 0.4, borderBottom:"1px solid #eee", cursor:"pointer"}}>
+                        <td style={{padding:"6px"}}><input type="checkbox" checked={w.visible} onChange={(e)=>{e.stopPropagation(); toggleWinProp(w.id, 'visible');}}/></td>
+                        <td style={{padding:"6px", fontWeight:"bold"}}>{w.pos}</td>
+                        <td style={{padding:"6px"}}>{w.w}x{w.h}</td>
+                        <td style={{padding:"6px", color:"#FF4B4B"}}>{w.price.toFixed(0)}€</td>
+                        <td style={{padding:"6px", color:"#0066cc"}}>{w.dist}km</td>
+                        <td style={{padding:"6px", maxWidth:"100px", overflow:"hidden", textOverflow:"ellipsis", whiteSpace:"nowrap"}}>{w.source}</td>
                       </tr>
                     )
                   })}
                 </tbody>
               </table>
             </div>
+          </div>
 
-            <h3 style={{margin:"0 0 15px 0", color:"#111"}}>{T.gaps_h}</h3>
-            {gaps.length > 0 ? (
-              <div style={{border:"1px solid #eee", borderRadius:"6px", overflowX:"auto", marginBottom:"20px"}}>
-                <table style={{width: "100%", borderCollapse: "collapse", fontSize: "12px", textAlign: "left"}}>
-                  <thead><tr style={{background:"#222", color:"white"}}>
-                    <th style={{padding:"10px"}}>{T.col.id}</th><th style={{padding:"10px"}}>{T.col.dim}</th><th style={{padding:"10px"}}>{T.col.a}</th><th style={{padding:"10px"}}>{T.col.x}</th><th style={{padding:"10px"}}>{T.col.y}</th>
-                  </tr></thead>
-                  <tbody>
-                    {gaps.map((g,i) => (
-                      <tr key={g.id} style={{borderBottom:"1px solid #eee"}}>
-                        <td style={{padding:"8px 10px", fontWeight:"bold"}}>Gap-{i+1}</td>
-                        <td style={{padding:"8px 10px"}}>{g.w} x {g.h}</td>
-                        <td style={{padding:"8px 10px", fontWeight:"bold"}}>{((g.w*g.h)/1000000).toFixed(2)}</td>
-                        <td style={{padding:"8px 10px"}}>{g.x}</td><td style={{padding:"8px 10px"}}>{g.y}</td>
+          {/* Spalte 2: VERWENDETE FENSTER (Sichtbar) */}
+          <div style={{ flex: 1, overflowY: "auto", padding: "15px" }}>
+            <h3 style={{margin:"0 0 10px 0", color:"#111", fontSize:"14px"}}>{T.used_windows} ({windows.filter(w=>w.visible).length})</h3>
+            <div style={{border:"1px solid #eee", borderRadius:"6px", overflowX:"auto"}}>
+              <table style={{width: "100%", borderCollapse: "collapse", fontSize: "11px", textAlign: "left"}}>
+                <thead><tr style={{background:"#f8f9fa", borderBottom:"1px solid #eee"}}>
+                  <th title="Alle umschalten" onClick={()=>toggleAll('pinned')} style={{padding:"6px", cursor:"pointer"}}>{T.col.p}🖱️</th>
+                  <th title="Alle umschalten" onClick={()=>toggleAll('rotated')} style={{padding:"6px", cursor:"pointer"}}>{T.col.r}🖱️</th>
+                  <th style={{padding:"6px"}}>{T.col.id}</th><th style={{padding:"6px"}}>{T.col.x}</th><th style={{padding:"6px"}}>{T.col.y}</th><th style={{padding:"6px"}}>{T.col.dim}</th>
+                </tr></thead>
+                <tbody>
+                  {windows.filter(w=>w.visible).map(w => {
+                    let isSelected = selectedId === w.id;
+                    let dispW = w.rotated ? w.h : w.w; let dispH = w.rotated ? w.w : w.h;
+                    return (
+                      <tr id={`row-used-${w.id}`} key={`used-${w.id}`} onClick={()=>setSelectedId(w.id)} style={{background: isSelected ? "#e3f2fd" : (w.pinned ? "#fff3cd" : "transparent"), borderBottom:"1px solid #eee", cursor:"pointer"}}>
+                        <td style={{padding:"6px"}}><input type="checkbox" checked={w.pinned} onChange={(e)=>{e.stopPropagation(); toggleWinProp(w.id, 'pinned');}}/></td>
+                        <td style={{padding:"6px"}}><input type="checkbox" checked={w.rotated} onChange={(e)=>{e.stopPropagation(); toggleRotate(w.id);}}/></td>
+                        <td style={{padding:"6px", fontWeight:"bold"}}>{w.pos}</td>
+                        <td style={{padding:"6px"}}><input type="number" value={w.x} onChange={e=>{let arr=windows.map(x=>x.id===w.id?{...x, x:parseInt(e.target.value)||0, pinned:true}:x); setWindows(arr); runAI(arr, wall, params, seed);}} onClick={e=>e.stopPropagation()} style={{width:"50px", padding:"2px"}}/></td>
+                        <td style={{padding:"6px"}}><input type="number" value={w.y} onChange={e=>{let arr=windows.map(x=>x.id===w.id?{...x, y:parseInt(e.target.value)||0, pinned:true}:x); setWindows(arr); runAI(arr, wall, params, seed);}} onClick={e=>e.stopPropagation()} style={{width:"50px", padding:"2px"}}/></td>
+                        <td style={{padding:"6px"}}>{dispW}x{dispH}</td>
                       </tr>
-                    ))}
-                  </tbody>
-                </table>
-              </div>
-            ) : <div style={{background:"#d4edda", color:"#155724", padding:"15px", borderRadius:"6px", fontWeight:"bold"}}>{T.no_gaps}</div>}
-          </div>
-
-          <div style={{ width: "350px", flexShrink: 0, display: "flex", flexDirection: "column", background: "#f8f9fa", borderLeft: "2px solid #ddd" }}>
-            <div style={{ padding: "15px", background: "#222", color: "white", fontWeight: "bold", fontSize: "14px", display:"flex", justifyContent:"space-between", alignItems:"center" }}>
-              <span>🤖 KI Assistent</span>
+                    )
+                  })}
+                </tbody>
+              </table>
             </div>
-            
-            <div style={{ flex: 1, overflowY: "auto", padding: "15px", display: "flex", flexDirection: "column", gap: "10px" }}>
-              {chatMessages.map((m, i) => (
-                <div key={i} style={{ alignSelf: m.role === 'user' ? 'flex-end' : 'flex-start', background: m.role === 'user' ? '#0066cc' : '#e9ecef', color: m.role === 'user' ? 'white' : '#222', padding: "10px 14px", borderRadius: "8px", maxWidth: "85%", fontSize: "13px", lineHeight: "1.4", whiteSpace: "pre-wrap" }}>
-                  {m.text}
-                </div>
-              ))}
-              {chatLoading && <div style={{ alignSelf: 'flex-start', background: '#e9ecef', padding: "10px 14px", borderRadius: "8px", fontSize: "13px" }}>KI denkt nach...</div>}
-              <div ref={chatEndRef} />
-            </div>
-
-            <form onSubmit={handleChatSubmit} style={{ display: "flex", padding: "15px", borderTop: "1px solid #ddd", background: "white" }}>
-              <input type="text" value={chatInput} onChange={e=>setChatInput(e.target.value)} disabled={chatLoading} placeholder="Frage zur Fassade..." style={{ flex: 1, padding: "10px", border: "1px solid #ccc", borderRadius: "4px 0 0 4px", outline: "none", fontSize: "13px" }} />
-              <button type="submit" disabled={chatLoading} style={{ padding: "10px 15px", background: chatLoading ? "#ccc" : "#FF4B4B", color: "white", border: "none", borderRadius: "0 4px 4px 0", cursor: chatLoading ? "not-allowed" : "pointer", fontWeight: "bold" }}>Senden</button>
-            </form>
           </div>
-
         </div>
       </div>
+
+      {/* =======================
+          RECHTE SIDEBAR (CHATBOT)
+      ======================= */}
+      <div style={{ width: rightOpen ? "350px" : "0px", background: "#f8f9fa", borderLeft: rightOpen ? "2px solid #ddd" : "none", display: "flex", flexDirection: "column", transition: "0.3s", flexShrink: 0, overflow: "hidden" }}>
+        <div style={{ width: "350px", display: "flex", flexDirection: "column", height: "100%" }}>
+          <div style={{ padding: "15px", background: "#222", color: "white", fontWeight: "bold", fontSize: "14px", display:"flex", justifyContent:"space-between", alignItems:"center" }}>
+            <span>🤖 KI Assistent</span>
+          </div>
+          
+          <div style={{ flex: 1, overflowY: "auto", padding: "15px", display: "flex", flexDirection: "column", gap: "10px" }}>
+            {chatMessages.map((m, i) => (
+              <div key={i} style={{ alignSelf: m.role === 'user' ? 'flex-end' : 'flex-start', background: m.role === 'user' ? '#0066cc' : '#e9ecef', color: m.role === 'user' ? 'white' : '#222', padding: "10px 14px", borderRadius: "8px", maxWidth: "85%", fontSize: "13px", lineHeight: "1.4", whiteSpace: "pre-wrap" }}>
+                {m.text}
+              </div>
+            ))}
+            {chatLoading && <div style={{ alignSelf: 'flex-start', background: '#e9ecef', padding: "10px 14px", borderRadius: "8px", fontSize: "13px" }}>KI denkt nach...</div>}
+            <div ref={chatEndRef} />
+          </div>
+
+          <form onSubmit={handleChatSubmit} style={{ display: "flex", padding: "15px", borderTop: "1px solid #ddd", background: "white" }}>
+            <input type="text" value={chatInput} onChange={e=>setChatInput(e.target.value)} disabled={chatLoading} placeholder="Frage zur Fassade..." style={{ flex: 1, padding: "10px", border: "1px solid #ccc", borderRadius: "4px 0 0 4px", outline: "none", fontSize: "13px" }} />
+            <button type="submit" disabled={chatLoading} style={{ padding: "10px 15px", background: chatLoading ? "#ccc" : "#FF4B4B", color: "white", border: "none", borderRadius: "0 4px 4px 0", cursor: chatLoading ? "not-allowed" : "pointer", fontWeight: "bold" }}>Senden</button>
+          </form>
+        </div>
+      </div>
+
     </div>
   );
 }

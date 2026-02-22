@@ -1,13 +1,13 @@
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState, useRef, useEffect, Suspense } from 'react';
 import JSZip from 'jszip';
+// 3D Imports
+import { Canvas } from '@react-three/fiber';
+import { OrbitControls, Environment, ContactShadows } from '@react-three/drei';
 
-// --- VOLLSTÄNDIGES WÖRTERBUCH (UNGEKÜRZT) ---
+// --- VOLLSTÄNDIGES WÖRTERBUCH ---
 const LANGS = {
-  "🇩🇪 DE": { title: "🧱 Facade AI Pro v10.0", search_h: "1. Globale Suche", c_land: "Land", c_zip: "PLZ / Ort", c_rad: "Umkreis (km)", reuse: "Gebraucht", new: "Neu", search_solar: "☀️ Nur Solarpaneele suchen", btn_search: "Daten abrufen", cust_h: "2. Eigenbestand", w_lbl: "↔️ Breite", h_lbl: "↕️ Höhe", btn_add: "Hinzufügen", wall_h: "Wandöffnung (mm)", btn_suggest: "💡 Wand optimieren", btn_shuf: "🎲 Zufälliger Seed", btn_gaps: "✂️ Zuschnitt drehen", lock: "🔒 Gepinnte behalten", sym: "📐 Symmetrie", chaos: "Chaos", gravity: "🧲 Gravitationsstärke", seed: "Seed", auto_rot: "🔄 Auto-Rotation", clust_num: "🏝️ Anzahl Cluster", clust_pin: "🧲 Um Gepinnte anordnen", rect_clust: "🔲 Rechteckig Clustern", mode_cluster: "🏝️ Organisch", mode_rect: "🧱 Unten anordnen", mode_scatter: "🌌 Verstreuen", gap_subdiv: "📏 Max. Verschnitt-Platte (mm)", solar_auto: "☀️ Auto-Solar in Lücken", solar_fetch: "🌐 Auto-Suche wenn Solar fehlt", wall_a: "Wand", win_a: "Fenster/Solar", fill: "Füllgrad", price: "Preis", mat_h: "📋 Matrix", exp_csv: "CSV", exp_cad: "DXF", exp_img: "Bild", exp_bw: "S/W", exp_line: "CAD", exp_zip: "ZIP", realism: "✨ Realismus", gaps_h: "🟥 Zuschnitt-Liste", no_gaps: "Wand perfekt gefüllt!", col: {v:"👁️", p:"📌", r:"🔄", f:"⭐", id:"ID", x:"X", y:"Y", dim:"Maße", a:"m²", src:"Herkunft", dist: "Dist", pr:"Preis", l:"Link"}, all_windows: "📦 Inventar (Alle Elemente)", used_windows: "🏗️ Verwendete Elemente", fullscreen: "⛶ Vollbild" },
-  "🇪🇸 ES": { title: "🧱 Generador Fachadas v10.0", search_h: "1. Búsqueda", c_land: "País", c_zip: "C.P.", c_rad: "Radio (km)", reuse: "Usado", new: "Nuevo", search_solar: "☀️ Buscar Paneles Solares", btn_search: "Obtener datos", cust_h: "2. Inventario", w_lbl: "↔️ Ancho", h_lbl: "↕️ Alto", btn_add: "Añadir", wall_h: "Muro (mm)", btn_suggest: "💡 Optimizar Muro", btn_shuf: "🎲 Semilla Aleatoria", btn_gaps: "✂️ Rotar cortes", lock: "🔒 Bloquear Pines", sym: "📐 Simetría", chaos: "Caos", gravity: "🧲 Gravedad", seed: "Semilla", auto_rot: "🔄 Auto-rotación", clust_num: "🏝️ Clústeres", clust_pin: "🧲 Agrupar a fijos", rect_clust: "🔲 Clúster Rectangular", mode_cluster: "🏝️ Orgánico", mode_rect: "🧱 Abajo", mode_scatter: "🌌 Dispersión", gap_subdiv: "📏 Panel de corte máx (mm)", solar_auto: "☀️ Auto-Solar en huecos", solar_fetch: "🌐 Auto-búsqueda solar", wall_a: "Muro", win_a: "Vent./Solar", fill: "Relleno", price: "Precio", mat_h: "📋 Matriz", exp_csv: "CSV", exp_cad: "DXF", exp_img: "Img", exp_bw: "B/N", exp_line: "Líneas", exp_zip: "ZIP", realism: "✨ Realismo", gaps_h: "🟥 Cortes", no_gaps: "¡Perfecto!", col: {v:"👁️", p:"📌", r:"🔄", f:"⭐", id:"ID", x:"X", y:"Y", dim:"Dim", a:"m²", src:"Origen", dist: "Dist", pr:"Precio", l:"Link"}, all_windows: "📦 Inventario Total", used_windows: "🏗️ En uso", fullscreen: "⛶ Pantalla Comp." },
-  "🇬🇧 EN": { title: "🧱 Facade AI Pro v10.0", search_h: "1. Search", c_land: "Country", c_zip: "ZIP / City", c_rad: "Radius (km)", reuse: "Used", new: "New", search_solar: "☀️ Search Solar Panels Only", btn_search: "Fetch Data", cust_h: "2. Inventory", w_lbl: "↔️ Width", h_lbl: "↕️ Height", btn_add: "Add", wall_h: "Wall (mm)", btn_suggest: "💡 Optimize Wall", btn_shuf: "🎲 Random Seed", btn_gaps: "✂️ Toggle Gaps", lock: "🔒 Keep Pinned", sym: "📐 Symmetry", chaos: "Chaos", gravity: "🧲 Gravity Strength", seed: "Seed", auto_rot: "🔄 Auto-Rotation", clust_num: "🏝️ Clusters", clust_pin: "🧲 Group around Pinned", rect_clust: "🔲 Rectangular Cluster", mode_cluster: "🏝️ Organic", mode_rect: "🧱 Bottom Pack", mode_scatter: "🌌 Scatter", gap_subdiv: "📏 Max Gap Panel (mm)", solar_auto: "☀️ Auto-Solar in Gaps", solar_fetch: "🌐 Auto-Fetch Solar if missing", wall_a: "Wall Area", win_a: "Win/Solar", fill: "Fill", price: "Price", mat_h: "📋 Matrix", exp_csv: "CSV", exp_cad: "DXF", exp_img: "Img", exp_bw: "B/W", exp_line: "CAD", exp_zip: "ZIP", realism: "✨ Realism", gaps_h: "🟥 Gaps", no_gaps: "Perfect!", col: {v:"👁️", p:"📌", r:"🔄", f:"⭐", id:"ID", x:"X", y:"Y", dim:"Dims", a:"m²", src:"Source", dist: "Dist", pr:"Price", l:"Link"}, all_windows: "📦 Inventory (All)", used_windows: "🏗️ Used Elements", fullscreen: "⛶ Fullscreen" },
-  "🇫🇷 FR": { title: "🧱 Générateur de Façade v10.0", search_h: "Recherche", c_land: "Pays", c_zip: "CP", c_rad: "Rayon", reuse: "Usagé", new: "Neuf", search_solar: "Solaire", btn_search: "Chercher", cust_h: "Inventaire", w_lbl: "↔️ Largeur", h_lbl: "↕️ Hauteur", btn_add: "Ajouter", wall_h: "Mur (mm)", btn_suggest: "Optimiser", btn_shuf: "Mélanger", btn_gaps: "Alterner", lock: "Verrouiller", sym: "Symétrie", chaos: "Chaos", gravity: "Gravité", seed: "Graine", auto_rot: "Rotation", clust_num: "Clústeres", clust_pin: "Grouper", rect_clust: "Rectangle", mode_cluster: "Organique", mode_rect: "Bas", mode_scatter: "Dispersion", gap_subdiv: "Max Gap", solar_auto: "Auto-Solaire", solar_fetch: "Chercher Solaire", wall_a: "Mur", win_a: "Fen/Sol", fill: "Remplissage", price: "Prix", mat_h: "Matrice", exp_csv: "CSV", exp_cad: "DXF", exp_img: "Img", exp_bw: "N/B", exp_line: "CAD", exp_zip: "ZIP", realism: "Réalisme", gaps_h: "Panneaux", no_gaps: "Parfait!", col: {v:"👁️", p:"📌", r:"🔄", f:"⭐", id:"ID", x:"X", y:"Y", dim:"Dim", a:"m²", src:"Source", dist: "Dist", pr:"Prix", l:"Lien"}, all_windows: "Inventaire", used_windows: "Utilisées", fullscreen: "Plein Écran" },
-  "🇮🇹 IT": { title: "🧱 Generatore Facciate v10.0", search_h: "Ricerca", c_land: "Paese", c_zip: "CAP", c_rad: "Raggio", reuse: "Usato", new: "Nuovo", search_solar: "Solare", btn_search: "Cerca", cust_h: "Inventario", w_lbl: "↔️ Largh.", h_lbl: "↕️ Altezza", btn_add: "Aggiungi", wall_h: "Muro (mm)", btn_suggest: "Ottimizza", btn_shuf: "Rimescola", btn_gaps: "Tagli", lock: "Blocca", sym: "Simmetria", chaos: "Caos", gravity: "Gravità", seed: "Seme", auto_rot: "Rotazione", clust_num: "Cluster", clust_pin: "Raggruppa", rect_clust: "Rettangolo", mode_cluster: "Organico", mode_rect: "Basso", mode_scatter: "Dispersione", gap_subdiv: "Max Taglio", solar_auto: "Auto-Solare", solar_fetch: "Cerca Solare", wall_a: "Muro", win_a: "Fin/Sol", fill: "Riemp.", price: "Prezzo", mat_h: "Matrice", exp_csv: "CSV", exp_cad: "DXF", exp_img: "Img", exp_bw: "B/N", exp_line: "CAD", exp_zip: "ZIP", realism: "Realismo", gaps_h: "Pannelli", no_gaps: "Perfetto!", col: {v:"👁️", p:"📌", r:"🔄", f:"⭐", id:"ID", x:"X", y:"Y", dim:"Dim", a:"m²", src:"Fonte", dist: "Dist", pr:"Prezzo", l:"Link"}, all_windows: "Inventario", used_windows: "Usate", fullscreen: "Schermo Intero" }
+  "🇩🇪 DE": { title: "🧱 Facade AI Pro v11.0 (3D)", search_h: "1. Globale Suche", c_land: "Land", c_zip: "PLZ / Ort", c_rad: "Umkreis (km)", reuse: "Gebraucht", new: "Neu", search_solar: "☀️ Nur Solarpaneele suchen", btn_search: "Daten abrufen", cust_h: "2. Eigenbestand", w_lbl: "↔️ Breite", h_lbl: "↕️ Höhe", btn_add: "Hinzufügen", wall_h: "Wandöffnung (mm)", btn_suggest: "💡 Wand optimieren", btn_shuf: "🎲 Zufälliger Seed", btn_gaps: "✂️ Zuschnitt drehen", lock: "🔒 Gepinnte behalten", sym: "📐 Symmetrie", chaos: "Chaos", gravity: "🧲 Gravitationsstärke", seed: "Seed", auto_rot: "🔄 Auto-Rotation", clust_num: "🏝️ Anzahl Cluster", clust_pin: "🧲 Um Gepinnte anordnen", rect_clust: "🔲 Rechteckig Clustern", mode_cluster: "🏝️ Organisch", mode_rect: "🧱 Unten anordnen", mode_scatter: "🌌 Verstreuen", gap_subdiv: "📏 Max. Verschnitt-Platte (mm)", solar_auto: "☀️ Auto-Solar in Lücken", solar_fetch: "🌐 Auto-Suche wenn Solar fehlt", wall_a: "Wand", win_a: "Fenster/Solar", fill: "Füllgrad", price: "Preis", mat_h: "📋 Matrix", exp_csv: "CSV", exp_cad: "DXF", exp_img: "Bild", exp_bw: "S/W", exp_line: "CAD", exp_zip: "ZIP", realism: "✨ Realismus", toggle_3d: "🧊 3D Ansicht", gaps_h: "🟥 Zuschnitt-Liste", no_gaps: "Wand perfekt gefüllt!", col: {v:"👁️", p:"📌", r:"🔄", f:"⭐", id:"ID", x:"X", y:"Y", dim:"Maße", a:"m²", src:"Herkunft", dist: "Dist", pr:"Preis", l:"Link"}, all_windows: "📦 Inventar (Alle Elemente)", used_windows: "🏗️ Verwendete Elemente", fullscreen: "⛶ Vollbild" },
+  "🇬🇧 EN": { title: "🧱 Facade AI Pro v11.0 (3D)", search_h: "1. Search", c_land: "Country", c_zip: "ZIP / City", c_rad: "Radius (km)", reuse: "Used", new: "New", search_solar: "☀️ Search Solar Panels Only", btn_search: "Fetch Data", cust_h: "2. Inventory", w_lbl: "↔️ Width", h_lbl: "↕️ Height", btn_add: "Add", wall_h: "Wall (mm)", btn_suggest: "💡 Optimize Wall", btn_shuf: "🎲 Random Seed", btn_gaps: "✂️ Toggle Gaps", lock: "🔒 Keep Pinned", sym: "📐 Symmetry", chaos: "Chaos", gravity: "🧲 Gravity Strength", seed: "Seed", auto_rot: "🔄 Auto-Rotation", clust_num: "🏝️ Clusters", clust_pin: "🧲 Group around Pinned", rect_clust: "🔲 Rectangular Cluster", mode_cluster: "🏝️ Organic", mode_rect: "🧱 Bottom Pack", mode_scatter: "🌌 Scatter", gap_subdiv: "📏 Max Gap Panel (mm)", solar_auto: "☀️ Auto-Solar in Gaps", solar_fetch: "🌐 Auto-Fetch Solar if missing", wall_a: "Wall Area", win_a: "Win/Solar", fill: "Fill", price: "Price", mat_h: "📋 Matrix", exp_csv: "CSV", exp_cad: "DXF", exp_img: "Img", exp_bw: "B/W", exp_line: "CAD", exp_zip: "ZIP", realism: "✨ Realism", toggle_3d: "🧊 3D View", gaps_h: "🟥 Gaps", no_gaps: "Perfect!", col: {v:"👁️", p:"📌", r:"🔄", f:"⭐", id:"ID", x:"X", y:"Y", dim:"Dims", a:"m²", src:"Source", dist: "Dist", pr:"Price", l:"Link"}, all_windows: "📦 Inventory (All)", used_windows: "🏗️ Used Elements", fullscreen: "⛶ Fullscreen" }
 };
 
 const COUNTRIES = ["Deutschland", "Österreich", "Schweiz", "España", "France", "Italia", "United Kingdom", "USA"];
@@ -20,6 +20,49 @@ function mulberry32(a) {
     return ((t ^ t >>> 14) >>> 0) / 4294967296;
   }
 }
+
+// --- 3D KOMPONENTE ---
+const Scene3D = ({ windows, wall }) => {
+    // Wandzentrum in 3D Koordinaten umrechnen
+    return (
+        <Canvas camera={{ position: [0, 0, Math.max(wall.w, wall.h)], fov: 50 }}>
+            <ambientLight intensity={0.6} />
+            <directionalLight position={[10000, 10000, 10000]} intensity={1.5} castShadow />
+            <OrbitControls makeDefault enableDamping dampingFactor={0.1} />
+            <Environment preset="city" />
+
+            {/* Die Wand (als Block) */}
+            <mesh position={[0, 0, -100]}>
+                <boxGeometry args={[wall.w, wall.h, 200]} />
+                <meshStandardMaterial color="#fce4e4" roughness={0.9} />
+            </mesh>
+
+            {/* Die Fenster & Solar */}
+            {windows.filter(w=>w.visible).map(w => {
+                let dispW = w.rotated ? w.h : w.w; 
+                let dispH = w.rotated ? w.w : w.h;
+                
+                // 3D Umrechnung: React Three Fiber (0,0,0) ist die Mitte.
+                // Unsere 2D-Zeichnung startet unten links (0,0).
+                let cx = (w.x + dispW/2) - (wall.w/2);
+                let cy = (w.y + dispH/2) - (wall.h/2);
+
+                let isSolar = w.type === 'Solar';
+
+                return (
+                    <mesh key={w.id} position={[cx, cy, 10]} castShadow receiveShadow>
+                        <boxGeometry args={[dispW, dispH, isSolar ? 30 : 220]} />
+                        <meshStandardMaterial 
+                            color={isSolar ? "#1a252f" : "#87CEEB"} 
+                            metalness={isSolar ? 0.3 : 0.9} 
+                            roughness={isSolar ? 0.5 : 0.1} 
+                        />
+                    </mesh>
+                );
+            })}
+        </Canvas>
+    );
+};
 
 export default function App() {
   const [lang, setLang] = useState("🇩🇪 DE");
@@ -36,17 +79,15 @@ export default function App() {
   const [params, setParams] = useState({ 
     symmetry: false, chaos: 10, gravity: 50, lock: true, gapToggle: false, autoRot: false, 
     clusterCount: 1, clusterPinned: true, rectCluster: false, layoutMode: 'cluster',
-    gapMaxDim: 5000, solarAuto: false, solarFetch: false, realism: false
+    gapMaxDim: 5000, solarAuto: false, solarFetch: false, realism: false, view3D: false
   });
   const [seed, setSeed] = useState(42);
   
-  // Drag & Highlight States
   const [draggingId, setDraggingId] = useState(null);
   const [dragOffset, setDragOffset] = useState({x: 0, y: 0});
   const [selectedId, setSelectedId] = useState(null);
   const canvasRef = useRef(null); 
   
-  // Resizing States (Sidebars & Dividers)
   const [leftWidth, setLeftWidth] = useState(350);
   const [rightWidth, setRightWidth] = useState(350);
   const [matrixSplitLeft, setMatrixSplitLeft] = useState(500);
@@ -58,7 +99,6 @@ export default function App() {
   const topPaneRef = useRef(null);
   const [paneSize, setPaneSize] = useState({ w: 800, h: 400 }); 
 
-  // Chatbot State
   const [chatInput, setChatInput] = useState("");
   const [chatMessages, setChatMessages] = useState([
     { role: 'bot', text: '👋 Hallo! Ich bin deine intelligente Architekten-KI.' }
@@ -106,62 +146,27 @@ export default function App() {
     }, 50);
   };
 
-  // --- RESIZE HANDLER ---
-  const handleHDividerDragStart = (e) => {
-    e.preventDefault();
-    document.addEventListener('mousemove', handleHDividerDrag);
-    document.addEventListener('mouseup', handleHDividerDragEnd);
-  };
-  const handleHDividerDrag = (e) => {
-    const newHeight = (e.clientY / window.innerHeight) * 100;
-    setTopPaneHeight(Math.max(10, Math.min(newHeight, 90))); 
-  };
-  const handleHDividerDragEnd = () => {
-    document.removeEventListener('mousemove', handleHDividerDrag); document.removeEventListener('mouseup', handleHDividerDragEnd);
-  };
+  const handleHDividerDragStart = (e) => { e.preventDefault(); document.addEventListener('mousemove', handleHDividerDrag); document.addEventListener('mouseup', handleHDividerDragEnd); };
+  const handleHDividerDrag = (e) => { setTopPaneHeight(Math.max(10, Math.min((e.clientY / window.innerHeight) * 100, 90))); };
+  const handleHDividerDragEnd = () => { document.removeEventListener('mousemove', handleHDividerDrag); document.removeEventListener('mouseup', handleHDividerDragEnd); };
 
-  const handleLeftSidebarDragStart = (e) => {
-    e.preventDefault();
-    document.addEventListener('mousemove', handleLeftSidebarDrag);
-    document.addEventListener('mouseup', handleLeftSidebarDragEnd);
-  };
+  const handleLeftSidebarDragStart = (e) => { e.preventDefault(); document.addEventListener('mousemove', handleLeftSidebarDrag); document.addEventListener('mouseup', handleLeftSidebarDragEnd); };
   const handleLeftSidebarDrag = (e) => setLeftWidth(Math.max(250, Math.min(e.clientX, 600)));
-  const handleLeftSidebarDragEnd = () => {
-    document.removeEventListener('mousemove', handleLeftSidebarDrag); document.removeEventListener('mouseup', handleLeftSidebarDragEnd);
-  };
+  const handleLeftSidebarDragEnd = () => { document.removeEventListener('mousemove', handleLeftSidebarDrag); document.removeEventListener('mouseup', handleLeftSidebarDragEnd); };
 
-  const handleRightSidebarDragStart = (e) => {
-    e.preventDefault();
-    document.addEventListener('mousemove', handleRightSidebarDrag);
-    document.addEventListener('mouseup', handleRightSidebarDragEnd);
-  };
+  const handleRightSidebarDragStart = (e) => { e.preventDefault(); document.addEventListener('mousemove', handleRightSidebarDrag); document.addEventListener('mouseup', handleRightSidebarDragEnd); };
   const handleRightSidebarDrag = (e) => setRightWidth(Math.max(250, Math.min(window.innerWidth - e.clientX, 600)));
-  const handleRightSidebarDragEnd = () => {
-    document.removeEventListener('mousemove', handleRightSidebarDrag); document.removeEventListener('mouseup', handleRightSidebarDragEnd);
-  };
+  const handleRightSidebarDragEnd = () => { document.removeEventListener('mousemove', handleRightSidebarDrag); document.removeEventListener('mouseup', handleRightSidebarDragEnd); };
 
-  const handleMatrixDividerDragStart = (e) => {
-    e.preventDefault();
-    document.addEventListener('mousemove', handleMatrixDividerDrag);
-    document.addEventListener('mouseup', handleMatrixDividerDragEnd);
-  };
-  const handleMatrixDividerDrag = (e) => {
-    const offset = leftOpen ? leftWidth : 0;
-    setMatrixSplitLeft(Math.max(200, Math.min(e.clientX - offset, window.innerWidth - (rightOpen ? rightWidth : 0) - 100)));
-  };
-  const handleMatrixDividerDragEnd = () => {
-    document.removeEventListener('mousemove', handleMatrixDividerDrag); document.removeEventListener('mouseup', handleMatrixDividerDragEnd);
-  };
+  const handleMatrixDividerDragStart = (e) => { e.preventDefault(); document.addEventListener('mousemove', handleMatrixDividerDrag); document.addEventListener('mouseup', handleMatrixDividerDragEnd); };
+  const handleMatrixDividerDrag = (e) => { const offset = leftOpen ? leftWidth : 0; setMatrixSplitLeft(Math.max(200, Math.min(e.clientX - offset, window.innerWidth - (rightOpen ? rightWidth : 0) - 100))); };
+  const handleMatrixDividerDragEnd = () => { document.removeEventListener('mousemove', handleMatrixDividerDrag); document.removeEventListener('mouseup', handleMatrixDividerDragEnd); };
 
   const toggleFullscreen = () => {
-    if (!document.fullscreenElement) {
-        document.documentElement.requestFullscreen().catch(err => console.log(err));
-    } else {
-        document.exitFullscreen();
-    }
+    if (!document.fullscreenElement) document.documentElement.requestFullscreen().catch(err => console.log(err));
+    else document.exitFullscreen();
   };
 
-  // --- KI & MATHEMATIK ---
   const checkOverlap = (x, y, w, h, placedList, ignoreId = null) => {
     return placedList.some(p => {
         if(p.id === ignoreId) return false;
@@ -241,7 +246,6 @@ export default function App() {
     unpinnedWindows = unpinnedWindows.map(w => ({...w, _weight: (w.w*w.h) * (1 + (rng()-0.5)*(currentParams.chaos/50)) })).sort((a,b)=>b._weight - a._weight);
     let step = currentParams.layoutMode === 'rect' ? 50 : 100;
     
-    // Bounding Box Logic for Rectangular Clustering
     let bbox = { minX: 0, maxX: 0, minY: 0, maxY: 0 };
     const updateBBox = () => {
         if(placed.length > 0) {
@@ -256,7 +260,6 @@ export default function App() {
     unpinnedWindows.forEach(w => {
       let bestPos = null, minScore = Infinity;
       let orientations = currentParams.autoRot ? [false, true] : [w.rotated];
-      
       const gravityFactor = currentParams.gravity / 50; 
 
       orientations.forEach(rot => {
@@ -267,24 +270,15 @@ export default function App() {
             for(let x=0; x<=currentWall.w - eff_w; x+=step) {
               if(!checkOverlap(x, y, eff_w, eff_h, placed)) {
                 let score = 0;
-                
-                if (currentParams.layoutMode === 'scatter') { 
-                    score = rng() * 100000; 
-                } else if (currentParams.layoutMode === 'rect') { 
-                    score = y * 10000 + x; 
-                } else {
+                if (currentParams.layoutMode === 'scatter') { score = rng() * 100000; } 
+                else if (currentParams.layoutMode === 'rect') { score = y * 10000 + x; } 
+                else {
                     let distScore = Math.min(...centers.map(c => Math.pow(x+eff_w/2 - c.x, 2) + Math.pow(y+eff_h/2 - c.y, 2)));
                     score = distScore * gravityFactor;
                     if(currentParams.symmetry) score += Math.min(Math.abs(x+eff_w/2 - centers[0].x), Math.abs(y+eff_h/2 - centers[0].y)) * 5000;
                 }
-
-                // Extra Strafe, wenn "Rechteckig Clustern" an ist und die Box gesprengt wird
                 if (currentParams.rectCluster && placed.length > 0) {
-                    let newMaxX = Math.max(bbox.maxX, x + eff_w);
-                    let newMinX = Math.min(bbox.minX, x);
-                    let newMaxY = Math.max(bbox.maxY, y + eff_h);
-                    let newMinY = Math.min(bbox.minY, y);
-                    let newArea = (newMaxX - newMinX) * (newMaxY - newMinY);
+                    let newArea = (Math.max(bbox.maxX, x + eff_w) - Math.min(bbox.minX, x)) * (Math.max(bbox.maxY, y + eff_h) - Math.min(bbox.minY, y));
                     score += newArea * 50;
                 }
                 
@@ -293,10 +287,7 @@ export default function App() {
             }
           }
       });
-      if(bestPos) {
-          placed.push(bestPos);
-          updateBBox();
-      }
+      if(bestPos) { placed.push(bestPos); updateBBox(); }
     });
 
     if(placed.length > 0 && fixed_x.length === 0 && currentParams.layoutMode !== 'scatter' && currentParams.clusterCount === 1) {
@@ -307,7 +298,6 @@ export default function App() {
       placed = placed.map(p => ({...p, x: p.x+sx, y: p.y+sy}));
     }
 
-    // 2. AUTO-SOLAR LOGIK
     let generatedSolar = [];
     if (currentParams.solarAuto) {
         let tempGaps = calculateGapsExact(currentWall.w, currentWall.h, placed, false);
@@ -330,9 +320,7 @@ export default function App() {
                     if (fits) {
                         let eff_w = rot ? s.h : s.w; let eff_h = rot ? s.w : s.h;
                         placed.push({...s, x: g.x, y: g.y, w: eff_w, h: eff_h, rotated: rot});
-                    } else {
-                        availableSolar.push(s); 
-                    }
+                    } else { availableSolar.push(s); }
                 }
             }
         });
@@ -340,7 +328,6 @@ export default function App() {
 
     let rawGaps = calculateGapsExact(currentWall.w, currentWall.h, placed, currentParams.gapToggle);
     
-    // 3. SUBDIVISION LOGIK FÜR GAPS
     let finalGaps = [];
     let maxDim = currentParams.gapMaxDim || 5000;
     rawGaps.forEach(g => {
@@ -409,8 +396,7 @@ export default function App() {
             price: isSolar ? 150 : (isReuse ? (size[0]*size[1])/25000 + 20 : (size[0]*size[1])/15000 + 100),
             color: isSolar ? "#2c3e50" : (isReuse ? "#4682b4" : "#add8e6"), 
             source: isReuse ? `Marketplace (${searchParams.zip})` : `Supplier`, 
-            dist: distance, 
-            type: isSolar ? "Solar" : "Fenster",
+            dist: distance, type: isSolar ? "Solar" : "Fenster",
             pinned: false, rotated: false, visible: true, link: "https://example.com"
         });
     }
@@ -448,7 +434,6 @@ export default function App() {
     setWindows(updated); runAI(updated, wall, params, seed);
   };
 
-  // --- EXPORTE FUNKTIONEN ---
   const getCsvString = () => {
     let r = [ ["ID", "Typ", "Breite", "Hoehe", "m2", "Preis", "Distanz(km)", "Herkunft"] ];
     windows.filter(w=>w.visible).forEach(w => r.push([w.pos, w.type, w.w, w.h, ((w.w*w.h)/1000000).toFixed(2), w.price.toFixed(2), w.dist, w.source]));
@@ -537,7 +522,6 @@ export default function App() {
     const link = document.createElement("a"); link.href = URL.createObjectURL(content); link.download = "facade_project.zip"; link.click();
   };
 
-  // --- DRAG & HIGHLIGHT LOGIK ---
   const handleWindowPointerDown = (e, w) => {
     e.stopPropagation(); 
     setSelectedId(w.id);
@@ -608,7 +592,6 @@ export default function App() {
     setChatLoading(false);
   };
 
-  // Sehr realistische, elegante Flat Line Drawing Architektur Silhouette
   const archSVG = `data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 300'><text x='50' y='20' font-size='14' font-family='sans-serif' text-anchor='middle' fill='%23555' font-weight='bold'>1.78m</text><path d='M 50 35 C 45 35 42 39 42 44 C 42 49 45 53 50 53 C 55 53 58 49 58 44 C 58 39 55 35 50 35 Z M 42 58 C 35 60 32 65 30 75 L 25 130 L 35 130 L 40 90 L 42 150 L 35 290 L 45 290 L 50 190 L 55 290 L 65 290 L 58 150 L 60 90 L 65 130 L 75 130 L 70 75 C 68 65 65 60 58 58 C 55 57 45 57 42 58 Z' fill='none' stroke='%23333' stroke-width='2'/></svg>`;
 
   return (
@@ -626,7 +609,7 @@ export default function App() {
           </div>
           <h2 style={{fontSize:"18px", marginTop:0, color:"#111"}}>{T.title}</h2>
 
-          {/* SUCHE (Inkl. Solar Option) */}
+          {/* SUCHE */}
           <div style={{background:"#f8f9fa", padding:"15px", borderRadius:"6px", marginBottom:"15px", border:"1px solid #e9ecef"}}>
             <h4 style={{margin:"0 0 10px 0"}}>{T.search_h}</h4>
             <select value={searchParams.land} onChange={e=>setSearch({...searchParams, land:e.target.value})} style={{width:"100%", padding:"8px", marginBottom:"5px", border:"1px solid #ccc", borderRadius:"4px"}}>{COUNTRIES.map(c => <option key={c} value={c}>{c}</option>)}</select>
@@ -729,8 +712,11 @@ export default function App() {
             <div style={{flex:1}}><div style={{fontSize:"11px", color:"#FF4B4B", fontWeight:"bold"}}>{T.price}</div><div style={{fontSize:"16px", fontWeight:"bold", color:"#FF4B4B"}}>{totalPrice.toFixed(2)} €</div></div>
             
             <div style={{display:"flex", gap:"5px", alignItems:"center"}}>
+               {/* 3D TOGGLE */}
+               <button onClick={()=>setParams({...params, view3D: !params.view3D})} style={{padding:"6px 10px", background: params.view3D ? "#0066cc" : "#e9ecef", color: params.view3D ? "white" : "#333", border:"none", borderRadius:"4px", cursor:"pointer", fontSize:"11px", fontWeight:"bold", marginRight:"10px"}}>{T.toggle_3d}</button>
+
                {/* REALISMUS SWITCH */}
-               <label style={{fontSize:"12px", display:"flex", alignItems:"center", gap:"5px", marginRight:"10px", fontWeight:"bold", color:"#2c3e50"}}><input type="checkbox" checked={params.realism} onChange={e=>setParams({...params, realism:e.target.checked})}/> {T.realism}</label>
+               {!params.view3D && <label style={{fontSize:"12px", display:"flex", alignItems:"center", gap:"5px", marginRight:"10px", fontWeight:"bold", color:"#2c3e50"}}><input type="checkbox" checked={params.realism} onChange={e=>setParams({...params, realism:e.target.checked})}/> {T.realism}</label>}
                
                <button onClick={toggleFullscreen} style={{padding:"6px 10px", background:"#333", color:"white", border:"none", borderRadius:"4px", cursor:"pointer", fontSize:"11px", fontWeight:"bold"}}>{T.fullscreen}</button>
                <button onClick={()=>downloadCanvas(drawMainCanvas, "facade_collage.png")} style={{padding:"6px 10px", background:"#fff", border:"1px solid #ccc", borderRadius:"4px", cursor:"pointer", fontSize:"11px"}}>{T.exp_img}</button>
@@ -743,60 +729,68 @@ export default function App() {
 
           <div ref={topPaneRef} onClick={() => setSelectedId(null)} style={{ flex: 1, padding: "15px", display: "flex", gap: "25px", alignItems: "center", justifyContent:"flex-start", overflow:"hidden", background:"#eef1f5" }}>
             
+            {/* MAIN CANVAS ODER 3D ANSICHT */}
             <div style={{display: "flex", alignItems: "flex-end"}}>
-              <div style={{ width: Math.max(15, 300 * mainScale), height: 1780 * mainScale, marginRight: "10px", background: `url("${archSVG}") no-repeat bottom center/contain`, opacity: 0.7 }} />
+              {!params.view3D && <div style={{ width: Math.max(15, 300 * mainScale), height: 1780 * mainScale, marginRight: "10px", background: `url("${archSVG}") no-repeat bottom center/contain`, opacity: 0.7 }} />}
               <div>
-                <div style={{textAlign:"center", fontWeight:"bold", marginBottom:"8px", fontSize:"11px", color:"#555"}}>Collage (Drag & Drop)</div>
-                <div ref={canvasRef} onMouseMove={onDrag} onMouseUp={stopDrag} onMouseLeave={stopDrag}
-                  style={{ width: canvasW, height: canvasH, border: "3px solid #333", position: "relative", background: "repeating-linear-gradient(45deg, #fce4e4, #fce4e4 10px, #ffffff 10px, #ffffff 20px)", boxShadow: "0 5px 15px rgba(0,0,0,0.1)", borderRadius:"2px" }}>
-                  
-                  {gaps.map(g => (
-                    <div key={g.id} style={{ position: "absolute", left: g.x * mainScale, bottom: g.y * mainScale, width: g.w * mainScale, height: g.h * mainScale, background: "rgba(255, 75, 75, 0.4)", border: "1px dashed #FF4B4B", pointerEvents: "none", display: "flex", justifyContent: "center", alignItems: "center", fontSize: "9px", color: "white", textShadow: "0px 1px 2px rgba(0,0,0,0.8)", fontWeight: "bold" }}>
-                      {(g.w * g.h / 1000000) >= 0.4 ? `${(g.w * g.h / 1000000).toFixed(2)}` : ""}
+                <div style={{textAlign:"center", fontWeight:"bold", marginBottom:"8px", fontSize:"11px", color:"#555"}}>{params.view3D ? "3D Architektur Modell" : "Collage (Drag & Drop)"}</div>
+                
+                {/* 3D VIEW ODER 2D VIEW */}
+                {params.view3D ? (
+                    <div style={{ width: canvasW, height: canvasH, background: "linear-gradient(to top, #d0e1f9, #87CEEB)", borderRadius: "2px", boxShadow: "0 5px 15px rgba(0,0,0,0.2)" }}>
+                        <Suspense fallback={<div style={{padding:"20px", textAlign:"center"}}>Lade 3D Engine...</div>}>
+                            <Scene3D windows={windows} wall={wall} />
+                        </Suspense>
                     </div>
-                  ))}
-
-                  {windows.filter(w=>w.visible).map(w => {
-                    let dispW = w.rotated ? w.h : w.w; let dispH = w.rotated ? w.w : w.h;
-                    let isDragging = draggingId === w.id;
-                    let isSelected = selectedId === w.id;
-                    
-                    // Style für Realismus
-                    let realismBorder = params.realism ? 'inset 0 0 0 4px #e0e0e0, inset 0 0 0 8px #555' : 'none';
-                    let standardBorder = isSelected ? "3px solid #00a8ff" : (w.pinned ? "2px solid #111" : "1px solid #555");
-                    let finalBoxShadow = isSelected ? "0 0 15px 5px rgba(0,168,255,0.7)" : (params.realism ? realismBorder : (w.pinned ? "none" : "0 4px 8px rgba(0,0,0,0.3)"));
-
-                    return (
-                      <div key={w.id} onMouseDown={(e) => handleWindowPointerDown(e, w)}
-                        style={{ position: "absolute", left: w.x * mainScale, bottom: w.y * mainScale, width: dispW * mainScale, height: dispH * mainScale, 
-                        background: w.type === 'Solar' ? "#1a252f" : w.color, 
-                        border: params.realism ? 'none' : standardBorder, 
-                        boxShadow: finalBoxShadow,
-                        boxSizing: 'border-box',
-                        cursor: w.pinned ? "not-allowed" : (isDragging ? "grabbing" : "grab"), display: "flex", flexDirection: "column", justifyContent: "center", alignItems: "center", fontWeight: "bold", fontSize: "10px", color: w.type === 'Solar' ? "white" : "#222", zIndex: isSelected || isDragging ? 100 : (w.pinned ? 5 : 10), opacity: w.pinned ? 0.95 : 1, transition: isDragging ? "none" : "all 0.1s" }}
-                      >
-                        {/* Glas Spiegelung für Fenster */}
-                        {params.realism && w.type === 'Fenster' && (
-                           <div style={{ position: 'absolute', top: 0, left: 0, right: 0, bottom: 0, background: 'linear-gradient(135deg, rgba(255,255,255,0) 0%, rgba(255,255,255,0.5) 50%, rgba(255,255,255,0) 50.1%, rgba(255,255,255,0) 100%)', pointerEvents: 'none' }} />
-                        )}
-                        {/* Solar Grid für Solar */}
-                        {params.realism && w.type === 'Solar' && (
-                           <div style={{ position: 'absolute', top: 0, left: 0, right: 0, bottom: 0, backgroundImage: 'linear-gradient(rgba(255, 255, 255, 0.3) 1px, transparent 1px), linear-gradient(90deg, rgba(255, 255, 255, 0.3) 1px, transparent 1px)', backgroundSize: '15px 15px', pointerEvents: 'none' }} />
-                        )}
-
-                        <div style={{position: "absolute", top: 1, right: 1, display: "flex", gap: "2px", zIndex: 10}}>
-                          <button onClick={(e)=>{e.stopPropagation(); toggleRotate(w.id);}} style={{background:"rgba(255,255,255,0.8)", color:"black", border:"1px solid #777", borderRadius:"2px", fontSize:"8px", cursor:"pointer", padding:"1px 3px"}}>🔄</button>
-                          <button onClick={(e)=>{e.stopPropagation(); toggleWinProp(w.id, 'pinned');}} style={{background:"rgba(255,255,255,0.8)", color:"black", border:"1px solid #777", borderRadius:"2px", fontSize:"8px", cursor:"pointer", padding:"1px 3px"}}>{w.pinned ? "❌" : "📌"}</button>
+                ) : (
+                    <div ref={canvasRef} onMouseMove={onDrag} onMouseUp={stopDrag} onMouseLeave={stopDrag}
+                      style={{ width: canvasW, height: canvasH, border: "3px solid #333", position: "relative", background: "repeating-linear-gradient(45deg, #fce4e4, #fce4e4 10px, #ffffff 10px, #ffffff 20px)", boxShadow: "0 5px 15px rgba(0,0,0,0.1)", borderRadius:"2px" }}>
+                      
+                      {gaps.map(g => (
+                        <div key={g.id} style={{ position: "absolute", left: g.x * mainScale, bottom: g.y * mainScale, width: g.w * mainScale, height: g.h * mainScale, background: "rgba(255, 75, 75, 0.4)", border: "1px dashed #FF4B4B", pointerEvents: "none", display: "flex", justifyContent: "center", alignItems: "center", fontSize: "9px", color: "white", textShadow: "0px 1px 2px rgba(0,0,0,0.8)", fontWeight: "bold" }}>
+                          {(g.w * g.h / 1000000) >= 0.4 ? `${(g.w * g.h / 1000000).toFixed(2)}` : ""}
                         </div>
-                        <span style={{pointerEvents: "none", marginTop: "10px", textAlign: "center", zIndex: 10}}>{w.pinned && "📌 "}{w.pos}<br/><span style={{fontSize: "8px", fontWeight:"normal"}}>{dispW}x{dispH}</span></span>
-                      </div>
-                    );
-                  })}
-                </div>
+                      ))}
+
+                      {windows.filter(w=>w.visible).map(w => {
+                        let dispW = w.rotated ? w.h : w.w; let dispH = w.rotated ? w.w : w.h;
+                        let isDragging = draggingId === w.id;
+                        let isSelected = selectedId === w.id;
+                        
+                        let realismBorder = params.realism ? 'inset 0 0 0 4px #e0e0e0, inset 0 0 0 8px #555' : 'none';
+                        let standardBorder = isSelected ? "3px solid #00a8ff" : (w.pinned ? "2px solid #111" : "1px solid #555");
+                        let finalBoxShadow = isSelected ? "0 0 15px 5px rgba(0,168,255,0.7)" : (params.realism ? realismBorder : (w.pinned ? "none" : "0 4px 8px rgba(0,0,0,0.3)"));
+
+                        return (
+                          <div key={w.id} onMouseDown={(e) => handleWindowPointerDown(e, w)}
+                            style={{ position: "absolute", left: w.x * mainScale, bottom: w.y * mainScale, width: dispW * mainScale, height: dispH * mainScale, 
+                            background: w.type === 'Solar' ? "#1a252f" : w.color, 
+                            border: params.realism ? 'none' : standardBorder, 
+                            boxShadow: finalBoxShadow,
+                            boxSizing: 'border-box',
+                            cursor: w.pinned ? "not-allowed" : (isDragging ? "grabbing" : "grab"), display: "flex", flexDirection: "column", justifyContent: "center", alignItems: "center", fontWeight: "bold", fontSize: "10px", color: w.type === 'Solar' ? "white" : "#222", zIndex: isSelected || isDragging ? 100 : (w.pinned ? 5 : 10), opacity: w.pinned ? 0.95 : 1, transition: isDragging ? "none" : "all 0.1s" }}
+                          >
+                            {params.realism && w.type === 'Fenster' && (
+                               <div style={{ position: 'absolute', top: 0, left: 0, right: 0, bottom: 0, background: 'linear-gradient(135deg, rgba(255,255,255,0) 0%, rgba(255,255,255,0.5) 50%, rgba(255,255,255,0) 50.1%, rgba(255,255,255,0) 100%)', pointerEvents: 'none' }} />
+                            )}
+                            {params.realism && w.type === 'Solar' && (
+                               <div style={{ position: 'absolute', top: 0, left: 0, right: 0, bottom: 0, backgroundImage: 'linear-gradient(rgba(255, 255, 255, 0.3) 1px, transparent 1px), linear-gradient(90deg, rgba(255, 255, 255, 0.3) 1px, transparent 1px)', backgroundSize: '15px 15px', pointerEvents: 'none' }} />
+                            )}
+
+                            <div style={{position: "absolute", top: 1, right: 1, display: "flex", gap: "2px", zIndex: 10}}>
+                              <button onClick={(e)=>{e.stopPropagation(); toggleRotate(w.id);}} style={{background:"rgba(255,255,255,0.8)", color:"black", border:"1px solid #777", borderRadius:"2px", fontSize:"8px", cursor:"pointer", padding:"1px 3px"}}>🔄</button>
+                              <button onClick={(e)=>{e.stopPropagation(); toggleWinProp(w.id, 'pinned');}} style={{background:"rgba(255,255,255,0.8)", color:"black", border:"1px solid #777", borderRadius:"2px", fontSize:"8px", cursor:"pointer", padding:"1px 3px"}}>{w.pinned ? "❌" : "📌"}</button>
+                            </div>
+                            <span style={{pointerEvents: "none", marginTop: "10px", textAlign: "center", zIndex: 10}}>{w.pinned && "📌 "}{w.pos}<br/><span style={{fontSize: "8px", fontWeight:"normal"}}>{dispW}x{dispH}</span></span>
+                          </div>
+                        );
+                      })}
+                    </div>
+                )}
               </div>
             </div>
 
-            <div style={{display: "flex", gap: "20px", alignItems:"flex-end", opacity: topPaneHeight < 30 ? 0 : 1, transition: "0.2s"}}>
+            <div style={{display: "flex", gap: "20px", alignItems:"flex-end", opacity: topPaneHeight < 30 || params.view3D ? 0 : 1, transition: "0.2s"}}>
               <div>
                 <div style={{textAlign:"center", fontWeight:"bold", marginBottom:"8px", fontSize:"11px", color:"#555"}}>S/W Analyse</div>
                 <div style={{ width: wall.w * subScale, height: wall.h * subScale, border: "2px solid #000", position: "relative", background: "white", boxShadow: "0 2px 10px rgba(0,0,0,0.1)" }}>
@@ -909,7 +903,8 @@ export default function App() {
                   <tbody>
                     {gaps.map((g,i) => (
                       <tr key={g.id} style={{borderBottom:"1px solid #eee"}}>
-                        <td style={{padding:"6px", fontWeight:"bold"}}>Gap-{i+1}</td><td style={{padding:"6px"}}>{g.w}x{g.h}</td>
+                        <td style={{padding:"6px", fontWeight:"bold"}}>Gap-{i+1}</td>
+                        <td style={{padding:"6px"}}>{g.w}x{g.h}</td>
                         <td style={{padding:"6px", fontWeight:"bold"}}>{((g.w*g.h)/1000000).toFixed(2)}</td>
                         <td style={{padding:"6px"}}>{g.x}</td><td style={{padding:"6px"}}>{g.y}</td>
                       </tr>

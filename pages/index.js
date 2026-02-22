@@ -1,23 +1,24 @@
 import React, { useState, useRef, useEffect, Suspense } from 'react';
 import JSZip from 'jszip';
 import { Canvas } from '@react-three/fiber';
-import { OrbitControls, Environment } from '@react-three/drei';
+import { OrbitControls, Environment, ContactShadows } from '@react-three/drei';
 
-// --- VOLLSTÄNDIGES WÖRTERBUCH (UNGEKÜRZT) ---
+// --- VOLLSTÄNDIGES WÖRTERBUCH (ALLE 9 SPRACHEN) ---
 const LANGS = {
-  "🇩🇪 DE": { title: "🧱 Facade AI Pro v10.0", search_h: "1. Globale Suche", c_land: "Land", c_zip: "PLZ / Ort", c_rad: "Umkreis (km)", reuse: "Gebraucht", new: "Neu", search_solar: "☀️ Nur Solarpaneele suchen", btn_search: "Daten abrufen", cust_h: "2. Eigenbestand", w_lbl: "↔️ Breite", h_lbl: "↕️ Höhe", btn_add: "Hinzufügen", wall_h: "Wand & Architektur", btn_suggest: "💡 Wand optimieren", btn_shuf: "🎲 KI Neu Clustern", btn_gaps: "✂️ Zuschnitt drehen", lock: "🔒 Gepinnte behalten", sym: "📐 Symmetrie", chaos: "Chaos", gravity: "🧲 Gravitationsstärke", seed: "Seed", auto_rot: "🔄 Auto-Rotation", clust_num: "🏝️ Anzahl Cluster", clust_pin: "🧲 Um Gepinnte anordnen", rect_clust: "🔲 Rechteckig Clustern", mode_cluster: "🏝️ Organisch", mode_rect: "🧱 Unten/Block", mode_scatter: "🌌 Verstreuen", gap_subdiv: "📏 Max. Verschnitt (mm)", solar_auto: "☀️ Auto-Solar in Lücken", solar_fetch: "🌐 Auto-Suche Solar", wall_a: "Wand", win_a: "Fenster/Solar", fill: "Füllgrad", price: "Preis", mat_h: "📋 Matrix", exp_csv: "CSV", exp_cad: "DXF", exp_img: "Bild", exp_bw: "S/W", exp_line: "CAD", exp_zip: "ZIP", realism: "✨ Realismus", tabs: { col: "🖼️ Collage", bw: "⬛ S/W Analyse", cad: "📐 CAD Modell", plan: "📏 Grundriss (Schnitt)", d3: "🧊 3D Ansicht" }, clear_inv: "🗑️ Inventar leeren", clear_draw: "🧹 Zeichnung leeren", wall_depth: "Wandstärke (mm)", cut_height: "Schnitthöhe (mm)", gaps_h: "🟥 Zuschnitt-Liste", no_gaps: "Wand perfekt gefüllt!", col: {v:"👁️", p:"📌", r:"🔄", f:"⭐", id:"ID", x:"X", y:"Y", dim:"Maße", a:"m²", src:"Herkunft", dist: "Dist.", pr:"Preis", l:"Link"}, all_windows: "📦 Inventar (Gefunden)", used_windows: "🏗️ Auf der Zeichnung", fullscreen: "⛶ Vollbild" },
-  "🇪🇸 ES": { title: "🧱 Generador Fachadas v10.0", search_h: "1. Búsqueda", c_land: "País", c_zip: "C.P.", c_rad: "Radio (km)", reuse: "Usado", new: "Nuevo", search_solar: "☀️ Buscar Solares", btn_search: "Obtener datos", cust_h: "2. Inventario", w_lbl: "↔️ Ancho", h_lbl: "↕️ Alto", btn_add: "Añadir", wall_h: "Muro y Arquitectura", btn_suggest: "💡 Optimizar Muro", btn_shuf: "🎲 Reagrupar IA", btn_gaps: "✂️ Rotar cortes", lock: "🔒 Bloquear Pines", sym: "📐 Simetría", chaos: "Caos", gravity: "🧲 Gravedad", seed: "Semilla", auto_rot: "🔄 Auto-rotación", clust_num: "🏝️ Clústeres", clust_pin: "🧲 Agrupar a fijos", rect_clust: "🔲 Rectangular", mode_cluster: "🏝️ Orgánico", mode_rect: "🧱 Bloque", mode_scatter: "🌌 Dispersión", gap_subdiv: "📏 Corte máx (mm)", solar_auto: "☀️ Auto-Solar", solar_fetch: "🌐 Búsqueda Solar", wall_a: "Muro", win_a: "Vent./Sol.", fill: "Relleno", price: "Precio", mat_h: "📋 Matriz", exp_csv: "CSV", exp_cad: "DXF", exp_img: "Img", exp_bw: "B/N", exp_line: "CAD", exp_zip: "ZIP", realism: "✨ Realismo", tabs: { col: "🖼️ Collage", bw: "⬛ Análisis B/N", cad: "📐 Modelo CAD", plan: "📏 Plano (Corte)", d3: "🧊 Vista 3D" }, clear_inv: "🗑️ Vaciar Inv.", clear_draw: "🧹 Limpiar Dibujo", wall_depth: "Grosor Muro (mm)", cut_height: "Altura de corte (mm)", gaps_h: "🟥 Cortes", no_gaps: "¡Perfecto!", col: {v:"👁️", p:"📌", r:"🔄", f:"⭐", id:"ID", x:"X", y:"Y", dim:"Dim", a:"m²", src:"Origen", dist: "Dist", pr:"Precio", l:"Link"}, all_windows: "📦 Inventario", used_windows: "🏗️ En Dibujo", fullscreen: "⛶ Pantalla Comp." },
-  "🇬🇧 EN": { title: "🧱 Facade AI Pro v10.0", search_h: "1. Search", c_land: "Country", c_zip: "ZIP / City", c_rad: "Radius (km)", reuse: "Used", new: "New", search_solar: "☀️ Search Solar Only", btn_search: "Fetch Data", cust_h: "2. Inventory", w_lbl: "↔️ Width", h_lbl: "↕️ Height", btn_add: "Add", wall_h: "Wall & Architecture", btn_suggest: "💡 Optimize Wall", btn_shuf: "🎲 Re-Cluster AI", btn_gaps: "✂️ Toggle Gaps", lock: "🔒 Keep Pinned", sym: "📐 Symmetry", chaos: "Chaos", gravity: "🧲 Gravity", seed: "Seed", auto_rot: "🔄 Auto-Rotate", clust_num: "🏝️ Clusters", clust_pin: "🧲 Pin-Gravity", rect_clust: "🔲 Rect Block", mode_cluster: "🏝️ Organic", mode_rect: "🧱 Bottom Block", mode_scatter: "🌌 Scatter", gap_subdiv: "📏 Max Gap (mm)", solar_auto: "☀️ Auto-Solar", solar_fetch: "🌐 Fetch Solar", wall_a: "Wall", win_a: "Win/Solar", fill: "Fill", price: "Price", mat_h: "📋 Matrix", exp_csv: "CSV", exp_cad: "DXF", exp_img: "Img", exp_bw: "B/W", exp_line: "CAD", exp_zip: "ZIP", realism: "✨ Realism", tabs: { col: "🖼️ Collage", bw: "⬛ B/W Analysis", cad: "📐 CAD Model", plan: "📏 Floor Plan", d3: "🧊 3D View" }, clear_inv: "🗑️ Clear Inv", clear_draw: "🧹 Clear Canvas", wall_depth: "Wall Depth (mm)", cut_height: "Cut Height (mm)", gaps_h: "🟥 Gaps", no_gaps: "Perfect!", col: {v:"👁️", p:"📌", r:"🔄", f:"⭐", id:"ID", x:"X", y:"Y", dim:"Dims", a:"m²", src:"Source", dist: "Dist", pr:"Price", l:"Link"}, all_windows: "📦 Inventory (All)", used_windows: "🏗️ On Canvas", fullscreen: "⛶ Fullscreen" },
-  "🇫🇷 FR": { title: "🧱 Façade AI Pro v10.0", search_h: "Recherche", c_land: "Pays", c_zip: "CP", c_rad: "Rayon", reuse: "Usagé", new: "Neuf", search_solar: "Solaire", btn_search: "Chercher", cust_h: "Inventaire", w_lbl: "↔️ Largeur", h_lbl: "↕️ Hauteur", btn_add: "Ajouter", wall_h: "Mur & Archi", btn_suggest: "Optimiser", btn_shuf: "Mélanger", btn_gaps: "Coupes", lock: "Fixer", sym: "Symétrie", chaos: "Chaos", gravity: "Gravité", seed: "Graine", auto_rot: "Rotation", clust_num: "Groupes", clust_pin: "Aimant", rect_clust: "Rect", mode_cluster: "Organique", mode_rect: "Bloc", mode_scatter: "Aléatoire", gap_subdiv: "Gap Max", solar_auto: "Auto-Sol", solar_fetch: "Chercher Sol", wall_a: "Mur", win_a: "Fen/Sol", fill: "Rempl.", price: "Prix", mat_h: "Matrice", exp_csv: "CSV", exp_cad: "DXF", exp_img: "Img", exp_bw: "N/B", exp_line: "CAD", exp_zip: "ZIP", realism: "Réalisme", tabs: { col: "Collage", bw: "N/B", cad: "CAD", plan: "Plan", d3: "3D" }, clear_inv: "Vider Inv", clear_draw: "Vider Dessin", wall_depth: "Épaisseur", cut_height: "Hauteur Coupe", gaps_h: "Panneaux", no_gaps: "Parfait!", col: {v:"👁️", p:"📌", r:"🔄", f:"⭐", id:"ID", x:"X", y:"Y", dim:"Dim", a:"m²", src:"Source", dist: "Dist", pr:"Prix", l:"Lien"}, all_windows: "Inventaire", used_windows: "Utilisées", fullscreen: "Plein Écran" },
-  "🇮🇹 IT": { title: "🧱 Facciata AI Pro v10.0", search_h: "Ricerca", c_land: "Paese", c_zip: "CAP", c_rad: "Raggio", reuse: "Usato", new: "Nuovo", search_solar: "Solare", btn_search: "Cerca", cust_h: "Inventario", w_lbl: "↔️ Largh.", h_lbl: "↕️ Alt.", btn_add: "Aggiungi", wall_h: "Muro & Archi", btn_suggest: "Ottimizza", btn_shuf: "Rimescola", btn_gaps: "Tagli", lock: "Blocca", sym: "Simmetria", chaos: "Caos", gravity: "Gravità", seed: "Seme", auto_rot: "Rotazione", clust_num: "Cluster", clust_pin: "Calamita", rect_clust: "Rettangolo", mode_cluster: "Organico", mode_rect: "Blocco", mode_scatter: "Sparso", gap_subdiv: "Taglio Max", solar_auto: "Auto-Sol", solar_fetch: "Cerca Sol", wall_a: "Muro", win_a: "Fin/Sol", fill: "Riemp.", price: "Prezzo", mat_h: "Matrice", exp_csv: "CSV", exp_cad: "DXF", exp_img: "Img", exp_bw: "B/N", exp_line: "CAD", exp_zip: "ZIP", realism: "Realismo", tabs: { col: "Collage", bw: "B/N", cad: "CAD", plan: "Pianta", d3: "3D" }, clear_inv: "Svuota Inv", clear_draw: "Svuota Dis", wall_depth: "Spessore", cut_height: "Alt. Taglio", gaps_h: "Pannelli", no_gaps: "Perfetto!", col: {v:"👁️", p:"📌", r:"🔄", f:"⭐", id:"ID", x:"X", y:"Y", dim:"Dim", a:"m²", src:"Fonte", dist: "Dist", pr:"Prezzo", l:"Link"}, all_windows: "Inventario", used_windows: "Usate", fullscreen: "Schermo Intero" },
-  "🇨🇭 RM": { title: "🧱 Façadas AI Pro v10.0", search_h: "Tschertga", c_land: "Pajais", c_zip: "PLZ", c_rad: "Radius", reuse: "Duvrà", new: "Nov", search_solar: "Solar", btn_search: "Tschertgar", cust_h: "Inventari", w_lbl: "↔️ Lad", h_lbl: "↕️ Aut", btn_add: "Agiuntar", wall_h: "Paraid", btn_suggest: "Optimisar", btn_shuf: "Maschadar", btn_gaps: "Tagls", lock: "Fixar", sym: "Simetria", chaos: "Caos", gravity: "Gravitad", seed: "Seed", auto_rot: "Rotaziun", clust_num: "Clust", clust_pin: "Magnet", rect_clust: "Rect", mode_cluster: "Organic", mode_rect: "Bloc", mode_scatter: "Sparp.", gap_subdiv: "Max Gap", solar_auto: "Auto-Sol", solar_fetch: "Tschertgar Sol", wall_a: "Paraid", win_a: "Fan/Sol", fill: "Empl.", price: "Pretsch", mat_h: "Matrix", exp_csv: "CSV", exp_cad: "DXF", exp_img: "Img", exp_bw: "S/W", exp_line: "CAD", exp_zip: "ZIP", realism: "Realissem", tabs: { col: "Collage", bw: "S/W", cad: "CAD", plan: "Plan", d3: "3D" }, clear_inv: "Svida Inv", clear_draw: "Svida Maletg", wall_depth: "Grossezza", cut_height: "Autezza Tagl", gaps_h: "Panels", no_gaps: "Perfetg!", col: {v:"👁️", p:"📌", r:"🔄", f:"⭐", id:"ID", x:"X", y:"Y", dim:"Dim", a:"m²", src:"Funt", dist: "Dist", pr:"Pretsch", l:"Link"}, all_windows: "Inventari", used_windows: "Duvradas", fullscreen: "Vollbild" },
-  "🇧🇬 BG": { title: "🧱 Фасади AI v10.0", search_h: "Търсене", c_land: "Държава", c_zip: "ПК", c_rad: "Радиус", reuse: "Стари", new: "Нови", search_solar: "Соларни", btn_search: "Търси", cust_h: "Инвентар", w_lbl: "↔️ Шир", h_lbl: "↕️ Вис", btn_add: "Добави", wall_h: "Стена", btn_suggest: "Оптимизирай", btn_shuf: "Разбъркай", btn_gaps: "Панели", lock: "Заключи", sym: "Симетрия", chaos: "Хаос", gravity: "Гравитация", seed: "Сийд", auto_rot: "Ротация", clust_num: "Клъстери", clust_pin: "Магнит", rect_clust: "Блок", mode_cluster: "Органичен", mode_rect: "Блок", mode_scatter: "Разпръснато", gap_subdiv: "Макс Панел", solar_auto: "Авто-Солар", solar_fetch: "Търси Солар", wall_a: "Стена", win_a: "Проз/Сол", fill: "Зап.", price: "Цена", mat_h: "Матрица", exp_csv: "CSV", exp_cad: "DXF", exp_img: "Img", exp_bw: "Ч/Б", exp_line: "CAD", exp_zip: "ZIP", realism: "Реализъм", tabs: { col: "Колаж", bw: "Ч/Б", cad: "CAD", plan: "План", d3: "3D" }, clear_inv: "Изчисти Инв", clear_draw: "Изчисти Черт", wall_depth: "Дебелина", cut_height: "Височина Срез", gaps_h: "Панели", no_gaps: "Идеално!", col: {v:"👁️", p:"📌", r:"🔄", f:"⭐", id:"ID", x:"X", y:"Y", dim:"Разм", a:"m²", src:"Изт", dist: "Разст", pr:"Цена", l:"Линк"}, all_windows: "Инвентар", used_windows: "Използвани", fullscreen: "Цял Екран" },
-  "🇮🇱 HE": { title: "🧱 חזיתות AI v10.0", search_h: "חיפוש", c_land: "מדינה", c_zip: "מיקוד", c_rad: "רדיוס", reuse: "משומש", new: "חדש", search_solar: "סולארי", btn_search: "חפש", cust_h: "מלאי", w_lbl: "↔️ רוחב", h_lbl: "↕️ גובה", btn_add: "הוסף", wall_h: "קיר", btn_suggest: "יעל", btn_shuf: "ערבב", btn_gaps: "חיתוכים", lock: "נעל", sym: "סימטריה", chaos: "כאוס", gravity: "כבידה", seed: "גרעין", auto_rot: "סיבוב", clust_num: "אשכולות", clust_pin: "מגנט", rect_clust: "בלוק", mode_cluster: "אורגני", mode_rect: "בלוק", mode_scatter: "פיזור", gap_subdiv: "פאנל מקס", solar_auto: "אוטו-סולארי", solar_fetch: "חפש סולארי", wall_a: "קיר", win_a: "חל/סול", fill: "מילוי", price: "מחיר", mat_h: "מטריצה", exp_csv: "CSV", exp_cad: "DXF", exp_img: "תמונה", exp_bw: "ש/ל", exp_line: "CAD", exp_zip: "ZIP", realism: "ריאליזם", tabs: { col: "קולאז׳", bw: "ש/ל", cad: "CAD", plan: "תוכנית", d3: "3D" }, clear_inv: "נקה מלאי", clear_draw: "נקה שרטוט", wall_depth: "עובי קיר", cut_height: "גובה חתך", gaps_h: "פאנלים", no_gaps: "מושלם!", col: {v:"👁️", p:"📌", r:"🔄", f:"⭐", id:"ID", x:"X", y:"Y", dim:"מידות", a:"מ״ר", src:"מקור", dist: "מרחק", pr:"מחיר", l:"לינק"}, all_windows: "מלאי", used_windows: "בשימוש", fullscreen: "מסך מלא" },
-  "🇯🇵 JA": { title: "🧱 ファサードAI v10.0", search_h: "検索", c_land: "国", c_zip: "郵便番号", c_rad: "半径", reuse: "中古", new: "新品", search_solar: "ソーラー", btn_search: "検索", cust_h: "在庫", w_lbl: "↔️ 幅", h_lbl: "↕️ 高さ", btn_add: "追加", wall_h: "壁と建築", btn_suggest: "最適化", btn_shuf: "シャッフル", btn_gaps: "パネル", lock: "固定", sym: "対称", chaos: "カオス", gravity: "重力", seed: "シード", auto_rot: "回転", clust_num: "クラスター", clust_pin: "マグネット", rect_clust: "ブロック", mode_cluster: "オーガニック", mode_rect: "ブロック", mode_scatter: "分散", gap_subdiv: "最大パネル", solar_auto: "自動ソーラー", solar_fetch: "ソーラー検索", wall_a: "壁", win_a: "窓/ソ", fill: "充填", price: "価格", mat_h: "マトリックス", exp_csv: "CSV", exp_cad: "DXF", exp_img: "画像", exp_bw: "白黒", exp_line: "CAD", exp_zip: "ZIP", realism: "リアリズム", tabs: { col: "コラージュ", bw: "白黒", cad: "CAD", plan: "平面図", d3: "3D" }, clear_inv: "在庫クリア", clear_draw: "図面クリア", wall_depth: "壁の厚さ", cut_height: "切断高さ", gaps_h: "パネル", no_gaps: "完璧！", col: {v:"👁️", p:"📌", r:"🔄", f:"⭐", id:"ID", x:"X", y:"Y", dim:"寸法", a:"m²", src:"ソース", dist: "距離", pr:"価格", l:"リンク"}, all_windows: "全在庫", used_windows: "使用中", fullscreen: "全画面" }
+  "🇩🇪 DE": { title: "🧱 Facade AI Pro v11.0", search_h: "1. Globale Suche", c_land: "Land", c_zip: "PLZ / Ort", c_rad: "Umkreis (km)", reuse: "Gebraucht", new: "Neu", search_solar: "☀️ Nur Solarpaneele suchen", btn_search: "Daten abrufen", cust_h: "2. Eigenbestand", w_lbl: "↔️ Breite", h_lbl: "↕️ Höhe", btn_add: "Hinzufügen", wall_h: "Wand & Architektur", btn_suggest: "💡 Wand optimieren", btn_shuf: "🎲 KI Neu Clustern", btn_gaps: "✂️ Zuschnitt drehen", lock: "🔒 Gepinnte behalten", sym: "📐 Symmetrie", chaos: "Chaos", gravity: "🧲 Gravitationsstärke", seed: "Seed", auto_rot: "🔄 Auto-Rotation", clust_num: "🏝️ Anzahl Cluster", clust_pin: "🧲 Um Gepinnte anordnen", rect_clust: "🔲 Rechteckige Bounding Box", mode_cluster: "🏝️ Organisch", mode_rect: "🧱 Block", mode_scatter: "🌌 Verstreuen", gap_subdiv: "📏 Max. Verschnitt (mm)", solar_auto: "☀️ Auto-Solar in Lücken", solar_fetch: "🌐 Auto-Suche Solar", wall_a: "Wand", win_a: "Fenster/Solar", fill: "Füllgrad", price: "Preis", mat_h: "📋 Matrix", exp_csv: "CSV", exp_cad: "DXF", exp_img: "Bild", exp_bw: "S/W", exp_line: "CAD", exp_zip: "ZIP", realism: "✨ Realismus", tabs: { col: "🖼️ Collage", bw: "⬛ S/W Analyse", cad: "📐 CAD", plan: "📏 Grundriss", d3: "🧊 3D Ansicht" }, clear_inv: "🗑️ Inventar leeren", clear_draw: "🧹 Zeichnung leeren", wall_depth: "Wandstärke (mm)", cut_height: "Schnitthöhe (mm)", gaps_h: "🟥 Zuschnitt-Liste", no_gaps: "Wand perfekt gefüllt!", col: {v:"👁️", p:"📌", r:"🔄", f:"⭐", id:"ID", x:"X", y:"Y", dim:"Maße", a:"m²", src:"Herkunft", dist: "Dist.", pr:"Preis", l:"Link"}, all_windows: "📦 Inventar (Gefunden)", used_windows: "🏗️ Auf der Zeichnung", fullscreen: "⛶ Vollbild" },
+  "🇪🇸 ES": { title: "🧱 Generador Fachadas v11.0", search_h: "1. Búsqueda", c_land: "País", c_zip: "C.P.", c_rad: "Radio (km)", reuse: "Usado", new: "Nuevo", search_solar: "☀️ Buscar Solares", btn_search: "Obtener datos", cust_h: "2. Inventario", w_lbl: "↔️ Ancho", h_lbl: "↕️ Alto", btn_add: "Añadir", wall_h: "Muro y Arquitectura", btn_suggest: "💡 Optimizar Muro", btn_shuf: "🎲 Reagrupar IA", btn_gaps: "✂️ Rotar cortes", lock: "🔒 Bloquear Pines", sym: "📐 Simetría", chaos: "Caos", gravity: "🧲 Gravedad", seed: "Semilla", auto_rot: "🔄 Auto-rotación", clust_num: "🏝️ Clústeres", clust_pin: "🧲 Agrupar a fijos", rect_clust: "🔲 Caja Rectangular", mode_cluster: "🏝️ Orgánico", mode_rect: "🧱 Bloque", mode_scatter: "🌌 Dispersión", gap_subdiv: "📏 Corte máx (mm)", solar_auto: "☀️ Auto-Solar", solar_fetch: "🌐 Búsqueda Solar", wall_a: "Muro", win_a: "Vent./Sol.", fill: "Relleno", price: "Precio", mat_h: "📋 Matriz", exp_csv: "CSV", exp_cad: "DXF", exp_img: "Img", exp_bw: "B/N", exp_line: "CAD", exp_zip: "ZIP", realism: "✨ Realismo", tabs: { col: "🖼️ Collage", bw: "⬛ B/N", cad: "📐 CAD", plan: "📏 Plano", d3: "🧊 3D" }, clear_inv: "🗑️ Vaciar Inv.", clear_draw: "🧹 Limpiar Dibujo", wall_depth: "Grosor Muro (mm)", cut_height: "Altura de corte (mm)", gaps_h: "🟥 Cortes", no_gaps: "¡Perfecto!", col: {v:"👁️", p:"📌", r:"🔄", f:"⭐", id:"ID", x:"X", y:"Y", dim:"Dim", a:"m²", src:"Origen", dist: "Dist", pr:"Precio", l:"Link"}, all_windows: "📦 Inventario", used_windows: "🏗️ En Dibujo", fullscreen: "⛶ Pantalla Comp." },
+  "🇬🇧 EN": { title: "🧱 Facade AI Pro v11.0", search_h: "1. Search", c_land: "Country", c_zip: "ZIP / City", c_rad: "Radius (km)", reuse: "Used", new: "New", search_solar: "☀️ Search Solar Only", btn_search: "Fetch Data", cust_h: "2. Inventory", w_lbl: "↔️ Width", h_lbl: "↕️ Height", btn_add: "Add", wall_h: "Wall & Architecture", btn_suggest: "💡 Optimize Wall", btn_shuf: "🎲 Re-Cluster AI", btn_gaps: "✂️ Toggle Gaps", lock: "🔒 Keep Pinned", sym: "📐 Symmetry", chaos: "Chaos", gravity: "🧲 Gravity", seed: "Seed", auto_rot: "🔄 Auto-Rotate", clust_num: "🏝️ Clusters", clust_pin: "🧲 Pin-Gravity", rect_clust: "🔲 Rect Bounding Box", mode_cluster: "🏝️ Organic", mode_rect: "🧱 Block", mode_scatter: "🌌 Scatter", gap_subdiv: "📏 Max Gap (mm)", solar_auto: "☀️ Auto-Solar", solar_fetch: "🌐 Fetch Solar", wall_a: "Wall", win_a: "Win/Solar", fill: "Fill", price: "Price", mat_h: "📋 Matrix", exp_csv: "CSV", exp_cad: "DXF", exp_img: "Img", exp_bw: "B/W", exp_line: "CAD", exp_zip: "ZIP", realism: "✨ Realism", tabs: { col: "🖼️ Collage", bw: "⬛ B/W", cad: "📐 CAD", plan: "📏 Plan", d3: "🧊 3D" }, clear_inv: "🗑️ Clear Inv", clear_draw: "🧹 Clear Canvas", wall_depth: "Wall Depth (mm)", cut_height: "Cut Height (mm)", gaps_h: "🟥 Gaps", no_gaps: "Perfect!", col: {v:"👁️", p:"📌", r:"🔄", f:"⭐", id:"ID", x:"X", y:"Y", dim:"Dims", a:"m²", src:"Source", dist: "Dist", pr:"Price", l:"Link"}, all_windows: "📦 Inventory", used_windows: "🏗️ On Canvas", fullscreen: "⛶ Fullscreen" },
+  "🇫🇷 FR": { title: "🧱 Façade AI Pro v11.0", search_h: "Recherche", c_land: "Pays", c_zip: "CP", c_rad: "Rayon", reuse: "Usagé", new: "Neuf", search_solar: "Solaire", btn_search: "Chercher", cust_h: "Inventaire", w_lbl: "↔️ Largeur", h_lbl: "↕️ Hauteur", btn_add: "Ajouter", wall_h: "Mur & Archi", btn_suggest: "Optimiser", btn_shuf: "Mélanger", btn_gaps: "Coupes", lock: "Fixer", sym: "Symétrie", chaos: "Chaos", gravity: "Gravité", seed: "Graine", auto_rot: "Rotation", clust_num: "Groupes", clust_pin: "Aimant", rect_clust: "Boîte Rect.", mode_cluster: "Organique", mode_rect: "Bloc", mode_scatter: "Aléatoire", gap_subdiv: "Gap Max", solar_auto: "Auto-Sol", solar_fetch: "Chercher Sol", wall_a: "Mur", win_a: "Fen/Sol", fill: "Rempl.", price: "Prix", mat_h: "Matrice", exp_csv: "CSV", exp_cad: "DXF", exp_img: "Img", exp_bw: "N/B", exp_line: "CAD", exp_zip: "ZIP", realism: "Réalisme", tabs: { col: "Collage", bw: "N/B", cad: "CAD", plan: "Plan", d3: "3D" }, clear_inv: "Vider Inv", clear_draw: "Vider Dessin", wall_depth: "Épaisseur", cut_height: "Hauteur Coupe", gaps_h: "Panneaux", no_gaps: "Parfait!", col: {v:"👁️", p:"📌", r:"🔄", f:"⭐", id:"ID", x:"X", y:"Y", dim:"Dim", a:"m²", src:"Source", dist: "Dist", pr:"Prix", l:"Lien"}, all_windows: "Inventaire", used_windows: "Utilisées", fullscreen: "Plein Écran" },
+  "🇮🇹 IT": { title: "🧱 Facciata AI Pro v11.0", search_h: "Ricerca", c_land: "Paese", c_zip: "CAP", c_rad: "Raggio", reuse: "Usato", new: "Nuovo", search_solar: "Solare", btn_search: "Cerca", cust_h: "Inventario", w_lbl: "↔️ Largh.", h_lbl: "↕️ Alt.", btn_add: "Aggiungi", wall_h: "Muro & Archi", btn_suggest: "Ottimizza", btn_shuf: "Rimescola", btn_gaps: "Tagli", lock: "Blocca", sym: "Simmetria", chaos: "Caos", gravity: "Gravità", seed: "Seme", auto_rot: "Rotazione", clust_num: "Cluster", clust_pin: "Calamita", rect_clust: "Box Rettangolare", mode_cluster: "Organico", mode_rect: "Blocco", mode_scatter: "Sparso", gap_subdiv: "Taglio Max", solar_auto: "Auto-Sol", solar_fetch: "Cerca Sol", wall_a: "Muro", win_a: "Fin/Sol", fill: "Riemp.", price: "Prezzo", mat_h: "Matrice", exp_csv: "CSV", exp_cad: "DXF", exp_img: "Img", exp_bw: "B/N", exp_line: "CAD", exp_zip: "ZIP", realism: "Realismo", tabs: { col: "Collage", bw: "B/N", cad: "CAD", plan: "Pianta", d3: "3D" }, clear_inv: "Svuota Inv", clear_draw: "Svuota Dis", wall_depth: "Spessore", cut_height: "Alt. Taglio", gaps_h: "Pannelli", no_gaps: "Perfetto!", col: {v:"👁️", p:"📌", r:"🔄", f:"⭐", id:"ID", x:"X", y:"Y", dim:"Dim", a:"m²", src:"Fonte", dist: "Dist", pr:"Prezzo", l:"Link"}, all_windows: "Inventario", used_windows: "Usate", fullscreen: "Schermo Intero" },
+  "🇨🇭 RM": { title: "🧱 Façadas AI Pro v11.0", search_h: "Tschertga", c_land: "Pajais", c_zip: "PLZ", c_rad: "Radius", reuse: "Duvrà", new: "Nov", search_solar: "Solar", btn_search: "Tschertgar", cust_h: "Inventari", w_lbl: "↔️ Lad", h_lbl: "↕️ Aut", btn_add: "Agiuntar", wall_h: "Paraid", btn_suggest: "Optimisar", btn_shuf: "Maschadar", btn_gaps: "Tagls", lock: "Fixar", sym: "Simetria", chaos: "Caos", gravity: "Gravitad", seed: "Seed", auto_rot: "Rotaziun", clust_num: "Clust", clust_pin: "Magnet", rect_clust: "Rect Box", mode_cluster: "Organic", mode_rect: "Bloc", mode_scatter: "Sparp.", gap_subdiv: "Max Gap", solar_auto: "Auto-Sol", solar_fetch: "Tschertgar Sol", wall_a: "Paraid", win_a: "Fan/Sol", fill: "Empl.", price: "Pretsch", mat_h: "Matrix", exp_csv: "CSV", exp_cad: "DXF", exp_img: "Img", exp_bw: "S/W", exp_line: "CAD", exp_zip: "ZIP", realism: "Realissem", tabs: { col: "Collage", bw: "S/W", cad: "CAD", plan: "Plan", d3: "3D" }, clear_inv: "Svida Inv", clear_draw: "Svida Maletg", wall_depth: "Grossezza", cut_height: "Autezza Tagl", gaps_h: "Panels", no_gaps: "Perfetg!", col: {v:"👁️", p:"📌", r:"🔄", f:"⭐", id:"ID", x:"X", y:"Y", dim:"Dim", a:"m²", src:"Funt", dist: "Dist", pr:"Pretsch", l:"Link"}, all_windows: "Inventari", used_windows: "Duvradas", fullscreen: "Vollbild" },
+  "🇧🇬 BG": { title: "🧱 Фасади AI v11.0", search_h: "Търсене", c_land: "Държава", c_zip: "ПК", c_rad: "Радиус", reuse: "Стари", new: "Нови", search_solar: "Соларни", btn_search: "Търси", cust_h: "Инвентар", w_lbl: "↔️ Шир", h_lbl: "↕️ Вис", btn_add: "Добави", wall_h: "Стена", btn_suggest: "Оптимизирай", btn_shuf: "Разбъркай", btn_gaps: "Панели", lock: "Заключи", sym: "Симетрия", chaos: "Хаос", gravity: "Гравитация", seed: "Сийд", auto_rot: "Ротация", clust_num: "Клъстери", clust_pin: "Магнит", rect_clust: "Блок Рамка", mode_cluster: "Органичен", mode_rect: "Блок", mode_scatter: "Разпръснато", gap_subdiv: "Макс Панел", solar_auto: "Авто-Солар", solar_fetch: "Търси Солар", wall_a: "Стена", win_a: "Проз/Сол", fill: "Зап.", price: "Цена", mat_h: "Матрица", exp_csv: "CSV", exp_cad: "DXF", exp_img: "Img", exp_bw: "Ч/Б", exp_line: "CAD", exp_zip: "ZIP", realism: "Реализъм", tabs: { col: "Колаж", bw: "Ч/Б", cad: "CAD", plan: "План", d3: "3D" }, clear_inv: "Изчисти Инв", clear_draw: "Изчисти Черт", wall_depth: "Дебелина", cut_height: "Височина Срез", gaps_h: "Панели", no_gaps: "Идеално!", col: {v:"👁️", p:"📌", r:"🔄", f:"⭐", id:"ID", x:"X", y:"Y", dim:"Разм", a:"m²", src:"Изт", dist: "Разст", pr:"Цена", l:"Линк"}, all_windows: "Инвентар", used_windows: "Използвани", fullscreen: "Цял Екран" },
+  "🇮🇱 HE": { title: "🧱 חזיתות AI v11.0", search_h: "חיפוש", c_land: "מדינה", c_zip: "מיקוד", c_rad: "רדיוס", reuse: "משומש", new: "חדש", search_solar: "סולארי", btn_search: "חפש", cust_h: "מלאי", w_lbl: "↔️ רוחב", h_lbl: "↕️ גובה", btn_add: "הוסף", wall_h: "קיר", btn_suggest: "יעל", btn_shuf: "ערבב", btn_gaps: "חיתוכים", lock: "נעל", sym: "סימטריה", chaos: "כאוס", gravity: "כבידה", seed: "גרעין", auto_rot: "סיבוב", clust_num: "אשכולות", clust_pin: "מגנט", rect_clust: "בלוק מלבני", mode_cluster: "אורגני", mode_rect: "בלוק", mode_scatter: "פיזור", gap_subdiv: "פאנל מקס", solar_auto: "אוטו-סולארי", solar_fetch: "חפש סולארי", wall_a: "קיר", win_a: "חל/סול", fill: "מילוי", price: "מחיר", mat_h: "מטריצה", exp_csv: "CSV", exp_cad: "DXF", exp_img: "תמונה", exp_bw: "ש/ל", exp_line: "CAD", exp_zip: "ZIP", realism: "ריאליזם", tabs: { col: "קולאז׳", bw: "ש/ל", cad: "CAD", plan: "תוכנית", d3: "3D" }, clear_inv: "נקה מלאי", clear_draw: "נקה שרטוט", wall_depth: "עובי קיר", cut_height: "גובה חתך", gaps_h: "פאנלים", no_gaps: "מושלם!", col: {v:"👁️", p:"📌", r:"🔄", f:"⭐", id:"ID", x:"X", y:"Y", dim:"מידות", a:"מ״ר", src:"מקור", dist: "מרחק", pr:"מחיר", l:"לינק"}, all_windows: "מלאי", used_windows: "בשימוש", fullscreen: "מסך מלא" },
+  "🇯🇵 JA": { title: "🧱 ファサードAI v11.0", search_h: "検索", c_land: "国", c_zip: "郵便番号", c_rad: "半径", reuse: "中古", new: "新品", search_solar: "ソーラー", btn_search: "検索", cust_h: "在庫", w_lbl: "↔️ 幅", h_lbl: "↕️ 高さ", btn_add: "追加", wall_h: "壁と建築", btn_suggest: "最適化", btn_shuf: "シャッフル", btn_gaps: "パネル", lock: "固定", sym: "対称", chaos: "カオス", gravity: "重力", seed: "シード", auto_rot: "回転", clust_num: "クラスター", clust_pin: "マグネット", rect_clust: "四角形枠", mode_cluster: "オーガニック", mode_rect: "ブロック", mode_scatter: "分散", gap_subdiv: "最大パネル", solar_auto: "自動ソーラー", solar_fetch: "ソーラー検索", wall_a: "壁", win_a: "窓/ソ", fill: "充填", price: "価格", mat_h: "マトリックス", exp_csv: "CSV", exp_cad: "DXF", exp_img: "画像", exp_bw: "白黒", exp_line: "CAD", exp_zip: "ZIP", realism: "リアリズム", tabs: { col: "コラージュ", bw: "白黒", cad: "CAD", plan: "平面図", d3: "3D" }, clear_inv: "在庫クリア", clear_draw: "図面クリア", wall_depth: "壁の厚さ", cut_height: "切断高さ", gaps_h: "パネル", no_gaps: "完璧！", col: {v:"👁️", p:"📌", r:"🔄", f:"⭐", id:"ID", x:"X", y:"Y", dim:"寸法", a:"m²", src:"ソース", dist: "距離", pr:"価格", l:"リンク"}, all_windows: "全在庫", used_windows: "使用中", fullscreen: "全画面" }
 };
 
 const COUNTRIES = ["Deutschland", "Österreich", "Schweiz", "España", "France", "Italia", "United Kingdom", "USA"];
 
+// Deterministischer Zufallsgenerator
 function mulberry32(a) {
   return function() {
     var t = a += 0x6D2B79F5;
@@ -30,15 +31,15 @@ function mulberry32(a) {
 // --- 3D KOMPONENTE ---
 const Scene3D = ({ windows, wall, wallDepth }) => {
     return (
-        <Canvas camera={{ position: [0, 0, Math.max(wall.w, wall.h)*0.8], fov: 50 }}>
-            <ambientLight intensity={0.6} />
-            <directionalLight position={[5000, 5000, 5000]} intensity={1.5} castShadow />
+        <Canvas camera={{ position: [0, 0, Math.max(wall.w, wall.h)*0.9], fov: 45 }}>
+            <ambientLight intensity={0.5} />
+            <directionalLight position={[2000, 3000, 4000]} intensity={1.5} castShadow />
             <OrbitControls makeDefault enableDamping dampingFactor={0.1} />
             <Environment preset="city" />
 
             <mesh position={[0, 0, -wallDepth/2]} receiveShadow>
                 <boxGeometry args={[wall.w, wall.h, wallDepth]} />
-                <meshStandardMaterial color="#fce4e4" roughness={0.9} />
+                <meshStandardMaterial color="#fce4e4" roughness={0.8} />
             </mesh>
 
             {windows.filter(w=>w.visible).map(w => {
@@ -47,15 +48,16 @@ const Scene3D = ({ windows, wall, wallDepth }) => {
                 let cx = (w.x + dispW/2) - (wall.w/2);
                 let cy = (w.y + dispH/2) - (wall.h/2);
                 let isSolar = w.type === 'Solar';
-                let depth = isSolar ? 40 : wallDepth + 20; 
+                let elementDepth = isSolar ? 40 : wallDepth + 40; // Fenster ragen 20mm nach vorne und hinten raus
+                let zPos = isSolar ? 20 : 0; // Solar klebt vorne drauf
 
                 return (
-                    <mesh key={w.id} position={[cx, cy, isSolar ? 20 : 0]} castShadow receiveShadow>
-                        <boxGeometry args={[dispW, dispH, depth]} />
+                    <mesh key={w.id} position={[cx, cy, zPos]} castShadow receiveShadow>
+                        <boxGeometry args={[dispW, dispH, elementDepth]} />
                         <meshStandardMaterial 
                             color={isSolar ? "#1a252f" : "#87CEEB"} 
-                            metalness={isSolar ? 0.4 : 0.9} 
-                            roughness={isSolar ? 0.3 : 0.1} 
+                            metalness={isSolar ? 0.4 : 0.8} 
+                            roughness={isSolar ? 0.3 : 0.2} 
                         />
                     </mesh>
                 );
@@ -88,6 +90,7 @@ export default function App() {
   
   // Tabs: 'col', 'bw', 'cad', 'plan', 'd3'
   const [activeTab, setActiveTab] = useState('col');
+  const [isMounted, setIsMounted] = useState(false); // Für Next.js Hydration Fix
 
   // Drag & Highlight States
   const [draggingId, setDraggingId] = useState(null);
@@ -115,22 +118,7 @@ export default function App() {
   const chatEndRef = useRef(null);
 
   useEffect(() => {
-    if(!topPaneRef.current) return;
-    const obs = new ResizeObserver(entries => {
-      setPaneSize({ w: entries[0].contentRect.width, h: entries[0].contentRect.height });
-    });
-    obs.observe(topPaneRef.current);
-    return () => obs.disconnect();
-  }, [leftOpen, rightOpen, leftWidth, rightWidth, topPaneHeight, activeTab]);
-
-  const paddingOffset = 100;
-  const mainScale = Math.min(Math.max(10, paneSize.w - 100) / Math.max(wall.w, 1), Math.max(10, paneSize.h - paddingOffset) / Math.max(wall.h, 1));
-  const planScale = Math.min(Math.max(10, paneSize.w - 100) / Math.max(wall.w, 1), Math.max(10, paneSize.h - paddingOffset) / Math.max(wallDepth, 1));
-  
-  const canvasH = wall.h * mainScale;
-  const canvasW = wall.w * mainScale;
-
-  useEffect(() => {
+    setIsMounted(true);
     let initial = [
       { id: "1", pos: "P1", w: 1200, h: 1400, x:0, y:0, price: 85, color: "#4682b4", source: "Lager", dist: 0, type: "Fenster", pinned: false, rotated: false, visible: true, link: "" },
       { id: "2", pos: "P2", w: 2000, h: 2100, x:0, y:0, price: 350, color: "#add8e6", source: "Lager", dist: 0, type: "Fenster", pinned: false, rotated: false, visible: true, link: "" },
@@ -142,8 +130,24 @@ export default function App() {
   }, []);
 
   useEffect(() => {
+    if(!topPaneRef.current) return;
+    const obs = new ResizeObserver(entries => {
+      setPaneSize({ w: entries[0].contentRect.width, h: entries[0].contentRect.height });
+    });
+    obs.observe(topPaneRef.current);
+    return () => obs.disconnect();
+  }, [leftOpen, rightOpen, leftWidth, rightWidth, topPaneHeight, activeTab]);
+
+  useEffect(() => {
     if(chatEndRef.current) chatEndRef.current.scrollIntoView({ behavior: 'smooth' });
   }, [chatMessages]);
+
+  const paddingOffset = 100;
+  const mainScale = Math.min(Math.max(10, paneSize.w - 150) / Math.max(wall.w, 1), Math.max(10, paneSize.h - paddingOffset) / Math.max(wall.h, 1));
+  const planScale = Math.min(Math.max(10, paneSize.w - 150) / Math.max(wall.w, 1), Math.max(10, paneSize.h - paddingOffset) / Math.max(wallDepth, 1));
+  
+  const canvasH = wall.h * mainScale;
+  const canvasW = wall.w * mainScale;
 
   const scrollToRow = (id) => {
     setTimeout(() => {
@@ -154,6 +158,7 @@ export default function App() {
     }, 50);
   };
 
+  // --- RESIZE HANDLER ---
   const handleHDividerDragStart = (e) => { e.preventDefault(); document.addEventListener('mousemove', handleHDividerDrag); document.addEventListener('mouseup', handleHDividerDragEnd); };
   const handleHDividerDrag = (e) => { setTopPaneHeight(Math.max(10, Math.min((e.clientY / window.innerHeight) * 100, 90))); };
   const handleHDividerDragEnd = () => { document.removeEventListener('mousemove', handleHDividerDrag); document.removeEventListener('mouseup', handleHDividerDragEnd); };
@@ -177,14 +182,17 @@ export default function App() {
 
   // --- AUFRÄUM FUNKTIONEN ---
   const clearInventory = () => {
+      // Löscht alles, was nicht auf der Wand gepinnt ist
       const used = windows.filter(w => w.pinned);
       setWindows(used); runAI(used, wall, params, seed);
   };
   const clearDrawing = () => {
-      const updated = windows.map(w => ({...w, pinned: false, x:0, y:0}));
+      // Entpinnt alles und setzt es zurück (Blendet es auf Wunsch aus)
+      const updated = windows.map(w => ({...w, pinned: false, x:0, y:0, visible: false}));
       setWindows(updated); runAI(updated, wall, params, seed);
   };
 
+  // --- KI & MATHEMATIK ---
   const checkOverlap = (x, y, w, h, placedList, ignoreId = null) => {
     return placedList.some(p => {
         if(p.id === ignoreId) return false;
@@ -226,6 +234,7 @@ export default function App() {
     const rng = mulberry32(currentSeed);
     let placed = []; let fixed_x = [], fixed_y = [];
     
+    // 1. Packe alle Fenster
     let activeItems = winList.filter(w => w.visible);
     let pinnedItems = activeItems.filter(w => w.pinned);
     
@@ -264,6 +273,7 @@ export default function App() {
     unpinnedWindows = unpinnedWindows.map(w => ({...w, _weight: (w.w*w.h) * (1 + (rng()-0.5)*(currentParams.chaos/50)) })).sort((a,b)=>b._weight - a._weight);
     let step = currentParams.layoutMode === 'rect' ? 50 : 100;
     
+    // Bounding Box für Rectangle Clustering
     let bbox = { minX: 0, maxX: 0, minY: 0, maxY: 0 };
     const updateBBox = () => {
         if(placed.length > 0) {
@@ -279,8 +289,8 @@ export default function App() {
       let bestPos = null, minScore = Infinity;
       let orientations = currentParams.autoRot ? [false, true] : [w.rotated];
       
-      // FIX: Stärkere Gewichtung der Gravitation (Magnet)
-      const gravityFactor = currentParams.gravity / 10; 
+      // FIX: Starke Gravitation (Exponentiell)
+      const gravityFactor = Math.pow((currentParams.gravity / 10), 3) || 0.1; 
 
       orientations.forEach(rot => {
           let eff_w = rot ? w.h : w.w; let eff_h = rot ? w.w : w.h;
@@ -290,6 +300,7 @@ export default function App() {
             for(let x=0; x<=currentWall.w - eff_w; x+=step) {
               if(!checkOverlap(x, y, eff_w, eff_h, placed)) {
                 let score = 0;
+                
                 if (currentParams.layoutMode === 'scatter') { 
                     score = rng() * 100000; 
                 } else if (currentParams.layoutMode === 'rect') { 
@@ -297,12 +308,12 @@ export default function App() {
                 } else {
                     let distScore = Math.min(...centers.map(c => Math.pow(x+eff_w/2 - c.x, 2) + Math.pow(y+eff_h/2 - c.y, 2)));
                     score = distScore * gravityFactor;
-                    if(currentParams.symmetry) score += Math.min(Math.abs(x+eff_w/2 - centers[0].x), Math.abs(y+eff_h/2 - centers[0].y)) * 5000;
+                    if(currentParams.symmetry) score += Math.min(Math.abs(x+eff_w/2 - centers[0].x), Math.abs(y+eff_h/2 - centers[0].y)) * 50000;
                 }
 
                 if (currentParams.rectCluster && placed.length > 0) {
                     let newArea = (Math.max(bbox.maxX, x + eff_w) - Math.min(bbox.minX, x)) * (Math.max(bbox.maxY, y + eff_h) - Math.min(bbox.minY, y));
-                    score += newArea * 50;
+                    score += newArea * 100; // Harte Strafe für Ausbrechen aus der Box
                 }
                 
                 if(score < minScore) { minScore = score; bestPos = {...w, x:x, y:y, w:eff_w, h:eff_h, rotated: rot}; }
@@ -321,6 +332,7 @@ export default function App() {
       placed = placed.map(p => ({...p, x: p.x+sx, y: p.y+sy}));
     }
 
+    // 2. AUTO-SOLAR LOGIK
     let generatedSolar = [];
     if (currentParams.solarAuto) {
         let tempGaps = calculateGapsExact(currentWall.w, currentWall.h, placed, false);
@@ -351,6 +363,7 @@ export default function App() {
 
     let rawGaps = calculateGapsExact(currentWall.w, currentWall.h, placed, currentParams.gapToggle);
     
+    // 3. SUBDIVISION LOGIK FÜR GAPS
     let finalGaps = [];
     let maxDim = currentParams.gapMaxDim || 5000;
     rawGaps.forEach(g => {
@@ -382,7 +395,7 @@ export default function App() {
   };
 
   const optimizeWall = () => {
-    let placed = windows.filter(w => w.visible && w.pinned); // Optimize based on pinned
+    let placed = windows.filter(w => w.visible && w.pinned); 
     if(placed.length === 0) placed = windows.filter(w => w.visible);
     if(placed.length === 0) return;
     
@@ -422,7 +435,7 @@ export default function App() {
             w: size[0], h: size[1], x: 0, y: 0,
             price: isSolar ? 150 : (isReuse ? (size[0]*size[1])/25000 + 20 : (size[0]*size[1])/15000 + 100),
             color: isSolar ? "#2c3e50" : (isReuse ? "#4682b4" : "#add8e6"), 
-            source: isReuse ? `Marketplace (${searchParams.zip})` : `Supplier`, 
+            source: isReuse ? `Marktplatz (${searchParams.zip})` : `Händler`, 
             dist: distance, type: isSolar ? "Solar" : "Fenster",
             pinned: false, rotated: false, visible: true, link: "https://example.com"
         });
@@ -438,11 +451,9 @@ export default function App() {
     runAI([...windows, nw], wall, params, seed);
   };
 
-  // FIX: Sichtbarkeit toggeln ruft NICHT mehr runAI auf!
-  const toggleWinProp = (id, prop) => {
-    const updated = windows.map(w => w.id === id ? {...w, [prop]: !w[prop]} : w);
-    setWindows(updated);
-    if(prop !== 'visible') runAI(updated, wall, params, seed);
+  // FIX: Sichtbarkeit (Auge) toggelt nur den State, feuert NICHT runAI. Die Zeichnung bleibt unberührt.
+  const toggleVisibilityOnly = (id) => {
+    setWindows(windows.map(w => w.id === id ? {...w, visible: !w.visible} : w));
   };
 
   const toggleAll = (prop) => {
@@ -460,11 +471,18 @@ export default function App() {
       if(prop !== 'visible') runAI(updated, wall, params, seed);
   };
 
+  const toggleWinProp = (id, prop) => {
+    const updated = windows.map(w => w.id === id ? {...w, [prop]: !w[prop]} : w);
+    setWindows(updated);
+    if(prop !== 'visible') runAI(updated, wall, params, seed);
+  };
+
   const toggleRotate = (id) => {
     const updated = windows.map(w => w.id === id ? {...w, rotated: !w.rotated, pinned: true} : w);
     setWindows(updated); runAI(updated, wall, params, seed);
   };
 
+  // --- EXPORTE FUNKTIONEN ---
   const getCsvString = () => {
     let r = [ ["ID", "Typ", "Breite", "Hoehe", "m2", "Preis", "Distanz(km)", "Herkunft"] ];
     windows.filter(w=>w.visible).forEach(w => r.push([w.pos, w.type, w.w, w.h, ((w.w*w.h)/1000000).toFixed(2), w.price.toFixed(2), w.dist, w.source]));
@@ -485,24 +503,85 @@ export default function App() {
     return dxf;
   };
 
+  const drawMainCanvas = () => {
+    const cvs = document.createElement("canvas"); cvs.width = wall.w; cvs.height = wall.h; const ctx = cvs.getContext("2d");
+    ctx.fillStyle = "#fce4e4"; ctx.fillRect(0,0, wall.w, wall.h);
+    ctx.fillStyle = "rgba(255, 75, 75, 0.4)"; ctx.strokeStyle = "#FF4B4B"; ctx.lineWidth = 15;
+    gaps.forEach(g => { ctx.fillRect(g.x, wall.h - g.y - g.h, g.w, g.h); ctx.strokeRect(g.x, wall.h - g.y - g.h, g.w, g.h); });
+    windows.filter(w=>w.visible).forEach(w => {
+        let dw = w.rotated ? w.h : w.w; let dh = w.rotated ? w.w : w.h;
+        ctx.fillStyle = w.color; ctx.fillRect(w.x, wall.h - w.y - dh, dw, dh);
+        ctx.strokeStyle = w.pinned ? "#111" : "#555"; ctx.lineWidth = w.pinned ? 30 : 15;
+        ctx.strokeRect(w.x, wall.h - w.y - dh, dw, dh);
+    });
+    return cvs;
+  };
+
+  const drawBWCanvas = () => {
+    const cvs = document.createElement("canvas"); cvs.width = wall.w; cvs.height = wall.h; const ctx = cvs.getContext("2d");
+    ctx.fillStyle = "white"; ctx.fillRect(0,0, wall.w, wall.h);
+    ctx.fillStyle = "black"; gaps.forEach(g => { ctx.fillRect(g.x, wall.h - g.y - g.h, g.w, g.h); });
+    windows.filter(w=>w.visible && w.type !== 'Solar').forEach(w => {
+        let dw = w.rotated ? w.h : w.w; let dh = w.rotated ? w.w : w.h;
+        ctx.fillStyle = "white"; ctx.fillRect(w.x, wall.h - w.y - dh, dw, dh);
+        ctx.strokeStyle = "#ccc"; ctx.lineWidth = 10; ctx.strokeRect(w.x, wall.h - w.y - dh, dw, dh);
+    });
+    return cvs;
+  };
+
+  const drawLineCanvas = () => {
+    const cvs = document.createElement("canvas"); cvs.width = wall.w; cvs.height = wall.h; const ctx = cvs.getContext("2d");
+    ctx.fillStyle = "white"; ctx.fillRect(0,0, wall.w, wall.h);
+    ctx.strokeStyle = "#ccc"; ctx.lineWidth = 5; gaps.forEach(g => { ctx.strokeRect(g.x, wall.h - g.y - g.h, g.w, g.h); });
+    windows.filter(w=>w.visible).forEach(w => {
+        let dw = w.rotated ? w.h : w.w; let dh = w.rotated ? w.w : w.h;
+        ctx.strokeStyle = "#333"; ctx.lineWidth = 15; ctx.strokeRect(w.x, wall.h - w.y - dh, dw, dh);
+    });
+    return cvs;
+  };
+
+  const downloadCanvas = (canvasFunc, filename) => {
+    const link = document.createElement("a"); link.download = filename; link.href = canvasFunc().toDataURL("image/png"); link.click();
+  };
+
   const exportCSV = () => {
     const csv = getCsvString();
-    const link = document.createElement("a"); link.href = encodeURI(csv); link.download = "stueckliste.csv";
+    const link = document.createElement("a");
+    link.href = encodeURI(csv); link.download = "stueckliste.csv";
     document.body.appendChild(link); link.click(); document.body.removeChild(link);
   };
 
   const exportDXF = () => {
     const dxf = getDxfString();
-    const link = document.createElement("a"); link.href = "data:text/plain;charset=utf-8," + encodeURIComponent(dxf); link.download = "facade_export.dxf";
+    const link = document.createElement("a");
+    link.href = "data:text/plain;charset=utf-8," + encodeURIComponent(dxf); link.download = "facade_export.dxf";
     document.body.appendChild(link); link.click(); document.body.removeChild(link);
   };
 
-  const startDrag = (e, w) => {
+  const getCanvasBlob = (canvas) => new Promise(resolve => canvas.toBlob(resolve, 'image/png'));
+
+  const exportZIP = async () => {
+    const zip = new JSZip();
+    zip.file("stueckliste.csv", getCsvString().replace("data:text/csv;charset=utf-8,", ""));
+    zip.file("facade_export.dxf", getDxfString());
+    zip.file("01_collage.png", await getCanvasBlob(drawMainCanvas()));
+    zip.file("02_verschnitt_bw.png", await getCanvasBlob(drawBWCanvas()));
+    zip.file("03_cad_linien.png", await getCanvasBlob(drawLineCanvas()));
+    const content = await zip.generateAsync({type: "blob"});
+    const link = document.createElement("a"); link.href = URL.createObjectURL(content); link.download = "facade_project.zip"; link.click();
+  };
+
+  // --- DRAG ---
+  const handleWindowPointerDown = (e, w) => {
+    e.stopPropagation(); 
+    setSelectedId(w.id);
+    scrollToRow(w.id);
     if(w.pinned || e.target.tagName === 'BUTTON') return;
     const rect = e.target.getBoundingClientRect();
     setDragOffset({ x: e.clientX - rect.left, y: e.clientY - rect.top });
     setDraggingId(w.id);
   };
+
   const onDrag = (e) => {
     if(!draggingId || !canvasRef.current) return;
     const rect = canvasRef.current.getBoundingClientRect();
@@ -559,7 +638,7 @@ export default function App() {
     setChatLoading(false);
   };
 
-  // Sehr realistische Flat Line Drawing Silhouette
+  // Elegante Architektur-Silhouette
   const archSVG = `data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 300'><text x='50' y='20' font-size='14' font-family='sans-serif' text-anchor='middle' fill='%23555' font-weight='bold'>1.78m</text><path d='M 50 35 C 45 35 42 39 42 44 C 42 49 45 53 50 53 C 55 53 58 49 58 44 C 58 39 55 35 50 35 Z M 42 58 C 35 60 32 65 30 75 L 25 130 L 35 130 L 40 90 L 42 150 L 35 290 L 45 290 L 50 190 L 55 290 L 65 290 L 58 150 L 60 90 L 65 130 L 75 130 L 70 75 C 68 65 65 60 58 58 C 55 57 45 57 42 58 Z' fill='none' stroke='%23333' stroke-width='2'/></svg>`;
 
   return (
@@ -577,6 +656,7 @@ export default function App() {
           </div>
           <h2 style={{fontSize:"18px", marginTop:0, color:"#111"}}>{T.title}</h2>
 
+          {/* SUCHE */}
           <div style={{background:"#f8f9fa", padding:"15px", borderRadius:"6px", marginBottom:"15px", border:"1px solid #e9ecef"}}>
             <h4 style={{margin:"0 0 10px 0"}}>{T.search_h}</h4>
             <select value={searchParams.land} onChange={e=>setSearch({...searchParams, land:e.target.value})} style={{width:"100%", padding:"8px", marginBottom:"5px", border:"1px solid #ccc", borderRadius:"4px"}}>{COUNTRIES.map(c => <option key={c} value={c}>{c}</option>)}</select>
@@ -615,7 +695,7 @@ export default function App() {
               <input type="number" value={wall.h} onChange={e=>handleWallChange('h', parseInt(e.target.value))} style={{width:"70px", padding:"4px", border:"1px solid #ccc", borderRadius:"4px"}}/>
             </div>
             <div style={{display:"flex", alignItems:"center", gap:"10px", marginBottom:"15px"}}>
-              <span style={{fontSize:"14px"}} title="Wandstärke">🧱</span>
+              <span style={{fontSize:"14px"}} title={T.wall_depth}>🧱</span>
               <input type="range" min="100" max="1000" step="10" value={wallDepth} onChange={e=>setWallDepth(parseInt(e.target.value))} style={{flex:1}}/>
               <input type="number" value={wallDepth} onChange={e=>setWallDepth(parseInt(e.target.value))} style={{width:"70px", padding:"4px", border:"1px solid #ccc", borderRadius:"4px"}}/>
             </div>
@@ -729,6 +809,7 @@ export default function App() {
                         boxSizing: 'border-box',
                         cursor: w.pinned ? "not-allowed" : (isDragging ? "grabbing" : "grab"), display: "flex", flexDirection: "column", justifyContent: "center", alignItems: "center", fontWeight: "bold", fontSize: "10px", color: w.type === 'Solar' ? "white" : "#222", zIndex: isSelected || isDragging ? 100 : (w.pinned ? 5 : 10), opacity: w.pinned ? 0.95 : 1, transition: isDragging ? "none" : "all 0.1s" }}
                       >
+                        {/* Realismus Layer: Glas oder Solar Grid */}
                         {params.realism && w.type === 'Fenster' && (
                            <div style={{ position: 'absolute', top: 0, left: 0, right: 0, bottom: 0, background: 'linear-gradient(135deg, rgba(255,255,255,0) 0%, rgba(255,255,255,0.4) 50%, rgba(255,255,255,0) 50.1%, rgba(255,255,255,0) 100%)', pointerEvents: 'none' }} />
                         )}
@@ -753,7 +834,7 @@ export default function App() {
                   {gaps.map(g => (
                     <div key={"bw_"+g.id} style={{ position: "absolute", left: g.x * mainScale, bottom: g.y * mainScale, width: g.w * mainScale, height: g.h * mainScale, background: "black" }} />
                   ))}
-                  {/* Solar Panels NOT in BW hole view */}
+                  {/* Solar Panels machen KEIN Loch im S/W Plan, da sie Aufputz sind */}
                   {windows.filter(w=>w.visible && w.type !== 'Solar').map(w => {
                     let dispW = w.rotated ? w.h : w.w; let dispH = w.rotated ? w.w : w.h;
                     return <div key={"bw_"+w.id} style={{ position: "absolute", left: w.x * mainScale, bottom: w.y * mainScale, width: dispW * mainScale, height: dispH * mainScale, background: "white", border: "1px solid #ccc" }} />
@@ -779,13 +860,11 @@ export default function App() {
                     <div style={{ width: wall.w * planScale, height: wallDepth * planScale, background: "#ccc", position: "relative", border: "2px solid #555" }}>
                         {windows.filter(w=>w.visible && w.type === 'Fenster').map(w => {
                             let dispW = w.rotated ? w.h : w.w; let dispH = w.rotated ? w.w : w.h;
-                            // Schneidet das Fenster die Schnitthöhe?
                             if (cutHeight >= w.y && cutHeight <= w.y + dispH) {
                                 return <div key={"plan_"+w.id} style={{ position: "absolute", left: w.x * planScale, top: -2, width: dispW * planScale, height: (wallDepth * planScale)+4, background: "white", borderLeft: "2px solid #555", borderRight: "2px solid #555" }} />
                             }
                             return null;
                         })}
-                        {/* Solar Aufbau */}
                         {windows.filter(w=>w.visible && w.type === 'Solar').map(w => {
                             let dispW = w.rotated ? w.h : w.w; let dispH = w.rotated ? w.w : w.h;
                             if (cutHeight >= w.y && cutHeight <= w.y + dispH) {
@@ -797,7 +876,7 @@ export default function App() {
                 </div>
             )}
 
-            {activeTab === 'd3' && (
+            {isMounted && activeTab === 'd3' && (
                 <div style={{ width: '100%', height: '100%', minHeight: '400px', background: "linear-gradient(to top, #d0e1f9, #87CEEB)", borderRadius: "4px", boxShadow: "0 5px 15px rgba(0,0,0,0.2)" }}>
                     <Suspense fallback={<div style={{padding:"20px", textAlign:"center"}}>Lade 3D Engine...</div>}>
                         <Scene3D windows={activeWindows} wall={wall} wallDepth={wallDepth} />
@@ -810,9 +889,9 @@ export default function App() {
 
         {/* DRAGGABLE DIVIDER (H) */}
         <div onMouseDown={handleHDividerDragStart} style={{ height: "16px", background: "#ddd", cursor: "row-resize", display: "flex", justifyContent: "center", alignItems: "center", zIndex: 50, gap:"20px" }}>
-          <button onClick={()=>setTopPaneHeight(100)} style={{background:"none", border:"none", cursor:"pointer", fontSize:"10px"}}>🔽</button>
+          <button onClick={()=>setTopPaneHeight(100)} style={{background:"none", border:"none", cursor:"pointer", fontSize:"10px"}}>🔽 Max</button>
           <div style={{width:"40px", height:"4px", background:"#fff", borderRadius:"2px"}}></div>
-          <button onClick={()=>setTopPaneHeight(0)} style={{background:"none", border:"none", cursor:"pointer", fontSize:"10px"}}>🔼</button>
+          <button onClick={()=>setTopPaneHeight(0)} style={{background:"none", border:"none", cursor:"pointer", fontSize:"10px"}}>🔼 Max</button>
         </div>
 
         {/* === UNTERE HÄLFTE: 2 SPALTEN MATRIX === */}
@@ -824,6 +903,7 @@ export default function App() {
             <div style={{border:"1px solid #eee", borderRadius:"6px", overflowX:"auto"}}>
               <table style={{width: "100%", borderCollapse: "collapse", fontSize: "11px", textAlign: "left"}}>
                 <thead><tr style={{background:"#f8f9fa", borderBottom:"1px solid #eee"}}>
+                  {/* Sichtbarkeit ändert NUR das Auge, kein KI-Reload! */}
                   <th title="Alle umschalten" onClick={()=>toggleAll('visible')} style={{padding:"6px", cursor:"pointer"}}>{T.col.v}🖱️</th>
                   <th style={{padding:"6px"}}>{T.col.id}</th><th style={{padding:"6px"}}>{T.col.dim}</th><th style={{padding:"6px"}}>{T.col.pr}</th><th style={{padding:"6px"}}>{T.col.dist}</th><th style={{padding:"6px"}}>{T.col.src}</th><th style={{padding:"6px"}}>{T.col.l}</th>
                 </tr></thead>
@@ -832,7 +912,7 @@ export default function App() {
                     let isSelected = selectedId === w.id;
                     return (
                       <tr id={`row-all-${w.id}`} key={`all-${w.id}`} onClick={()=>setSelectedId(w.id)} style={{background: isSelected ? "#e3f2fd" : (w.pinned ? "#fff3cd" : "transparent"), opacity: w.visible ? 1 : 0.4, borderBottom:"1px solid #eee", cursor:"pointer"}}>
-                        <td style={{padding:"6px"}}><input type="checkbox" checked={w.visible} onChange={(e)=>{e.stopPropagation(); toggleWinProp(w.id, 'visible');}}/></td>
+                        <td style={{padding:"6px"}}><input type="checkbox" checked={w.visible} onChange={(e)=>{e.stopPropagation(); toggleVisibilityOnly(w.id);}}/></td>
                         <td style={{padding:"6px", fontWeight:"bold", color: w.type==='Solar'?"#2c3e50":""}}>{w.pos} {w.type==='Solar'?'☀️':''}</td>
                         <td style={{padding:"6px"}}>{w.w}x{w.h}</td>
                         <td style={{padding:"6px", color:"#FF4B4B"}}>{w.price.toFixed(0)}€</td>
@@ -866,7 +946,7 @@ export default function App() {
                     let dispW = w.rotated ? w.h : w.w; let dispH = w.rotated ? w.w : w.h;
                     return (
                       <tr id={`row-used-${w.id}`} key={`used-${w.id}`} onClick={()=>setSelectedId(w.id)} style={{background: isSelected ? "#e3f2fd" : (w.pinned ? "#fff3cd" : "transparent"), borderBottom:"1px solid #eee", cursor:"pointer"}}>
-                        <td style={{padding:"6px"}}><input type="checkbox" checked={w.visible} onChange={(e)=>{e.stopPropagation(); toggleWinProp(w.id, 'visible');}}/></td>
+                        <td style={{padding:"6px"}}><input type="checkbox" checked={w.visible} onChange={(e)=>{e.stopPropagation(); toggleVisibilityOnly(w.id);}}/></td>
                         <td style={{padding:"6px"}}><input type="checkbox" checked={w.pinned} onChange={(e)=>{e.stopPropagation(); toggleWinProp(w.id, 'pinned');}}/></td>
                         <td style={{padding:"6px"}}><input type="checkbox" checked={w.rotated} onChange={(e)=>{e.stopPropagation(); toggleRotate(w.id);}}/></td>
                         <td style={{padding:"6px", fontWeight:"bold", color: w.type==='Solar'?"#2c3e50":""}}>{w.pos} {w.type==='Solar'?'☀️':''}</td>

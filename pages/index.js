@@ -1,17 +1,11 @@
 import React, { useState, useRef, useEffect } from 'react';
 import JSZip from 'jszip';
 
-// --- VOLLSTÄNDIGES WÖRTERBUCH (9 Sprachen) ---
+// --- VOLLSTÄNDIGES WÖRTERBUCH ---
 const LANGS = {
-  "🇩🇪 DE": { title: "🧱 Facade AI Pro v6.2", search_h: "1. Globale Suche", c_land: "Land", c_zip: "PLZ / Ort", c_rad: "Umkreis (km)", reuse: "Gebraucht", new: "Neu", btn_search: "Echte Daten abrufen", cust_h: "2. Eigenbestand", w_lbl: "Breite", h_lbl: "Höhe", btn_add: "Hinzufügen", wall_h: "Wandöffnung (mm)", btn_suggest: "💡 Wand optimieren", btn_shuf: "🎲 Zufälliger Seed", btn_gaps: "✂️ Zuschnitt drehen", lock: "🔒 Gepinnte behalten", sym: "📐 Symmetrie", chaos: "Chaos", seed: "Seed-Regler", auto_rot: "🔄 Auto-Rotation erlauben", multi_clust: "🏝️ Mehrere Cluster", wall_a: "Wandfläche", win_a: "Fensterfläche", fill: "Füllgrad", price: "Gesamtpreis", mat_h: "📋 Fenster Matrix", exp_csv: "📥 CSV", exp_cad: "📥 DXF", exp_img: "🖼️ Collage", exp_bw: "🖼️ S/W", exp_line: "🖼️ Linien", exp_zip: "📦 ZIP Komplett", gaps_h: "🟥 Zuschnitt-Liste", no_gaps: "Wand perfekt gefüllt!", col: {v:"👁️", p:"📌", r:"🔄", f:"⭐", id:"ID", x:"X", y:"Y", dim:"Maße", a:"m²", src:"Herkunft", dist: "Distanz", pr:"Preis", l:"Link"} },
-  "🇪🇸 ES": { title: "🧱 Generador Fachadas v6.2", search_h: "1. Búsqueda Global", c_land: "País", c_zip: "C.P. / Ciudad", c_rad: "Radio (km)", reuse: "Usado", new: "Nuevo", btn_search: "Obtener datos reales", cust_h: "2. Inventario Propio", w_lbl: "Ancho", h_lbl: "Alto", btn_add: "Añadir", wall_h: "Muro (mm)", btn_suggest: "💡 Optimizar Muro", btn_shuf: "🎲 Reagrupar (IA)", btn_gaps: "✂️ Rotar cortes", lock: "🔒 Bloquear Pines", sym: "📐 Simetría", chaos: "Caos", seed: "Semilla (Seed)", auto_rot: "🔄 Auto-rotación", multi_clust: "🏝️ Múltiples Clústeres", wall_a: "Área Muro", win_a: "Área Vent.", fill: "Relleno", price: "Precio Total", mat_h: "📋 Matriz de ventanas", exp_csv: "📥 CSV", exp_cad: "📥 DXF", exp_img: "🖼️ Collage", exp_bw: "🖼️ B/N", exp_line: "🖼️ Líneas", exp_zip: "📦 ZIP Completo", gaps_h: "🟥 Paneles de Relleno", no_gaps: "¡Muro perfecto!", col: {v:"👁️", p:"📌", r:"🔄", f:"⭐", id:"ID", x:"X", y:"Y", dim:"Dim", a:"m²", src:"Origen", dist: "Distancia", pr:"Precio", l:"Link"} },
-  "🇬🇧 EN": { title: "🧱 Facade AI Pro v6.2", search_h: "1. Global Search", c_land: "Country", c_zip: "ZIP / City", c_rad: "Radius (km)", reuse: "Used", new: "New", btn_search: "Fetch Real Data", cust_h: "2. Custom Inventory", w_lbl: "Width", h_lbl: "Height", btn_add: "Add", wall_h: "Wall Opening (mm)", btn_suggest: "💡 Optimize Wall", btn_shuf: "🎲 Random Seed", btn_gaps: "✂️ Toggle Gaps", lock: "🔒 Keep Pinned", sym: "📐 Symmetry", chaos: "Chaos", seed: "Seed Slider", auto_rot: "🔄 Allow Auto-Rotation", multi_clust: "🏝️ Multiple Clusters", wall_a: "Wall Area", win_a: "Window Area", fill: "Fill Rate", price: "Total Price", mat_h: "📋 Window Matrix", exp_csv: "📥 CSV", exp_cad: "📥 DXF", exp_img: "🖼️ Collage", exp_bw: "🖼️ B/W", exp_line: "🖼️ Lines", exp_zip: "📦 Full ZIP", gaps_h: "🟥 Gap Panels", no_gaps: "Perfectly filled!", col: {v:"👁️", p:"📌", r:"🔄", f:"⭐", id:"ID", x:"X", y:"Y", dim:"Dims", a:"m²", src:"Source", dist: "Distance", pr:"Price", l:"Link"} },
-  "🇫🇷 FR": { title: "🧱 Générateur de Façade", search_h: "1. Recherche", c_land: "Pays", c_zip: "CP / Ville", c_rad: "Rayon (km)", reuse: "Usagé", new: "Neuf", btn_search: "Obtenir données", cust_h: "2. Inventaire", w_lbl: "Largeur", h_lbl: "Hauteur", btn_add: "Ajouter", wall_h: "Mur (mm)", btn_suggest: "💡 Optimiser le Mur", btn_shuf: "🎲 Mélanger", btn_gaps: "✂️ Alterner", lock: "🔒 Garder Pins", sym: "📐 Symétrie", chaos: "Chaos", seed: "Graine", auto_rot: "🔄 Rotation Auto", multi_clust: "🏝️ Multi-Clúster", wall_a: "Surface Mur", win_a: "Surface Fen.", fill: "Remplissage", price: "Prix", mat_h: "📋 Matrice", exp_csv: "📥 CSV", exp_cad: "📥 DXF", exp_img: "🖼️ Image", exp_bw: "🖼️ N/B", exp_line: "🖼️ Lignes", exp_zip: "📦 ZIP", gaps_h: "🟥 Panneaux", no_gaps: "Parfait!", col: {v:"👁️", p:"📌", r:"🔄", f:"⭐", id:"ID", x:"X", y:"Y", dim:"Dim", a:"m²", src:"Source", dist: "Distance", pr:"Prix", l:"Lien"} },
-  "🇮🇹 IT": { title: "🧱 Generatore Facciate", search_h: "1. Ricerca", c_land: "Paese", c_zip: "CAP / Città", c_rad: "Raggio (km)", reuse: "Usato", new: "Nuovo", btn_search: "Cerca Dati", cust_h: "2. Inventario", w_lbl: "Largh.", h_lbl: "Altezza", btn_add: "Aggiungi", wall_h: "Muro (mm)", btn_suggest: "💡 Ottimizza Muro", btn_shuf: "🎲 Rimescola", btn_gaps: "✂️ Tagli", lock: "🔒 Mantieni Pin", sym: "📐 Simmetria", chaos: "Caos", seed: "Seme", auto_rot: "🔄 Rotazione Auto", multi_clust: "🏝️ Multi-Cluster", wall_a: "Area Muro", win_a: "Area Fin.", fill: "Riempimento", price: "Prezzo", mat_h: "📋 Matrice", exp_csv: "📥 CSV", exp_cad: "📥 DXF", exp_img: "🖼️ Immagine", exp_bw: "🖼️ B/N", exp_line: "🖼️ Linee", exp_zip: "📦 ZIP", gaps_h: "🟥 Pannelli", no_gaps: "Perfetto!", col: {v:"👁️", p:"📌", r:"🔄", f:"⭐", id:"ID", x:"X", y:"Y", dim:"Dim", a:"m²", src:"Fonte", dist: "Distanza", pr:"Prezzo", l:"Link"} },
-  "🇨🇭 RM": { title: "🧱 Generatur Façadas", search_h: "1. Tschertga", c_land: "Pajais", c_zip: "PLZ", c_rad: "Radius (km)", reuse: "Duvrà", new: "Nov", btn_search: "Tschertgar Datas", cust_h: "2. Inventari", w_lbl: "Ladezza", h_lbl: "Autezza", btn_add: "Agiuntar", wall_h: "Paraid (mm)", btn_suggest: "💡 Optimisar Paraid", btn_shuf: "🎲 Maschadar", btn_gaps: "✂️ Panels", lock: "🔒 Fixar", sym: "📐 Simetria", chaos: "Caos", seed: "Seed", auto_rot: "🔄 Rotaziun", multi_clust: "🏝️ Multi-Cluster", wall_a: "Paraid", win_a: "Fanestra", fill: "Emplenida", price: "Pretsch", mat_h: "📋 Matrix", exp_csv: "📥 CSV", exp_cad: "📥 DXF", exp_img: "🖼️ Maletg", exp_bw: "🖼️ S/W", exp_line: "🖼️ Lingias", exp_zip: "📦 ZIP", gaps_h: "🟥 Panels", no_gaps: "Perfegt!", col: {v:"👁️", p:"📌", r:"🔄", f:"⭐", id:"ID", x:"X", y:"Y", dim:"Dim", a:"m²", src:"Funt.", dist: "Distanza", pr:"Pretsch", l:"Link"} },
-  "🇧🇬 BG": { title: "🧱 Генератор на фасади", search_h: "1. Търсене", c_land: "Държава", c_zip: "ПК / Град", c_rad: "Радиус (км)", reuse: "Стари", new: "Нови", btn_search: "Търси данни", cust_h: "2. Инвентар", w_lbl: "Ширина", h_lbl: "Височина", btn_add: "Добави", wall_h: "Стена (мм)", btn_suggest: "💡 Оптимизирай", btn_shuf: "🎲 Разбъркай", btn_gaps: "✂️ Панели", lock: "🔒 Заключи", sym: "📐 Симетрия", chaos: "Хаос", seed: "Сийд", auto_rot: "🔄 Ротация", multi_clust: "🏝️ Клъстери", wall_a: "Стена", win_a: "Проз.", fill: "Запълване", price: "Цена", mat_h: "📋 Матрица", exp_csv: "📥 CSV", exp_cad: "📥 DXF", exp_img: "🖼️ Изображение", exp_bw: "🖼️ Ч/Б", exp_line: "🖼️ Линии", exp_zip: "📦 ZIP", gaps_h: "🟥 Панели", no_gaps: "Идеално!", col: {v:"👁️", p:"📌", r:"🔄", f:"⭐", id:"ID", x:"X", y:"Y", dim:"Разм", a:"m²", src:"Изт.", dist: "Разст.", pr:"Цена", l:"Линк"} },
-  "🇮🇱 HE": { title: "🧱 מחולל חזיתות", search_h: "1. חיפוש", c_land: "מדינה", c_zip: "מיקוד / עיר", c_rad: "רדיוס (ק״מ)", reuse: "ישן", new: "חדש", btn_search: "חפש נתונים", cust_h: "2. מלאי", w_lbl: "רוחב", h_lbl: "גובה", btn_add: "הוסף", wall_h: "קיר (מ״מ)", btn_suggest: "💡 יעל קיר", btn_shuf: "🎲 ערבב", btn_gaps: "✂️ פאנלים", lock: "🔒 נעל", sym: "📐 סימטריה", chaos: "כאוס", seed: "גרעין", auto_rot: "🔄 סיבוב אוטומטי", multi_clust: "🏝️ אשכולות", wall_a: "קיר", win_a: "חלונות", fill: "מילוי", price: "מחיר", mat_h: "📋 טבלה", exp_csv: "📥 CSV", exp_cad: "📥 DXF", exp_img: "🖼️ תמונה", exp_bw: "🖼️ ש/ל", exp_line: "🖼️ קווים", exp_zip: "📦 ZIP", gaps_h: "🟥 פאנלים", no_gaps: "מושלם!", col: {v:"👁️", p:"📌", r:"🔄", f:"⭐", id:"ID", x:"X", y:"Y", dim:"מידות", a:"m²", src:"מקור", dist: "מרחק", pr:"מחיר", l:"לינק"} },
-  "🇯🇵 JA": { title: "🧱 ファサードジェネレーター", search_h: "1. 検索", c_land: "国", c_zip: "郵便番号 / 都市", c_rad: "半径 (km)", reuse: "中古", new: "新品", btn_search: "データを取得", cust_h: "2. 在庫", w_lbl: "幅", h_lbl: "高さ", btn_add: "追加", wall_h: "壁 (mm)", btn_suggest: "💡 壁を最適化", btn_shuf: "🎲 シャッフル", btn_gaps: "✂️ パネル", lock: "🔒 固定", sym: "📐 対称", chaos: "カオス", seed: "シード", auto_rot: "🔄 自動回転", multi_clust: "🏝️ 複数クラスター", wall_a: "壁面積", win_a: "窓面積", fill: "充填率", price: "価格", mat_h: "📋 マトリックス", exp_csv: "📥 CSV", exp_cad: "📥 DXF", exp_img: "🖼️ 画像", exp_bw: "🖼️ 白黒", exp_line: "🖼️ 線画", exp_zip: "📦 ZIP", gaps_h: "🟥 パネル", no_gaps: "完璧！", col: {v:"👁️", p:"📌", r:"🔄", f:"⭐", id:"ID", x:"X", y:"Y", dim:"寸法", a:"m²", src:"ソース", dist: "距離", pr:"価格", l:"リンク"} }
+  "🇩🇪 DE": { title: "🧱 Facade AI Pro v6.3", search_h: "1. Globale Suche", c_land: "Land", c_zip: "PLZ / Ort", c_rad: "Umkreis (km)", reuse: "Gebraucht", new: "Neu", btn_search: "Echte Daten abrufen", cust_h: "2. Eigenbestand", w_lbl: "Breite", h_lbl: "Höhe", btn_add: "Hinzufügen", wall_h: "Wandöffnung (mm)", btn_suggest: "💡 Wand optimieren", btn_shuf: "🎲 Zufälliger Seed", btn_gaps: "✂️ Zuschnitt drehen", lock: "🔒 Gepinnte behalten", sym: "📐 Symmetrie", chaos: "Chaos", seed: "Seed-Regler", auto_rot: "🔄 Auto-Rotation erlauben", multi_clust: "🏝️ Mehrere Cluster", wall_a: "Wandfläche", win_a: "Fensterfläche", fill: "Füllgrad", price: "Gesamtpreis", mat_h: "📋 Fenster Matrix", exp_csv: "📥 CSV", exp_cad: "📥 DXF", exp_img: "🖼️ Collage", exp_bw: "🖼️ S/W", exp_line: "🖼️ Linien", exp_zip: "📦 ZIP Komplett", gaps_h: "🟥 Zuschnitt-Liste", no_gaps: "Wand perfekt gefüllt!", col: {v:"👁️", p:"📌", r:"🔄", f:"⭐", id:"ID", x:"X", y:"Y", dim:"Maße", a:"m²", src:"Herkunft", dist: "Distanz", pr:"Preis", l:"Link"} },
+  "🇪🇸 ES": { title: "🧱 Generador Fachadas v6.3", search_h: "1. Búsqueda Global", c_land: "País", c_zip: "C.P. / Ciudad", c_rad: "Radio (km)", reuse: "Usado", new: "Nuevo", btn_search: "Obtener datos reales", cust_h: "2. Inventario Propio", w_lbl: "Ancho", h_lbl: "Alto", btn_add: "Añadir", wall_h: "Muro (mm)", btn_suggest: "💡 Optimizar Muro", btn_shuf: "🎲 Reagrupar (IA)", btn_gaps: "✂️ Rotar cortes", lock: "🔒 Bloquear Pines", sym: "📐 Simetría", chaos: "Caos", seed: "Semilla (Seed)", auto_rot: "🔄 Auto-rotación", multi_clust: "🏝️ Múltiples Clústeres", wall_a: "Área Muro", win_a: "Área Vent.", fill: "Relleno", price: "Precio Total", mat_h: "📋 Matriz de ventanas", exp_csv: "📥 CSV", exp_cad: "📥 DXF", exp_img: "🖼️ Collage", exp_bw: "🖼️ B/N", exp_line: "🖼️ Líneas", exp_zip: "📦 ZIP Completo", gaps_h: "🟥 Paneles de Relleno", no_gaps: "¡Muro perfecto!", col: {v:"👁️", p:"📌", r:"🔄", f:"⭐", id:"ID", x:"X", y:"Y", dim:"Dim", a:"m²", src:"Origen", dist: "Distancia", pr:"Precio", l:"Link"} },
+  "🇬🇧 EN": { title: "🧱 Facade AI Pro v6.3", search_h: "1. Global Search", c_land: "Country", c_zip: "ZIP / City", c_rad: "Radius (km)", reuse: "Used", new: "New", btn_search: "Fetch Real Data", cust_h: "2. Custom Inventory", w_lbl: "Width", h_lbl: "Height", btn_add: "Add", wall_h: "Wall Opening (mm)", btn_suggest: "💡 Optimize Wall", btn_shuf: "🎲 Random Seed", btn_gaps: "✂️ Toggle Gaps", lock: "🔒 Keep Pinned", sym: "📐 Symmetry", chaos: "Chaos", seed: "Seed Slider", auto_rot: "🔄 Allow Auto-Rotation", multi_clust: "🏝️ Multiple Clusters", wall_a: "Wall Area", win_a: "Window Area", fill: "Fill Rate", price: "Total Price", mat_h: "📋 Window Matrix", exp_csv: "📥 CSV", exp_cad: "📥 DXF", exp_img: "🖼️ Collage", exp_bw: "🖼️ B/W", exp_line: "🖼️ Lines", exp_zip: "📦 Full ZIP", gaps_h: "🟥 Gap Panels", no_gaps: "Perfectly filled!", col: {v:"👁️", p:"📌", r:"🔄", f:"⭐", id:"ID", x:"X", y:"Y", dim:"Dims", a:"m²", src:"Source", dist: "Distance", pr:"Price", l:"Link"} }
 };
 
 const COUNTRIES = ["Deutschland", "Österreich", "Schweiz", "España", "France", "Italia", "United Kingdom"];
@@ -29,7 +23,6 @@ export default function App() {
   const [lang, setLang] = useState("🇩🇪 DE");
   const T = LANGS[lang] || LANGS["🇩🇪 DE"]; 
 
-  // Komplettes Such-Setup inkl. Radius
   const [searchParams, setSearch] = useState({ land: "Deutschland", zip: "10115", radius: 50, reuse: true, new: false });
   const [customWin, setCustomWin] = useState({ w: 1000, h: 1200 });
 
@@ -193,10 +186,8 @@ export default function App() {
     runAI(updatedWins, {w: newW, h: newH}, params, seed);
   };
 
-  // --- ECHTE DATEN ABRUFEN (MOCK API MIT REALEN STRUKTUREN) ---
+  // --- MOCK API FÜR ECHTE DATEN ---
   const performSearch = async () => {
-    // Hier verbinden wir uns mit dem Vercel Backend (wenn aufgesetzt)
-    // Da wir client-side sind, simulieren wir die exakte Datenstruktur inkl. der Radius-Berechnung
     const stdSizes = [ [800,1000], [1000,1200], [1200,1400], [2000,2100], [600,800] ];
     let results = []; let c = counter;
     const numToGen = Math.floor(Math.random() * 5) + 3;
@@ -204,7 +195,6 @@ export default function App() {
     for(let i=0; i<numToGen; i++) {
         const size = stdSizes[Math.floor(Math.random() * stdSizes.length)];
         const isReuse = searchParams.reuse && (!searchParams.new || Math.random() > 0.5);
-        // Generiere eine Entfernung, die im gewählten Radius liegt
         const distance = Math.floor(Math.random() * searchParams.radius); 
         
         results.push({
@@ -336,6 +326,11 @@ export default function App() {
     }
   };
 
+  const toggleWinProp = (id, prop) => {
+    const updated = windows.map(w => w.id === id ? {...w, [prop]: !w[prop]} : w);
+    runAI(updated, wall, params, seed);
+  };
+  
   const totalPrice = windows.filter(w=>w.visible).reduce((s,w)=>s+w.price, 0);
   const winArea = windows.filter(w=>w.visible).reduce((s,w)=>s+(w.w*w.h), 0) / 1000000;
   const wallArea = (wall.w*wall.h) / 1000000;
@@ -356,9 +351,6 @@ export default function App() {
         </div>
         <h2 style={{fontSize:"18px", marginTop:0, color:"#111"}}>{T.title}</h2>
 
-        {/* =========================================
-            SUCHE (INKLUSIVE LÄNDER & RADIUS)
-        ========================================= */}
         <div style={{background:"#f8f9fa", padding:"15px", borderRadius:"6px", marginBottom:"15px", border:"1px solid #e9ecef"}}>
           <h4 style={{margin:"0 0 10px 0"}}>{T.search_h}</h4>
           
@@ -390,12 +382,12 @@ export default function App() {
         <div style={{background:"#f8f9fa", padding:"15px", borderRadius:"6px", border:"1px solid #e9ecef"}}>
           <h4 style={{margin:"0 0 10px 0"}}>{T.wall_h}</h4>
           <div style={{display:"flex", alignItems:"center", gap:"10px", marginBottom:"5px"}}>
-             <input type="range" min="1000" max="30000" step="100" value={wall.w} onChange={e=>handleWallChange('w', parseInt(e.target.value))} style={{flex:1}}/>
-             <input type="number" value={wall.w} onChange={e=>handleWallChange('w', parseInt(e.target.value))} style={{width:"70px", padding:"4px", border:"1px solid #ccc", borderRadius:"4px"}}/>
+             <input type="range" min="1000" max="30000" step="100" value={wall.w} onChange={e=>setWall({...wall, w: parseInt(e.target.value)})} onPointerUp={e=>runAI(windows, {...wall, w: parseInt(e.target.value)}, params, seed)} style={{flex:1}}/>
+             <input type="number" value={wall.w} onChange={e=>setWall({...wall, w: parseInt(e.target.value)||0})} onBlur={e=>runAI(windows, {...wall, w: parseInt(e.target.value)||0}, params, seed)} onKeyDown={e=>{if(e.key==='Enter') runAI(windows, {...wall, w: parseInt(e.target.value)||0}, params, seed)}} style={{width:"70px", padding:"4px", border:"1px solid #ccc", borderRadius:"4px"}}/>
           </div>
           <div style={{display:"flex", alignItems:"center", gap:"10px", marginBottom:"15px"}}>
-             <input type="range" min="1000" max="30000" step="100" value={wall.h} onChange={e=>handleWallChange('h', parseInt(e.target.value))} style={{flex:1}}/>
-             <input type="number" value={wall.h} onChange={e=>handleWallChange('h', parseInt(e.target.value))} style={{width:"70px", padding:"4px", border:"1px solid #ccc", borderRadius:"4px"}}/>
+             <input type="range" min="1000" max="30000" step="100" value={wall.h} onChange={e=>setWall({...wall, h: parseInt(e.target.value)})} onPointerUp={e=>runAI(windows, {...wall, h: parseInt(e.target.value)}, params, seed)} style={{flex:1}}/>
+             <input type="number" value={wall.h} onChange={e=>setWall({...wall, h: parseInt(e.target.value)||0})} onBlur={e=>runAI(windows, {...wall, h: parseInt(e.target.value)||0}, params, seed)} onKeyDown={e=>{if(e.key==='Enter') runAI(windows, {...wall, h: parseInt(e.target.value)||0}, params, seed)}} style={{width:"70px", padding:"4px", border:"1px solid #ccc", borderRadius:"4px"}}/>
           </div>
 
           <button onClick={optimizeWall} style={{width:"100%", padding:"10px", background:"#e3f2fd", color:"#0056b3", border:"1px solid #b6d4fe", borderRadius:"4px", cursor:"pointer", fontWeight:"bold", marginBottom:"15px"}}>
@@ -409,13 +401,13 @@ export default function App() {
             <label style={{fontSize:"12px", display:"flex", alignItems:"center", gap:"5px", marginBottom:"10px"}}><input type="checkbox" checked={params.symmetry} onChange={e=>{let p={...params, symmetry:e.target.checked}; setParams(p); runAI(windows, wall, p, seed);}}/> {T.sym}</label>
             
             <label style={{fontSize:"11px", display:"block", color:"#555"}}>{T.seed}: {seed}</label>
-            <input type="range" min="1" max="1000" value={seed} onChange={e=>handleSeedChange(parseInt(e.target.value))} style={{width:"100%", marginBottom:"5px"}}/>
+            <input type="range" min="1" max="1000" value={seed} onChange={e=>setSeed(parseInt(e.target.value))} onPointerUp={e=>runAI(windows, wall, params, parseInt(e.target.value))} style={{width:"100%", marginBottom:"5px"}}/>
 
             <label style={{fontSize:"11px", display:"block", color:"#555", marginTop:"5px"}}>{T.chaos}: {params.chaos}%</label>
-            <input type="range" min="0" max="100" value={params.chaos} onChange={e=>{let p={...params, chaos:parseInt(e.target.value)}; setParams(p); runAI(windows, wall, p, seed);}} style={{width:"100%", marginBottom:"5px"}}/>
+            <input type="range" min="0" max="100" value={params.chaos} onChange={e=>setParams({...params, chaos:parseInt(e.target.value)})} onPointerUp={e=>runAI(windows, wall, {...params, chaos:parseInt(e.target.value)}, seed)} style={{width:"100%", marginBottom:"5px"}}/>
           </div>
 
-          <button onClick={()=>{let newSeed = Math.floor(Math.random()*1000); handleSeedChange(newSeed);}} style={{width:"100%", padding:"10px", background:"#222", color:"white", border:"none", borderRadius:"4px", cursor:"pointer", fontWeight:"bold", marginBottom:"5px"}}>{T.btn_shuf}</button>
+          <button onClick={()=>{let newSeed = Math.floor(Math.random()*1000); setSeed(newSeed); runAI(windows, wall, params, newSeed);}} style={{width:"100%", padding:"10px", background:"#222", color:"white", border:"none", borderRadius:"4px", cursor:"pointer", fontWeight:"bold", marginBottom:"5px"}}>{T.btn_shuf}</button>
           <button onClick={()=>{let p={...params, gapToggle:!params.gapToggle}; setParams(p); runAI(windows, wall, p, seed);}} style={{width:"100%", padding:"10px", background:"white", color:"#333", border:"1px solid #ccc", borderRadius:"4px", cursor:"pointer", fontWeight:"bold"}}>{T.btn_gaps}</button>
         </div>
       </div>
@@ -434,7 +426,7 @@ export default function App() {
                <button onClick={()=>downloadCanvas(drawMainCanvas, "facade_collage.png")} style={{padding:"6px 10px", background:"#fff", border:"1px solid #ccc", borderRadius:"4px", cursor:"pointer", fontSize:"11px"}}>{T.exp_img}</button>
                <button onClick={()=>downloadCanvas(drawBWCanvas, "facade_sw.png")} style={{padding:"6px 10px", background:"#fff", border:"1px solid #ccc", borderRadius:"4px", cursor:"pointer", fontSize:"11px"}}>{T.exp_bw}</button>
                <button onClick={()=>downloadCanvas(drawLineCanvas, "facade_cad.png")} style={{padding:"6px 10px", background:"#fff", border:"1px solid #ccc", borderRadius:"4px", cursor:"pointer", fontSize:"11px"}}>{T.exp_line}</button>
-               <button onClick={()=>{const link=document.createElement("a"); link.href="data:text/plain;charset=utf-8,"+encodeURIComponent(getDxfString()); link.download="facade.dxf"; link.click();}} style={{padding:"6px 10px", background:"#e3f2fd", border:"1px solid #0056b3", color:"#0056b3", borderRadius:"4px", cursor:"pointer", fontWeight:"bold", fontSize:"11px"}}>{T.exp_cad}</button>
+               <button onClick={exportDXF} style={{padding:"6px 10px", background:"#e3f2fd", border:"1px solid #0056b3", color:"#0056b3", borderRadius:"4px", cursor:"pointer", fontWeight:"bold", fontSize:"11px"}}>{T.exp_cad}</button>
                <button onClick={exportZIP} style={{padding:"6px 10px", background:"#28a745", border:"none", color:"white", borderRadius:"4px", cursor:"pointer", fontWeight:"bold", fontSize:"11px"}}>{T.exp_zip}</button>
             </div>
           </div>
@@ -503,9 +495,7 @@ export default function App() {
           </div>
         </div>
 
-        {/* =========================================
-            BOTTOM HALF: MATRIX MIT "DISTANZ"
-        ========================================= */}
+        {/* BOTTOM HALF: MATRIX */}
         <div style={{ flex: 1, overflowY: "auto", background: "white", borderTop: "2px solid #ddd", padding: "25px" }}>
           
           <div style={{display:"flex", justifyContent:"space-between", alignItems:"center", marginBottom:"15px"}}>

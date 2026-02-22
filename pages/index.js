@@ -3,9 +3,9 @@ import JSZip from 'jszip';
 
 // --- VOLLSTÄNDIGES WÖRTERBUCH ---
 const LANGS = {
-  "🇩🇪 DE": { title: "🧱 Facade AI Pro v6.3", search_h: "1. Globale Suche", c_land: "Land", c_zip: "PLZ / Ort", c_rad: "Umkreis (km)", reuse: "Gebraucht", new: "Neu", btn_search: "Echte Daten abrufen", cust_h: "2. Eigenbestand", w_lbl: "Breite", h_lbl: "Höhe", btn_add: "Hinzufügen", wall_h: "Wandöffnung (mm)", btn_suggest: "💡 Wand optimieren", btn_shuf: "🎲 Zufälliger Seed", btn_gaps: "✂️ Zuschnitt drehen", lock: "🔒 Gepinnte behalten", sym: "📐 Symmetrie", chaos: "Chaos", seed: "Seed-Regler", auto_rot: "🔄 Auto-Rotation erlauben", multi_clust: "🏝️ Mehrere Cluster", wall_a: "Wandfläche", win_a: "Fensterfläche", fill: "Füllgrad", price: "Gesamtpreis", mat_h: "📋 Fenster Matrix", exp_csv: "📥 CSV", exp_cad: "📥 DXF", exp_img: "🖼️ Collage", exp_bw: "🖼️ S/W", exp_line: "🖼️ Linien", exp_zip: "📦 ZIP Komplett", gaps_h: "🟥 Zuschnitt-Liste", no_gaps: "Wand perfekt gefüllt!", col: {v:"👁️", p:"📌", r:"🔄", f:"⭐", id:"ID", x:"X", y:"Y", dim:"Maße", a:"m²", src:"Herkunft", dist: "Distanz", pr:"Preis", l:"Link"} },
-  "🇪🇸 ES": { title: "🧱 Generador Fachadas v6.3", search_h: "1. Búsqueda Global", c_land: "País", c_zip: "C.P. / Ciudad", c_rad: "Radio (km)", reuse: "Usado", new: "Nuevo", btn_search: "Obtener datos reales", cust_h: "2. Inventario Propio", w_lbl: "Ancho", h_lbl: "Alto", btn_add: "Añadir", wall_h: "Muro (mm)", btn_suggest: "💡 Optimizar Muro", btn_shuf: "🎲 Reagrupar (IA)", btn_gaps: "✂️ Rotar cortes", lock: "🔒 Bloquear Pines", sym: "📐 Simetría", chaos: "Caos", seed: "Semilla (Seed)", auto_rot: "🔄 Auto-rotación", multi_clust: "🏝️ Múltiples Clústeres", wall_a: "Área Muro", win_a: "Área Vent.", fill: "Relleno", price: "Precio Total", mat_h: "📋 Matriz de ventanas", exp_csv: "📥 CSV", exp_cad: "📥 DXF", exp_img: "🖼️ Collage", exp_bw: "🖼️ B/N", exp_line: "🖼️ Líneas", exp_zip: "📦 ZIP Completo", gaps_h: "🟥 Paneles de Relleno", no_gaps: "¡Muro perfecto!", col: {v:"👁️", p:"📌", r:"🔄", f:"⭐", id:"ID", x:"X", y:"Y", dim:"Dim", a:"m²", src:"Origen", dist: "Distancia", pr:"Precio", l:"Link"} },
-  "🇬🇧 EN": { title: "🧱 Facade AI Pro v6.3", search_h: "1. Global Search", c_land: "Country", c_zip: "ZIP / City", c_rad: "Radius (km)", reuse: "Used", new: "New", btn_search: "Fetch Real Data", cust_h: "2. Custom Inventory", w_lbl: "Width", h_lbl: "Height", btn_add: "Add", wall_h: "Wall Opening (mm)", btn_suggest: "💡 Optimize Wall", btn_shuf: "🎲 Random Seed", btn_gaps: "✂️ Toggle Gaps", lock: "🔒 Keep Pinned", sym: "📐 Symmetry", chaos: "Chaos", seed: "Seed Slider", auto_rot: "🔄 Allow Auto-Rotation", multi_clust: "🏝️ Multiple Clusters", wall_a: "Wall Area", win_a: "Window Area", fill: "Fill Rate", price: "Total Price", mat_h: "📋 Window Matrix", exp_csv: "📥 CSV", exp_cad: "📥 DXF", exp_img: "🖼️ Collage", exp_bw: "🖼️ B/W", exp_line: "🖼️ Lines", exp_zip: "📦 Full ZIP", gaps_h: "🟥 Gap Panels", no_gaps: "Perfectly filled!", col: {v:"👁️", p:"📌", r:"🔄", f:"⭐", id:"ID", x:"X", y:"Y", dim:"Dims", a:"m²", src:"Source", dist: "Distance", pr:"Price", l:"Link"} }
+  "🇩🇪 DE": { title: "🧱 Facade AI Pro v6.4 (Stable)", search_h: "1. Globale Suche", c_land: "Land", c_zip: "PLZ / Ort", c_rad: "Umkreis (km)", reuse: "Gebraucht", new: "Neu", btn_search: "Echte Daten abrufen", cust_h: "2. Eigenbestand", w_lbl: "Breite", h_lbl: "Höhe", btn_add: "Hinzufügen", wall_h: "Wandöffnung (mm)", btn_suggest: "💡 Wand optimieren", btn_shuf: "🎲 Zufälliger Seed", btn_gaps: "✂️ Zuschnitt drehen", lock: "🔒 Gepinnte behalten", sym: "📐 Symmetrie", chaos: "Chaos", seed: "Seed-Regler", auto_rot: "🔄 Auto-Rotation erlauben", multi_clust: "🏝️ Mehrere Cluster", wall_a: "Wandfläche", win_a: "Fensterfläche", fill: "Füllgrad", price: "Gesamtpreis", mat_h: "📋 Fenster Matrix", exp_csv: "📥 CSV", exp_cad: "📥 DXF", exp_img: "🖼️ Collage", exp_bw: "🖼️ S/W", exp_line: "🖼️ Linien", exp_zip: "📦 ZIP Komplett", gaps_h: "🟥 Zuschnitt-Liste", no_gaps: "Wand perfekt gefüllt!", col: {v:"👁️", p:"📌", r:"🔄", f:"⭐", id:"ID", x:"X", y:"Y", dim:"Maße", a:"m²", src:"Herkunft", dist: "Distanz", pr:"Preis", l:"Link"} },
+  "🇪🇸 ES": { title: "🧱 Generador Fachadas v6.4", search_h: "1. Búsqueda Global", c_land: "País", c_zip: "C.P. / Ciudad", c_rad: "Radio (km)", reuse: "Usado", new: "Nuevo", btn_search: "Obtener datos reales", cust_h: "2. Inventario Propio", w_lbl: "Ancho", h_lbl: "Alto", btn_add: "Añadir", wall_h: "Muro (mm)", btn_suggest: "💡 Optimizar Muro", btn_shuf: "🎲 Reagrupar (IA)", btn_gaps: "✂️ Rotar cortes", lock: "🔒 Bloquear Pines", sym: "📐 Simetría", chaos: "Caos", seed: "Semilla (Seed)", auto_rot: "🔄 Auto-rotación", multi_clust: "🏝️ Múltiples Clústeres", wall_a: "Área Muro", win_a: "Área Vent.", fill: "Relleno", price: "Precio Total", mat_h: "📋 Matriz de ventanas", exp_csv: "📥 CSV", exp_cad: "📥 DXF", exp_img: "🖼️ Collage", exp_bw: "🖼️ B/N", exp_line: "🖼️ Líneas", exp_zip: "📦 ZIP Completo", gaps_h: "🟥 Paneles de Relleno", no_gaps: "¡Muro perfecto!", col: {v:"👁️", p:"📌", r:"🔄", f:"⭐", id:"ID", x:"X", y:"Y", dim:"Dim", a:"m²", src:"Origen", dist: "Distancia", pr:"Precio", l:"Link"} },
+  "🇬🇧 EN": { title: "🧱 Facade AI Pro v6.4", search_h: "1. Global Search", c_land: "Country", c_zip: "ZIP / City", c_rad: "Radius (km)", reuse: "Used", new: "New", btn_search: "Fetch Real Data", cust_h: "2. Custom Inventory", w_lbl: "Width", h_lbl: "Height", btn_add: "Add", wall_h: "Wall Opening (mm)", btn_suggest: "💡 Optimize Wall", btn_shuf: "🎲 Random Seed", btn_gaps: "✂️ Toggle Gaps", lock: "🔒 Keep Pinned", sym: "📐 Symmetry", chaos: "Chaos", seed: "Seed Slider", auto_rot: "🔄 Allow Auto-Rotation", multi_clust: "🏝️ Multiple Clusters", wall_a: "Wall Area", win_a: "Window Area", fill: "Fill Rate", price: "Total Price", mat_h: "📋 Window Matrix", exp_csv: "📥 CSV", exp_cad: "📥 DXF", exp_img: "🖼️ Collage", exp_bw: "🖼️ B/W", exp_line: "🖼️ Lines", exp_zip: "📦 Full ZIP", gaps_h: "🟥 Gap Panels", no_gaps: "Perfectly filled!", col: {v:"👁️", p:"📌", r:"🔄", f:"⭐", id:"ID", x:"X", y:"Y", dim:"Dims", a:"m²", src:"Source", dist: "Distance", pr:"Price", l:"Link"} }
 };
 
 const COUNTRIES = ["Deutschland", "Österreich", "Schweiz", "España", "France", "Italia", "United Kingdom"];
@@ -91,10 +91,12 @@ export default function App() {
     return newGaps;
   };
 
+  // --- DIE KORRIGIERTE KI-ENGINE (KEINE ÜBERLAPPUNG!) ---
   const runAI = (winList, currentWall, currentParams, currentSeed) => {
     const rng = mulberry32(currentSeed);
     let placed = []; let fixed_x = [], fixed_y = [];
     
+    // 1. Gepinnte platzieren (mit strikter Kollisionsprüfung)
     winList.forEach(w => {
       if(!w.visible) return;
       if(w.pinned) {
@@ -106,6 +108,7 @@ export default function App() {
           placed.push({...w, x: tx, y: ty, w: eff_w, h: eff_h});
           fixed_x.push(tx + eff_w/2); fixed_y.push(ty + eff_h/2);
         } else {
+          // Kollision! Suche nächsten freien Platz.
           let bx=tx, by=ty, minDist=Infinity;
           for(let r=0; r<=currentWall.h-eff_h; r+=50) {
             for(let c=0; c<=currentWall.w-eff_w; c+=50) {
@@ -115,8 +118,12 @@ export default function App() {
               }
             }
           }
-          placed.push({...w, x: bx, y: by, w: eff_w, h: eff_h});
-          fixed_x.push(bx + eff_w/2); fixed_y.push(by + eff_h/2);
+          // FIX: Nur platzieren, wenn wirklich ein Platz gefunden wurde!
+          if(minDist !== Infinity) {
+            placed.push({...w, x: bx, y: by, w: eff_w, h: eff_h});
+            fixed_x.push(bx + eff_w/2); fixed_y.push(by + eff_h/2);
+          }
+          // Wenn minDist Infinity bleibt, wird das Fenster NICHT platziert (verhindert Überlappung).
         }
       }
     });
@@ -160,6 +167,10 @@ export default function App() {
     }
 
     setGaps(calculateGapsExact(currentWall.w, currentWall.h, placed, currentParams.gapToggle));
+    
+    // Sync state. Wenn ein Fenster nicht platziert werden konnte (wegen Platzmangel),
+    // behält es seine alten Koordinaten, wird aber nicht in 'placed' gefunden
+    // und daher in der UI nicht gerendert (aber bleibt in der Liste).
     setWindows(winList.map(w => {
       let p = placed.find(pl => pl.id === w.id);
       if(p) return {...w, x: p.x, y: p.y, rotated: p.rotated}; 
@@ -168,7 +179,8 @@ export default function App() {
   };
 
   const optimizeWall = () => {
-    let placed = windows.filter(w => w.visible);
+    // Nur tatsächlich platzierte Fenster berücksichtigen!
+    let placed = windows.filter(w => w.visible && !checkOverlap(w.x, w.y, w.rotated?w.h:w.w, w.rotated?w.w:w.h, [], w.id));
     if(placed.length === 0) return;
     let minX = Math.min(...placed.map(w => w.x));
     let minY = Math.min(...placed.map(w => w.y));
@@ -179,14 +191,16 @@ export default function App() {
 
     let updatedWins = windows.map(w => {
         if(!w.visible) return w;
-        return {...w, x: w.x - minX, y: w.y - minY, pinned: true};
+        // Prüfen ob dieses Fenster Teil der platzierten Gruppe ist
+        const isPlaced = placed.some(p => p.id === w.id);
+        if(isPlaced) return {...w, x: w.x - minX, y: w.y - minY, pinned: true};
+        return w; // Nicht platzierte Fenster bleiben wo sie sind (werden aber ausgeblendet durch neue Wandgröße)
     });
     setWall({w: newW, h: newH});
     setWindows(updatedWins);
     runAI(updatedWins, {w: newW, h: newH}, params, seed);
   };
 
-  // --- MOCK API FÜR ECHTE DATEN ---
   const performSearch = async () => {
     const stdSizes = [ [800,1000], [1000,1200], [1200,1400], [2000,2100], [600,800] ];
     let results = []; let c = counter;
@@ -237,7 +251,9 @@ export default function App() {
     const addRect = (x, y, w, h, color) => `0\nLWPOLYLINE\n8\n0\n62\n${color}\n90\n4\n70\n1\n43\n0\n10\n${x}\n20\n${y}\n10\n${x+w}\n20\n${y}\n10\n${x+w}\n20\n${y+h}\n10\n${x}\n20\n${y+h}\n`;
     dxf += addRect(0, 0, wall.w, wall.h, 1); 
     gaps.forEach(g => dxf += addRect(g.x, g.y, g.w, g.h, 1)); 
-    windows.filter(w=>w.visible).forEach(w => {
+    // Nur tatsächlich platzierte Fenster exportieren!
+    const placedWindows = windows.filter(w => w.visible && !checkOverlap(w.x, w.y, w.rotated?w.h:w.w, w.rotated?w.w:w.h, [], w.id));
+    placedWindows.forEach(w => {
         let dw = w.rotated ? w.h : w.w; let dh = w.rotated ? w.w : w.h;
         dxf += addRect(w.x, w.y, dw, dh, 7); 
     });
@@ -250,7 +266,9 @@ export default function App() {
     ctx.fillStyle = "#fce4e4"; ctx.fillRect(0,0, wall.w, wall.h);
     ctx.fillStyle = "rgba(255, 75, 75, 0.4)"; ctx.strokeStyle = "#FF4B4B"; ctx.lineWidth = 15;
     gaps.forEach(g => { ctx.fillRect(g.x, wall.h - g.y - g.h, g.w, g.h); ctx.strokeRect(g.x, wall.h - g.y - g.h, g.w, g.h); });
-    windows.filter(w=>w.visible).forEach(w => {
+    // Nur platzierte Fenster zeichnen
+    const placedWindows = windows.filter(w => w.visible && !checkOverlap(w.x, w.y, w.rotated?w.h:w.w, w.rotated?w.w:w.h, [], w.id));
+    placedWindows.forEach(w => {
         let dw = w.rotated ? w.h : w.w; let dh = w.rotated ? w.w : w.h;
         ctx.fillStyle = w.color; ctx.fillRect(w.x, wall.h - w.y - dh, dw, dh);
         ctx.strokeStyle = w.pinned ? "#111" : "#555"; ctx.lineWidth = w.pinned ? 30 : 15;
@@ -263,7 +281,8 @@ export default function App() {
     const cvs = document.createElement("canvas"); cvs.width = wall.w; cvs.height = wall.h; const ctx = cvs.getContext("2d");
     ctx.fillStyle = "white"; ctx.fillRect(0,0, wall.w, wall.h);
     ctx.fillStyle = "black"; gaps.forEach(g => { ctx.fillRect(g.x, wall.h - g.y - g.h, g.w, g.h); });
-    windows.filter(w=>w.visible).forEach(w => {
+    const placedWindows = windows.filter(w => w.visible && !checkOverlap(w.x, w.y, w.rotated?w.h:w.w, w.rotated?w.w:w.h, [], w.id));
+    placedWindows.forEach(w => {
         let dw = w.rotated ? w.h : w.w; let dh = w.rotated ? w.w : w.h;
         ctx.fillStyle = "white"; ctx.fillRect(w.x, wall.h - w.y - dh, dw, dh);
         ctx.strokeStyle = "#ccc"; ctx.lineWidth = 10; ctx.strokeRect(w.x, wall.h - w.y - dh, dw, dh);
@@ -275,7 +294,8 @@ export default function App() {
     const cvs = document.createElement("canvas"); cvs.width = wall.w; cvs.height = wall.h; const ctx = cvs.getContext("2d");
     ctx.fillStyle = "white"; ctx.fillRect(0,0, wall.w, wall.h);
     ctx.strokeStyle = "#ccc"; ctx.lineWidth = 5; gaps.forEach(g => { ctx.strokeRect(g.x, wall.h - g.y - g.h, g.w, g.h); });
-    windows.filter(w=>w.visible).forEach(w => {
+    const placedWindows = windows.filter(w => w.visible && !checkOverlap(w.x, w.y, w.rotated?w.h:w.w, w.rotated?w.w:w.h, [], w.id));
+    placedWindows.forEach(w => {
         let dw = w.rotated ? w.h : w.w; let dh = w.rotated ? w.w : w.h;
         ctx.strokeStyle = "#333"; ctx.lineWidth = 15; ctx.strokeRect(w.x, wall.h - w.y - dh, dw, dh);
     });
@@ -331,8 +351,11 @@ export default function App() {
     runAI(updated, wall, params, seed);
   };
   
-  const totalPrice = windows.filter(w=>w.visible).reduce((s,w)=>s+w.price, 0);
-  const winArea = windows.filter(w=>w.visible).reduce((s,w)=>s+(w.w*w.h), 0) / 1000000;
+  // NUR PLATZIERTE FENSTER FÜR METRIKEN & ZEICHNUNG
+  const placedWindowsForRender = windows.filter(w => w.visible && !checkOverlap(w.x, w.y, w.rotated?w.h:w.w, w.rotated?w.w:w.h, [], w.id));
+
+  const totalPrice = placedWindowsForRender.reduce((s,w)=>s+w.price, 0);
+  const winArea = placedWindowsForRender.reduce((s,w)=>s+(w.w*w.h), 0) / 1000000;
   const wallArea = (wall.w*wall.h) / 1000000;
   const fillRate = wallArea ? (winArea/wallArea)*100 : 0;
 
@@ -353,16 +376,12 @@ export default function App() {
 
         <div style={{background:"#f8f9fa", padding:"15px", borderRadius:"6px", marginBottom:"15px", border:"1px solid #e9ecef"}}>
           <h4 style={{margin:"0 0 10px 0"}}>{T.search_h}</h4>
-          
           <select value={searchParams.land} onChange={e=>setSearch({...searchParams, land:e.target.value})} style={{width:"100%", padding:"8px", marginBottom:"5px", border:"1px solid #ccc", borderRadius:"4px"}}>
             {COUNTRIES.map(c => <option key={c} value={c}>{c}</option>)}
           </select>
-          
           <input placeholder={T.c_zip} value={searchParams.zip} onChange={e=>setSearch({...searchParams, zip:e.target.value})} style={{width:"100%", padding:"8px", marginBottom:"10px", border:"1px solid #ccc", borderRadius:"4px"}}/>
-          
           <label style={{fontSize:"11px", display:"block", color:"#555"}}>{T.c_rad}: {searchParams.radius} km</label>
           <input type="range" min="10" max="500" step="10" value={searchParams.radius} onChange={e=>setSearch({...searchParams, radius:parseInt(e.target.value)})} style={{width:"100%", marginBottom:"10px"}}/>
-
           <div style={{display:"flex", gap:"10px", fontSize:"12px", margin:"10px 0"}}>
             <label><input type="checkbox" checked={searchParams.reuse} onChange={e=>setSearch({...searchParams, reuse:e.target.checked})}/> {T.reuse}</label>
             <label><input type="checkbox" checked={searchParams.new} onChange={e=>setSearch({...searchParams, new:e.target.checked})}/> {T.new}</label>
@@ -381,6 +400,8 @@ export default function App() {
 
         <div style={{background:"#f8f9fa", padding:"15px", borderRadius:"6px", border:"1px solid #e9ecef"}}>
           <h4 style={{margin:"0 0 10px 0"}}>{T.wall_h}</h4>
+          
+          {/* KORRIGIERTE REGLER: onPointerUp nutzt e.target.value direkt */}
           <div style={{display:"flex", alignItems:"center", gap:"10px", marginBottom:"5px"}}>
              <input type="range" min="1000" max="30000" step="100" value={wall.w} onChange={e=>setWall({...wall, w: parseInt(e.target.value)})} onPointerUp={e=>runAI(windows, {...wall, w: parseInt(e.target.value)}, params, seed)} style={{flex:1}}/>
              <input type="number" value={wall.w} onChange={e=>setWall({...wall, w: parseInt(e.target.value)||0})} onBlur={e=>runAI(windows, {...wall, w: parseInt(e.target.value)||0}, params, seed)} onKeyDown={e=>{if(e.key==='Enter') runAI(windows, {...wall, w: parseInt(e.target.value)||0}, params, seed)}} style={{width:"70px", padding:"4px", border:"1px solid #ccc", borderRadius:"4px"}}/>
@@ -400,6 +421,7 @@ export default function App() {
             <label style={{fontSize:"12px", display:"flex", alignItems:"center", gap:"5px", marginBottom:"5px"}}><input type="checkbox" checked={params.lock} onChange={e=>{let p={...params, lock:e.target.checked}; setParams(p); runAI(windows, wall, p, seed);}}/> {T.lock}</label>
             <label style={{fontSize:"12px", display:"flex", alignItems:"center", gap:"5px", marginBottom:"10px"}}><input type="checkbox" checked={params.symmetry} onChange={e=>{let p={...params, symmetry:e.target.checked}; setParams(p); runAI(windows, wall, p, seed);}}/> {T.sym}</label>
             
+            {/* KORRIGIERTER SEED & CHAOS REGLER */}
             <label style={{fontSize:"11px", display:"block", color:"#555"}}>{T.seed}: {seed}</label>
             <input type="range" min="1" max="1000" value={seed} onChange={e=>setSeed(parseInt(e.target.value))} onPointerUp={e=>runAI(windows, wall, params, parseInt(e.target.value))} style={{width:"100%", marginBottom:"5px"}}/>
 
@@ -426,7 +448,7 @@ export default function App() {
                <button onClick={()=>downloadCanvas(drawMainCanvas, "facade_collage.png")} style={{padding:"6px 10px", background:"#fff", border:"1px solid #ccc", borderRadius:"4px", cursor:"pointer", fontSize:"11px"}}>{T.exp_img}</button>
                <button onClick={()=>downloadCanvas(drawBWCanvas, "facade_sw.png")} style={{padding:"6px 10px", background:"#fff", border:"1px solid #ccc", borderRadius:"4px", cursor:"pointer", fontSize:"11px"}}>{T.exp_bw}</button>
                <button onClick={()=>downloadCanvas(drawLineCanvas, "facade_cad.png")} style={{padding:"6px 10px", background:"#fff", border:"1px solid #ccc", borderRadius:"4px", cursor:"pointer", fontSize:"11px"}}>{T.exp_line}</button>
-               <button onClick={exportDXF} style={{padding:"6px 10px", background:"#e3f2fd", border:"1px solid #0056b3", color:"#0056b3", borderRadius:"4px", cursor:"pointer", fontWeight:"bold", fontSize:"11px"}}>{T.exp_cad}</button>
+               <button onClick={()=>{const link=document.createElement("a"); link.href="data:text/plain;charset=utf-8,"+encodeURIComponent(getDxfString()); link.download="facade.dxf"; link.click();}} style={{padding:"6px 10px", background:"#e3f2fd", border:"1px solid #0056b3", color:"#0056b3", borderRadius:"4px", cursor:"pointer", fontWeight:"bold", fontSize:"11px"}}>{T.exp_cad}</button>
                <button onClick={exportZIP} style={{padding:"6px 10px", background:"#28a745", border:"none", color:"white", borderRadius:"4px", cursor:"pointer", fontWeight:"bold", fontSize:"11px"}}>{T.exp_zip}</button>
             </div>
           </div>
@@ -445,7 +467,8 @@ export default function App() {
                     </div>
                   ))}
 
-                  {windows.filter(w=>w.visible).map(w => {
+                  {/* NUR PLATZIERTE FENSTER ZEICHNEN */}
+                  {placedWindowsForRender.map(w => {
                     let dispW = w.rotated ? w.h : w.w; let dispH = w.rotated ? w.w : w.h;
                     let isDragging = draggingId === w.id;
                     return (
@@ -471,7 +494,7 @@ export default function App() {
                   {gaps.map(g => (
                     <div key={"bw_"+g.id} style={{ position: "absolute", left: g.x * (SCALE*0.5), bottom: g.y * (SCALE*0.5), width: g.w * (SCALE*0.5), height: g.h * (SCALE*0.5), background: "black" }} />
                   ))}
-                  {windows.filter(w=>w.visible).map(w => {
+                  {placedWindowsForRender.map(w => {
                     let dispW = w.rotated ? w.h : w.w; let dispH = w.rotated ? w.w : w.h;
                     return <div key={"bw_"+w.id} style={{ position: "absolute", left: w.x * (SCALE*0.5), bottom: w.y * (SCALE*0.5), width: dispW * (SCALE*0.5), height: dispH * (SCALE*0.5), background: "white", border: "1px solid #ccc" }} />
                   })}
@@ -484,7 +507,7 @@ export default function App() {
                   {gaps.map(g => (
                     <div key={"line_"+g.id} style={{ position: "absolute", left: g.x * (SCALE*0.5), bottom: g.y * (SCALE*0.5), width: g.w * (SCALE*0.5), height: g.h * (SCALE*0.5), background: "transparent", border: "0.5px solid #ccc" }} />
                   ))}
-                  {windows.filter(w=>w.visible).map(w => {
+                  {placedWindowsForRender.map(w => {
                     let dispW = w.rotated ? w.h : w.w; let dispH = w.rotated ? w.w : w.h;
                     return <div key={"line_"+w.id} style={{ position: "absolute", left: w.x * (SCALE*0.5), bottom: w.y * (SCALE*0.5), width: dispW * (SCALE*0.5), height: dispH * (SCALE*0.5), background: "transparent", border: "1px solid #333" }} />
                   })}
@@ -514,12 +537,14 @@ export default function App() {
               <tbody>
                 {windows.sort((a,b)=>a.dist-b.dist).map(w => {
                   let dispW = w.rotated ? w.h : w.w; let dispH = w.rotated ? w.w : w.h;
+                  // Prüfen, ob Fenster platziert wurde
+                  const isPlaced = !checkOverlap(w.x, w.y, dispW, dispH, [], w.id);
                   return (
-                    <tr key={w.id} style={{background: w.pinned ? "#fff3cd" : "transparent", opacity: w.visible ? 1 : 0.4, borderBottom:"1px solid #eee"}}>
+                    <tr key={w.id} style={{background: w.pinned ? "#fff3cd" : (isPlaced ? "transparent" : "#ffebee"), opacity: w.visible ? 1 : 0.4, borderBottom:"1px solid #eee", color: isPlaced ? "inherit" : "#d32f2f"}}>
                       <td style={{padding:"8px 10px", borderRight:"1px solid #ddd"}}><input type="checkbox" checked={w.visible} onChange={()=>toggleWinProp(w.id, 'visible')} style={{cursor:"pointer"}}/></td>
                       <td style={{padding:"8px 10px", borderRight:"1px solid #ddd"}}><input type="checkbox" checked={w.pinned} onChange={()=>toggleWinProp(w.id, 'pinned')} style={{cursor:"pointer"}}/></td>
                       <td style={{padding:"8px 10px", borderRight:"1px solid #ddd"}}><input type="checkbox" checked={w.rotated} onChange={()=>toggleWinProp(w.id, 'rotated')} style={{cursor:"pointer"}}/></td>
-                      <td style={{padding:"8px 10px", fontWeight:"bold"}}>{w.pos}</td>
+                      <td style={{padding:"8px 10px", fontWeight:"bold"}}>{w.pos} {!isPlaced && "(Überlappt!)"}</td>
                       <td style={{padding:"8px 10px"}}><input type="number" value={w.x} onChange={e=>{let arr=windows.map(x=>x.id===w.id?{...x, x:parseInt(e.target.value)||0, pinned:true}:x); setWindows(arr); runAI(arr, wall, params, seed);}} style={{width:"70px", padding:"4px", border:"1px solid #ccc", borderRadius:"4px"}}/></td>
                       <td style={{padding:"8px 10px"}}><input type="number" value={w.y} onChange={e=>{let arr=windows.map(x=>x.id===w.id?{...x, y:parseInt(e.target.value)||0, pinned:true}:x); setWindows(arr); runAI(arr, wall, params, seed);}} style={{width:"70px", padding:"4px", border:"1px solid #ccc", borderRadius:"4px"}}/></td>
                       <td style={{padding:"8px 10px"}}>{dispW} x {dispH}</td>
